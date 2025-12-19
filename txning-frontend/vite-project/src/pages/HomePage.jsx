@@ -1,167 +1,41 @@
 import Navbar from "../components/Navbar";
 import Footer from '../components/Footer'
+import Banner from '../components/Banner.jsx'
+import Marquee from "../components/Marquee.jsx";
+import HomeSection from '../components/HomeSection'
+import MagazineGrid from '../components/lists/MagazineGrid'
+import DramaScroller from '../components/lists/DramaScroller'
+import { mockResources } from '../data/mockResources'
+import { mockFeatured } from '../data/mockFeatured'
 export default function HomePage() {
+    const magazineItems = mockResources
+    .filter((r) => r.category === 'magazines')
+    .filter((r) => mockFeatured.magazines.includes(r.id))
+    const dramaItems = mockResources
+  .filter((x) => x.category === 'dramas')
+  .filter((x) => mockFeatured.dramas.includes(x.id))
   return (
     <div className="app-container">
-      {/* 导航栏 */}
+
       <Navbar />
 
-      {/* Banner 轮播区域 */}
-      <header className="banner-section">
-        <div className="banner-bg-pattern"></div>
+      <Banner />
 
-        {/* 背景装饰闪电 */}
-        <i className="fa-solid fa-bolt banner-lightning-bg"></i>
+     <Marquee />
+    <HomeSection title="商务杂志" subtitle="MAGAZINE" to="#">
+        <MagazineGrid items={magazineItems} />
+      </HomeSection>
 
-        {/* 漂浮柠檬 */}
-        <div
-          className="lemon-deco lemon-spin"
-          style={{ top: '15%', left: '8%' }}
-        ></div>
-        <div
-          className="lemon-deco"
-          style={{ bottom: '20%', left: '45%', transform: 'scale(0.6)' }}
-        ></div>
+      <HomeSection
+  className="section section-movie"
+  title="影视剧"
+  subtitle="MOVIES & TV"
+  to="/dramas"
+>
+  <DramaScroller items={dramaItems} />
+</HomeSection>
 
-        <div className="banner-content">
-          <div className="banner-tag">#全能艺人 / ALL ROUNDER</div>
-          <h1 className="banner-title">
-            BORN TO
-            <br />
-            <span style={{ color: 'white', WebkitTextStroke: '3px var(--dark)' }}>
-              SHINE
-            </span>
-          </h1>
-          <p
-            style={{
-              fontSize: '1.2rem',
-              fontWeight: 600,
-              marginBottom: '2.5rem',
-              width: '80%',
-            }}
-          >
-            2023 世界巡演即将启航，全新专辑《Flash Point》震撼发布，定义属于你的高光时刻。
-          </p>
-          <a href="#" className="banner-btn">
-            了解行程 <i className="fa-solid fa-arrow-right"></i>
-          </a>
-        </div>
-
-        <div className="banner-visual">
-          {/* 示意人物立绘，具有破格效果 */}
-          <img
-            src="https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=2787&auto=format&fit=crop"
-            className="banner-person"
-            alt="Star Portrait"
-          />
-        </div>
-
-        <div className="banner-controls">
-          <div className="control-dot active"></div>
-          <div className="control-dot"></div>
-          <div className="control-dot"></div>
-        </div>
-      </header>
-
-      {/* 跑马灯 */}
-      <div className="marquee-strip">
-        <div className="marquee-content">
-          <i className="fa-solid fa-lemon"></i> ALEX ZHANG OFFICIAL WEBSITE
-          <span style={{ margin: '0 40px' }}>//</span>
-          <i className="fa-solid fa-bolt"></i> NEW BUSINESS COLLABORATION
-          <span style={{ margin: '0 40px' }}>//</span>
-          <i className="fa-solid fa-video"></i> SUMMER MOVIE FESTIVAL
-          <span style={{ margin: '0 40px' }}>//</span>
-          <i className="fa-solid fa-lemon"></i> ALEX ZHANG OFFICIAL WEBSITE
-          <span style={{ margin: '0 40px' }}>//</span>
-          <i className="fa-solid fa-bolt"></i> NEW BUSINESS COLLABORATION
-          <span style={{ margin: '0 40px' }}>//</span>
-        </div>
-      </div>
-
-      {/* 01 商务杂志 (Business & Magazines) */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title">商务杂志 / MAGAZINE</h2>
-          <a href="#" className="more-link">
-            VIEW ALL <i className="fa-solid fa-circle-arrow-right"></i>
-          </a>
-        </div>
-
-        <div className="mag-grid">
-          <div className="mag-card">
-            <div className="mag-img-container">
-              <div className="mag-sticker">OCT COVER</div>
-              <img
-                src="https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2864&auto=format&fit=crop"
-                className="mag-img"
-                alt="Mag"
-              />
-            </div>
-            <div className="mag-info">
-              <h3 className="mag-title">VOGUE me 十月刊</h3>
-              <p className="mag-sub">封面人物 / 独家专访</p>
-            </div>
-          </div>
-
-          <div className="mag-card">
-            <div className="mag-img-container">
-              <div
-                className="mag-sticker"
-                style={{ background: 'var(--white)', color: 'var(--dark)' }}
-              >
-                BRAND
-              </div>
-              <img
-                src="https://images.unsplash.com/photo-1611048267451-e6ed903d4a38?q=80&w=2944&auto=format&fit=crop"
-                className="mag-img"
-                alt="Brand"
-              />
-            </div>
-            <div className="mag-info">
-              <h3 className="mag-title">GENTLE MONSTER</h3>
-              <p className="mag-sub">全球品牌代言人</p>
-            </div>
-          </div>
-
-          <div className="mag-card">
-            <div className="mag-img-container">
-              <div className="mag-sticker">SEP ISSUE</div>
-              <img
-                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2940&auto=format&fit=crop"
-                className="mag-img"
-                alt="Mag"
-              />
-            </div>
-            <div className="mag-info">
-              <h3 className="mag-title">ELLE MEN 秋季刊</h3>
-              <p className="mag-sub">内页大片 / 时尚解析</p>
-            </div>
-          </div>
-
-          <div className="mag-card">
-            <div className="mag-img-container">
-              <div
-                className="mag-sticker"
-                style={{ background: '#FF5E57', color: 'white' }}
-              >
-                NEW
-              </div>
-              <img
-                src="https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop"
-                className="mag-img"
-                alt="Mag"
-              />
-            </div>
-            <div className="mag-info">
-              <h3 className="mag-title">TIFFANY &amp; CO.</h3>
-              <p className="mag-sub">品牌挚友推广</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 02 影视剧 (Movies & TV) - Dark Mode */}
+      {/* 02 影视剧 (Movies & TV) - Dark Mode
       <section className="section section-movie">
         <div className="section-header">
           <i
@@ -172,7 +46,7 @@ export default function HomePage() {
             影视剧 / MOVIES &amp; TV
           </h2>
           <a href="#" className="more-link" style={{ color: 'var(--primary)' }}>
-            FILMOGRAPHY <i className="fa-solid fa-circle-arrow-right"></i>
+            VIEW ALL <i className="fa-solid fa-circle-arrow-right"></i>
           </a>
         </div>
 
@@ -251,7 +125,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* 03 访谈 (Interviews) */}
       <section className="section">
