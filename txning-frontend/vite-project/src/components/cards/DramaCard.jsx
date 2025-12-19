@@ -1,9 +1,13 @@
 export default function DramaCard({ item }) {
+    const meta = [
+  item.year,
+  item.genres?.join(' / ')
+].filter(Boolean).join(' | ')
   return (
     <div className="movie-item">
-      {item.tagText ? (
+      {item.status ? (
         <div className="movie-tag" style={item.tagStyle}>
-          {item.tagText}
+          {item.status}
         </div>
       ) : null}
 
@@ -11,7 +15,7 @@ export default function DramaCard({ item }) {
 
       <div className="movie-desc">
         <h4>{item.title}</h4>
-        <p style={{ color: '#aaa', fontSize: '0.8rem' }}>{item.meta}</p>
+        <p style={{ color: '#aaa', fontSize: '0.8rem' }}>{meta}</p>
       </div>
     </div>
   )

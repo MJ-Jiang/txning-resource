@@ -47,58 +47,388 @@ export const mockResources = [
   {
     id: 'drama-1',
     category: 'dramas',
+    slug: 'deep-sea-rescue',
     title: '深海救援',
-    meta: '2023 | 动作 / 冒险',
+    year: 2023,
+    genres: ['动作', '冒险'],
     posterUrl:
       'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
-    tagText: '上映中',
+    status: '上映中',
     tagStyle: undefined, // 使用默认红色（CSS 里 .movie-tag 背景是 accent-red）
+    platforms: ['youtube'],
     alt: 'Movie',
   },
   {
     id: 'drama-2',
     category: 'dramas',
+    slug: 'neon-district',
+    year: 2024,
+    genres: ['科幻', '赛博朋克'],
     title: '霓虹街区',
-    meta: '2024 | 赛博朋克剧集',
     posterUrl:
       'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2825&auto=format&fit=crop',
-    tagText: '待播',
+    status: '待播',
     tagStyle: { background: '#888' },
     alt: 'Movie',
   },
   {
     id: 'drama-3',
     category: 'dramas',
+    slug: 'silent-witness',
     title: '沉默的证人',
-    meta: '2022 | 悬疑 / 犯罪',
+    year: 2022,
+    genres: ['悬疑', '犯罪'],
     posterUrl:
       'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2940&auto=format&fit=crop',
-    tagText: null,
+    status: '正在热播',
     tagStyle: undefined,
+    platforms:['腾讯视频'],
     alt: 'Movie',
   },
   {
     id: 'drama-4',
     category: 'dramas',
+    slug: 'youth-party',
     title: '青春派对',
-    meta: '2021 | 综艺常驻',
+    year: 2021,
+    genres: ['综艺'],
     posterUrl:
       'https://images.unsplash.com/photo-1594909122845-861c4f9c16cb?q=80&w=2940&auto=format&fit=crop',
-    tagText: null,
-    tagStyle: undefined,
+    status: '待播',
+    tagStyle: { background: '#888' },
+    platforms:['youtube'],
     alt: 'Movie',
   },
-  {
-    id: 'drama-5',
-    category: 'dramas',
-    title: '极速狂飙',
-    meta: '2020 | 动作',
-    posterUrl:
-      'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
-    tagText: null,
-    tagStyle: undefined,
-    alt: 'Movie',
-  },
+{
+  id: 'drama-5',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-6',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-7',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-8',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-9',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-10',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-11',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-12',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-13',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-14',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-15',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-16',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-17',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+{
+  id: 'drama-18',
+  category: 'dramas',
+  slug: 'fast-rush',
+  title: '极速狂飙',
+  year: 2020,
+  genres: ['动作'],
+  posterUrl:
+    'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+  status: '即将上线', // 可选：released / upcoming / ongoing
+  tagStyle: undefined,
+  platforms: ['院线'], // 可选
+  alt: 'Movie',
+},
+// {
+//   id: 'drama-19',
+//   category: 'dramas',
+//   slug: 'fast-rush',
+//   title: '极速狂飙',
+//   year: 2020,
+//   genres: ['动作'],
+//   posterUrl:
+//     'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+//   status: '即将上线', // 可选：released / upcoming / ongoing
+//   tagStyle: undefined,
+//   platforms: ['院线'], // 可选
+//   alt: 'Movie',
+// },
+// {
+//   id: 'drama-20',
+//   category: 'dramas',
+//   slug: 'fast-rush',
+//   title: '极速狂飙',
+//   year: 2020,
+//   genres: ['动作'],
+//   posterUrl:
+//     'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+//   status: '即将上线', // 可选：released / upcoming / ongoing
+//   tagStyle: undefined,
+//   platforms: ['院线'], // 可选
+//   alt: 'Movie',
+// },
+// {
+//   id: 'drama-21',
+//   category: 'dramas',
+//   slug: 'fast-rush',
+//   title: '极速狂飙',
+//   year: 2020,
+//   genres: ['动作'],
+//   posterUrl:
+//     'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+//   status: '即将上线', // 可选：released / upcoming / ongoing
+//   tagStyle: undefined,
+//   platforms: ['院线'], // 可选
+//   alt: 'Movie',
+// },
+// {
+//   id: 'drama-22',
+//   category: 'dramas',
+//   slug: 'fast-rush',
+//   title: '极速狂飙',
+//   year: 2020,
+//   genres: ['动作'],
+//   posterUrl:
+//     'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+//   status: '即将上线', // 可选：released / upcoming / ongoing
+//   tagStyle: undefined,
+//   platforms: ['院线'], // 可选
+//   alt: 'Movie',
+// },
+// {
+//   id: 'drama-23',
+//   category: 'dramas',
+//   slug: 'fast-rush',
+//   title: '极速狂飙',
+//   year: 2020,
+//   genres: ['动作'],
+//   posterUrl:
+//     'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+//   status: '即将上线', // 可选：released / upcoming / ongoing
+//   tagStyle: undefined,
+//   platforms: ['院线'], // 可选
+//   alt: 'Movie',
+// },
+// {
+//   id: 'drama-24',
+//   category: 'dramas',
+//   slug: 'fast-rush',
+//   title: '极速狂飙',
+//   year: 2020,
+//   genres: ['动作'],
+//   posterUrl:
+//     'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+//   status: '即将上线', // 可选：released / upcoming / ongoing
+//   tagStyle: undefined,
+//   platforms: ['院线'], // 可选
+//   alt: 'Movie',
+// },
+// {
+//   id: 'drama-25',
+//   category: 'dramas',
+//   slug: 'fast-rush',
+//   title: '极速狂飙',
+//   year: 2020,
+//   genres: ['动作'],
+//   posterUrl:
+//     'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+//   status: '即将上线', // 可选：released / upcoming / ongoing
+//   tagStyle: undefined,
+//   platforms: ['院线'], // 可选
+//   alt: 'Movie',
+// },
+// {
+//   id: 'drama-26',
+//   category: 'dramas',
+//   slug: 'fast-rush',
+//   title: '极速狂飙',
+//   year: 2020,
+//   genres: ['动作'],
+//   posterUrl:
+//     'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+//   status: '即将上线', // 可选：released / upcoming / ongoing
+//   tagStyle: undefined,
+//   platforms: ['院线'], // 可选
+//   alt: 'Movie',
+// },
     // ===== interviews =====
   {
     id: 'int-1',

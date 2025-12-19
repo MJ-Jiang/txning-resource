@@ -586,3 +586,210 @@
         }
         @keyframes pulse { 50% { transform: scale(1.1); } }
 
+/* ===== Dramas Page ===== */
+.library-header {
+  padding: 0;
+}
+
+.library-title h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+.library-title p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  opacity: 0.85;
+}
+
+/* 筛选栏：建议 sticky */
+.filters-bar {
+  position: sticky;
+  top: 80px; /* 你的 navbar 高度是 80px */
+  z-index: 900;
+  background: rgba(255, 245, 199, 0.92); /* 用你最浅黄的半透明 */
+  backdrop-filter: blur(10px);
+  border-top: none
+  border-bottom: var(--border-width) solid var(--dark);
+  padding: 1.2rem 6rem;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.filters-left {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: end;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-item label {
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.filter-input,
+.filter-select {
+  height: 42px;
+  padding: 0 12px;
+  border: 2px solid var(--dark);
+  border-radius: 12px;
+  background: var(--white);
+  font-weight: 700;
+  outline: none;
+}
+
+.filter-input {
+  width: 280px;
+  max-width: 60vw;
+}
+
+.filters-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-btn {
+  height: 42px;
+  padding: 0 16px;
+  border: 3px solid var(--dark);
+  background: var(--white);
+  border-radius: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--dark);
+  transition: 0.2s;
+}
+.filter-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--dark);
+  background: var(--primary);
+}
+
+.filter-count {
+  font-weight: 800;
+}
+
+/* 列表区域 */
+.library-section {
+  padding: 2.5rem 6rem 5rem;
+}
+
+/* 网格：默认 5 列，超宽屏自动 6 列 */
+.drama-grid {
+  display: grid;
+  gap: 1.6rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+@media (min-width: 1600px) {
+  .drama-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  .drama-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .library-header,
+  .filters-bar,
+  .library-section {
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+  }
+  .drama-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.scroll-sentinel {
+  height: 1px;
+}
+
+/* 空状态 */
+.empty-state {
+  border: var(--border-width) solid var(--dark);
+  background: var(--white);
+  border-radius: 20px;
+  padding: 2rem;
+}
+
+/* 分页 */
+.pager {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+
+.pager-btn {
+  height: 44px;
+  padding: 0 14px;
+  border: 3px solid var(--dark);
+  border-radius: 14px;
+  background: var(--white);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--dark);
+  transition: 0.2s;
+}
+.pager-btn:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--dark);
+  background: var(--primary);
+}
+.pager-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pager-pages {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pager-page {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--dark);
+  border-radius: 14px;
+  background: var(--white);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--dark);
+  transition: 0.2s;
+}
+.pager-page:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--dark);
+  background: var(--primary);
+}
+.pager-page.active {
+  background: var(--dark);
+  color: var(--primary);
+  box-shadow: none;
+  transform: none;
+}
+
+.pager-ellipsis {
+  font-weight: 900;
+  opacity: 0.8;
+}

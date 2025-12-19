@@ -40,7 +40,7 @@ export default function HomePage() {
         >
         <DramaScroller items={dramaItems} />
         </HomeSection>
-    <HomeSection title="商务杂志" subtitle="MAGAZINE" to="#">
+    <HomeSection title="商务杂志" subtitle="MAGAZINE" to="/magazines">
         <MagazineGrid items={magazineItems} />
       </HomeSection>
 

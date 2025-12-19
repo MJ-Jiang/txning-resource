@@ -1,9 +1,10 @@
+import { Link } from 'react-router-dom'
+
 export default function HomeSection({
   className = 'section',
   title,
   subtitle,
   to,
-  right,
   children,
 }) {
   return (
@@ -14,14 +15,10 @@ export default function HomeSection({
           {subtitle ? ` / ${subtitle}` : ''}
         </h2>
 
-        {right ? (
-          right
-        ) : to ? (
-          <a href={to} className="more-link">
+        {to && (
+          <Link to={to} className="more-link">
             VIEW ALL <i className="fa-solid fa-circle-arrow-right"></i>
-          </a>
-        ) : (
-          <span />
+          </Link>
         )}
       </div>
 

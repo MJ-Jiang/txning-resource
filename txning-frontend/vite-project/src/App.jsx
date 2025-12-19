@@ -1,7 +1,16 @@
 import './App.css'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
+import { Routes, Route } from 'react-router-dom'
+import DramasPage from './pages/DramasPage'
 import HomePage from './pages/HomePage'
+import ScrollToTop from './components/ScrollToTop'
 export default function App() {
- return <HomePage />
+return (
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/dramas" element={<DramasPage />} />
+      </Routes>
+    </>
+  )
 }
