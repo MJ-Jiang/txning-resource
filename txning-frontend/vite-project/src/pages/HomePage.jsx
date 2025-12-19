@@ -5,6 +5,8 @@ import Marquee from "../components/Marquee.jsx";
 import HomeSection from '../components/HomeSection'
 import MagazineGrid from '../components/lists/MagazineGrid'
 import DramaScroller from '../components/lists/DramaScroller'
+import InterviewGrid from '../components/lists/InterviewGrid'
+import EventsTimeline from '../components/lists/EventsTimeline'
 import { mockResources } from '../data/mockResources'
 import { mockFeatured } from '../data/mockFeatured'
 export default function HomePage() {
@@ -14,6 +16,12 @@ export default function HomePage() {
     const dramaItems = mockResources
   .filter((x) => x.category === 'dramas')
   .filter((x) => mockFeatured.dramas.includes(x.id))
+  const interviewItems = mockResources
+  .filter((x) => x.category === 'interviews')
+  .filter((x) => mockFeatured.interviews.includes(x.id))
+  const eventItems = mockResources
+  .filter((x) => x.category === 'events')
+  .filter((x) => mockFeatured.events.includes(x.id))
   return (
     <div className="app-container">
 
@@ -28,215 +36,19 @@ export default function HomePage() {
 
       <HomeSection
   className="section section-movie"
-  title="影视剧"
-  subtitle="MOVIES & TV"
+  title="影视剧综"
+  subtitle="MOVIES & TV & SHOWS"
   to="/dramas"
 >
   <DramaScroller items={dramaItems} />
 </HomeSection>
-
-      {/* 02 影视剧 (Movies & TV) - Dark Mode
-      <section className="section section-movie">
-        <div className="section-header">
-          <i
-            className="fa-solid fa-bolt"
-            style={{ fontSize: '2.5rem', color: 'var(--primary)' }}
-          ></i>
-          <h2 className="section-title" style={{ color: 'var(--white)' }}>
-            影视剧 / MOVIES &amp; TV
-          </h2>
-          <a href="#" className="more-link" style={{ color: 'var(--primary)' }}>
-            VIEW ALL <i className="fa-solid fa-circle-arrow-right"></i>
-          </a>
-        </div>
-
-        <div className="movie-scroller">
-          <div className="movie-item">
-            <div className="movie-tag">上映中</div>
-            <img
-              src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop"
-              className="movie-poster"
-              alt="Movie"
-            />
-            <div className="movie-desc">
-              <h4>深海救援</h4>
-              <p style={{ color: '#aaa', fontSize: '0.8rem' }}>
-                2023 | 动作 / 冒险
-              </p>
-            </div>
-          </div>
-
-          <div className="movie-item">
-            <div className="movie-tag" style={{ background: '#888' }}>
-              待播
-            </div>
-            <img
-              src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2825&auto=format&fit=crop"
-              className="movie-poster"
-              alt="Movie"
-            />
-            <div className="movie-desc">
-              <h4>霓虹街区</h4>
-              <p style={{ color: '#aaa', fontSize: '0.8rem' }}>
-                2024 | 赛博朋克剧集
-              </p>
-            </div>
-          </div>
-
-          <div className="movie-item">
-            <img
-              src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2940&auto=format&fit=crop"
-              className="movie-poster"
-              alt="Movie"
-            />
-            <div className="movie-desc">
-              <h4>沉默的证人</h4>
-              <p style={{ color: '#aaa', fontSize: '0.8rem' }}>
-                2022 | 悬疑 / 犯罪
-              </p>
-            </div>
-          </div>
-
-          <div className="movie-item">
-            <img
-              src="https://images.unsplash.com/photo-1594909122845-861c4f9c16cb?q=80&w=2940&auto=format&fit=crop"
-              className="movie-poster"
-              alt="Movie"
-            />
-            <div className="movie-desc">
-              <h4>青春派对</h4>
-              <p style={{ color: '#aaa', fontSize: '0.8rem' }}>
-                2021 | 综艺常驻
-              </p>
-            </div>
-          </div>
-
-          <div className="movie-item">
-            <img
-              src="https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop"
-              className="movie-poster"
-              alt="Movie"
-            />
-            <div className="movie-desc">
-              <h4>极速狂飙</h4>
-              <p style={{ color: '#aaa', fontSize: '0.8rem' }}>
-                2020 | 动作
-              </p>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
-      {/* 03 访谈 (Interviews) */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title">访谈 / INTERVIEWS</h2>
-          <i className="fa-regular fa-comments" style={{ fontSize: '2.5rem' }}></i>
-        </div>
-
-        <div className="interview-grid">
-          <div className="interview-card">
-            <i className="fa-solid fa-quote-left"></i>
-            <img
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2787&auto=format&fit=crop"
-              className="inv-thumb"
-              alt="Interview"
-            />
-            <div className="inv-content">
-              <h3>《人物》封面专访</h3>
-              <p className="inv-quote">
-                “我不定义自己，因为定义往往意味着限制。我更喜欢在未知中寻找新的能量。”
-              </p>
-            </div>
-          </div>
-
-          <div className="interview-card">
-            <i className="fa-solid fa-quote-left"></i>
-            <img
-              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2787&auto=format&fit=crop"
-              className="inv-thumb"
-              alt="Interview"
-            />
-            <div className="inv-content">
-              <h3>新浪娱乐：这就爱了</h3>
-              <p className="inv-quote">
-                “演戏就像是一次灵魂的旅行，能在不同的角色里活一次，本身就很酷。”
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 04 官方活动 (Official Events) */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title">官方活动 / EVENTS</h2>
-          <i
-            className="fa-solid fa-calendar-check"
-            style={{ fontSize: '2.5rem' }}
-          ></i>
-        </div>
-
-        <div className="events-list">
-          <div className="event-item">
-            <div className="event-marker"></div>
-            <div className="event-card">
-              <div className="event-date">
-                24<span>NOV</span>
-              </div>
-              <div className="event-details">
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '5px' }}>
-                  上海粉丝见面会
-                </h3>
-                <p style={{ color: '#666' }}>
-                  <i className="fa-solid fa-location-dot"></i>{' '}
-                  上海梅赛德斯奔驰文化中心 | 19:30 PM
-                </p>
-              </div>
-              <a
-                href="#"
-                style={{
-                  background: 'var(--dark)',
-                  color: 'white',
-                  padding: '10px 20px',
-                  fontWeight: 'bold',
-                  borderRadius: '5px',
-                }}
-              >
-                TICKETS
-              </a>
-            </div>
-          </div>
-
-          <div className="event-item">
-            <div className="event-marker"></div>
-            <div className="event-card">
-              <div className="event-date">
-                10<span>DEC</span>
-              </div>
-              <div className="event-details">
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '5px' }}>
-                  年度时尚盛典红毯
-                </h3>
-                <p style={{ color: '#666' }}>
-                  <i className="fa-solid fa-location-dot"></i> 北京 ｜ 待定
-                </p>
-              </div>
-              <a
-                href="#"
-                style={{
-                  border: '2px solid var(--dark)',
-                  padding: '8px 18px',
-                  fontWeight: 'bold',
-                  borderRadius: '5px',
-                }}
-              >
-                INFO
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+<HomeSection title="访谈" subtitle="INTERVIEWS" to="/interviews">
+  <InterviewGrid items={interviewItems} />
+</HomeSection>
+<HomeSection title="官方活动" subtitle="EVENTS" to="/events">
+  <EventsTimeline items={eventItems} />
+</HomeSection>
+     
 
       {/* 05 图频 (Photos & Clips) */}
       <section className="section" style={{ background: '#fff' }}>

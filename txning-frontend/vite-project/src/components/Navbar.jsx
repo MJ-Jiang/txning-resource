@@ -8,7 +8,7 @@ export default function Navbar() {
       <ul className="nav-links">
         <li><a href="#" className="nav-item active">主页</a></li>
         <li><a href="#" className="nav-item">商务杂志</a></li>
-        <li><a href="#" className="nav-item">影视剧</a></li>
+        <li><a href="#" className="nav-item">影视剧综</a></li>
         <li><a href="#" className="nav-item">访谈</a></li>
         <li><a href="#" className="nav-item">官方活动</a></li>
         <li><a href="#" className="nav-item">图频</a></li>

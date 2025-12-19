@@ -99,4 +99,57 @@ export const mockResources = [
     tagStyle: undefined,
     alt: 'Movie',
   },
+    // ===== interviews =====
+  {
+    id: 'int-1',
+    category: 'interviews',
+    title: '《人物》封面专访',
+    quote: '“我不定义自己，因为定义往往意味着限制。我更喜欢在未知中寻找新的能量。”',
+    thumbUrl:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2787&auto=format&fit=crop',
+    alt: 'Interview',
+  },
+  {
+    id: 'int-2',
+    category: 'interviews',
+    title: '新浪娱乐：这就爱了',
+    quote: '“演戏就像是一次灵魂的旅行，能在不同的角色里活一次，本身就很酷。”',
+    thumbUrl:
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2787&auto=format&fit=crop',
+    alt: 'Interview',
+  },
+    // ===== events =====
+  {
+    id: 'evt-1',
+    category: 'events',
+    day: '24',
+    month: 'NOV',
+    title: '上海粉丝见面会',
+    location: '上海梅赛德斯奔驰文化中心 | 19:30 PM',
+    link: '#',
+    buttonStyle: {
+      background: 'var(--dark)',
+      color: 'white',
+      padding: '10px 20px',
+      fontWeight: 'bold',
+      borderRadius: '5px',
+    },
+  },
+  {
+    id: 'evt-2',
+    category: 'events',
+    day: '10',
+    month: 'DEC',
+    title: '年度时尚盛典红毯',
+    location: '北京 ｜ 待定',
+    link: '#',
+    buttonStyle: {
+      border: '2px solid var(--dark)',
+      padding: '8px 18px',
+      fontWeight: 'bold',
+      borderRadius: '5px',
+    },
+  },
+
+
 ]
