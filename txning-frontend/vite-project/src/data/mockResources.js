@@ -150,6 +150,54 @@ export const mockResources = [
       borderRadius: '5px',
     },
   },
+  // 追加在 mockResources 数组里即可
+{
+  id: 'media-1',
+  category: 'gallery',
+  mediaType: 'image', // image | video | album
+  thumbUrl:
+    'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=2787&auto=format&fit=crop',
+  alt: 'Pic',
+  // 未来联动：这条媒体属于哪部剧/哪本杂志/哪次访谈等
+  related: { dramaIds: [], magazineIds: [], interviewIds: [] },
+},
+{
+  id: 'media-2',
+  category: 'gallery',
+  mediaType: 'video',
+  thumbUrl:
+    'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?q=80&w=2803&auto=format&fit=crop',
+  alt: 'Pic',
+  related: { dramaIds: [], magazineIds: [], interviewIds: [] },
+},
+{
+  id: 'media-3',
+  category: 'gallery',
+  mediaType: 'image',
+  thumbUrl:
+    'https://images.unsplash.com/photo-1496345647009-l6d9506e23b9?q=80&w=2836&auto=format&fit=crop',
+  alt: 'Pic',
+  related: { dramaIds: [], magazineIds: [], interviewIds: [] },
+},
+{
+  id: 'media-4',
+  category: 'gallery',
+  mediaType: 'album',
+  thumbUrl:
+    'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2788&auto=format&fit=crop',
+  alt: 'Pic',
+  related: { dramaIds: [], magazineIds: [], interviewIds: [] },
+},
+{
+  id: 'media-5',
+  category: 'gallery',
+  mediaType: 'image',
+  thumbUrl:
+    'https://images.unsplash.com/photo-1516726817505-f5ed825624d8?q=80&w=2787&auto=format&fit=crop',
+  alt: 'Pic',
+  related: { dramaIds: [], magazineIds: [], interviewIds: [] },
+},
+
 
 
 ]

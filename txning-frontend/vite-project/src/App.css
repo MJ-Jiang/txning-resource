@@ -403,11 +403,40 @@
         }
 
         /* 03访谈 - 对话气泡 */
+        /* 访谈区：深黄强调 + 顶部波浪（借鉴 section-movie 的语言） */
+.section-interview {
+  background: #FFD64F;           /* 你的最深黄 */
+  color: var(--dark);
+  position: relative;
+
+  /* 顶部波浪装饰（用你最浅黄做波浪点，让层次更柔和） */
+  background-image: radial-gradient(circle at 10px 0, #FFF5C7 10px, transparent 11px);
+  background-size: 20px 20px;
+  background-repeat: repeat-x;
+  background-position: 0 -10px;
+
+  /* 让内容离波浪远一点，避免贴顶 */
+  padding-top: 6rem;
+}
+
         .interview-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 3rem;
         }
+        .section-interviews .interview-card {
+  background: var(--white);
+  border: var(--border-width) solid var(--dark);
+  box-shadow: 10px 10px 0 rgba(34, 34, 34, 0.18);
+  transform: translateY(-6px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* hover 时再“抬一点” */
+.section-interview .interview-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 14px 14px 0 rgba(34, 34, 34, 0.22);
+}
 
         .interview-card {
             background: var(--white);
@@ -417,7 +446,7 @@
             padding: 2rem;
             align-items: center;
             gap: 1.5rem;
-            box-shadow: 6px 6px 0 var(--secondary);
+       
             position: relative;
         }
         
@@ -518,6 +547,12 @@
             overflow: hidden;
             box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
         }
+        .gallery-item img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
         
         .gallery-item:nth-child(1) { grid-row: span 2; }
         .gallery-item:nth-child(4) { grid-column: span 2; }
