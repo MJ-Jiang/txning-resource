@@ -34,7 +34,7 @@ export default function Navbar() {
 
         <li>
           <NavLink
-            to="/magazines"
+            to="/endorsements"
             className={({ isActive }) =>
               `nav-item ${isActive ? 'active' : ''}`
             }

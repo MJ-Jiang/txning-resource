@@ -9,6 +9,9 @@ export const mockResources = [
     alt: 'Mag',
     title: 'VOGUE me 十月刊',
     subTitle: '封面人物 / 独家专访',
+    year: 2023,
+    status: '已发布',
+    type:'商务',
   },
   {
     id: 'mag-2',
@@ -20,6 +23,9 @@ export const mockResources = [
     alt: 'Brand',
     title: 'GENTLE MONSTER',
     subTitle: '全球品牌代言人',
+    year: 2025,
+    status: '已发布',
+    type:'商务',
   },
   {
     id: 'mag-3',
@@ -31,6 +37,9 @@ export const mockResources = [
     alt: 'Mag',
     title: 'ELLE MEN 秋季刊',
     subTitle: '内页大片 / 时尚解析',
+    year: 2023,
+    status: '待发售',
+    type:'杂志',
   },
   {
     id: 'mag-4',
@@ -42,6 +51,9 @@ export const mockResources = [
     alt: 'Mag',
     title: 'TIFFANY & CO.',
     subTitle: '品牌挚友推广',
+    year: 2023,
+    status: '已到期',
+    type:'商务',
   },
   // ===== dramas =====
   {
@@ -438,6 +450,11 @@ export const mockResources = [
     thumbUrl:
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2787&auto=format&fit=crop',
     alt: 'Interview',
+    status: '即将上线',
+    platforms: ['腾讯'],
+    tagStyle: undefined,
+    year: 2023,
+    type:'综艺',
   },
   {
     id: 'int-2',

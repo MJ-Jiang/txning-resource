@@ -1,20 +1,12 @@
-import { useMemo, useState } from 'react'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
+import { useMemo } from 'react'
 import DramaCard from '../components/cards/DramaCard'
-import Pager from '../components/channels/Pager'
-import FiltersBar from '../components/channels/FiltersBar'
 import SelectFilter from '../components/SelectFilter'
 import usePagedList from '../hooks/usePagedList'
+import useResourceFilters from '../hooks/useResourceFilters'
+import ResourceLibraryPage from '../components/channels/ResourceLibraryPage'
 import { mockResources } from '../data/mockResources'
 
 const PAGE_SIZE = 25
-
-function uniqSorted(arr) {
-  return Array.from(new Set(arr.filter(Boolean))).sort((a, b) =>
-    String(a).localeCompare(String(b), 'zh-Hans-CN')
-  )
-}
 
 function getDramaPlatform(d) {
   if (d.platform) return d.platform
@@ -34,132 +26,102 @@ export default function DramasPage() {
     []
   )
 
-  // filters
-  const [q, setQ] = useState('')
-  const [platform, setPlatform] = useState('all')
-  const [genre, setGenre] = useState('all')
-  const [year, setYear] = useState('all')
-  const [status, setStatus] = useState('all')
+  const schema = useMemo(
+    () => [
+      {
+        name: 'platform',
+        label: '平台',
+        defaultValue: 'all',
+        getValue: (d) => getDramaPlatform(d),
+      },
+      {
+        name: 'genre',
+        label: '类型',
+        defaultValue: 'all',
+        getValue: (d) => getDramaGenres(d), // array
+      },
+      {
+        name: 'year',
+        label: '年份',
+        defaultValue: 'all',
+        getValue: (d) => d.year,
+        // 年份通常希望是数字降序：useResourceFilters 默认 name==='year' 会这样做
+      },
+      {
+        name: 'status',
+        label: '状态',
+        defaultValue: 'all',
+        getValue: (d) => d.status,
+      },
+    ],
+    []
+  )
 
-  // options
-  const platformOptions = useMemo(() => {
-    return uniqSorted(allDramas.map(getDramaPlatform))
-  }, [allDramas])
-
-  const genreOptions = useMemo(() => {
-    return uniqSorted(allDramas.flatMap(getDramaGenres))
-  }, [allDramas])
-
-  const yearOptions = useMemo(() => {
-    const vals = allDramas.map((d) => d.year).filter(Boolean)
-    return Array.from(new Set(vals)).sort((a, b) => Number(b) - Number(a))
-  }, [allDramas])
-
-  const statusOptions = useMemo(() => {
-    const vals = allDramas.map((d) => d.status).filter(Boolean)
-    return uniqSorted(vals)
-  }, [allDramas])
-
-  // filtered
-  const filtered = useMemo(() => {
-    const query = q.trim().toLowerCase()
-
-    return allDramas.filter((d) => {
-      const title = String(d.title ?? '').toLowerCase()
-      const okQ = query ? title.includes(query) : true
-
-      const p = getDramaPlatform(d)
-      const okP = platform === 'all' ? true : p === platform
-
-      const gs = getDramaGenres(d)
-      const okG = genre === 'all' ? true : gs.includes(genre)
-
-      const okY = year === 'all' ? true : String(d.year) === String(year)
-
-      const okS = status === 'all' ? true : String(d.status) === String(status)
-
-      return okQ && okP && okG && okY && okS
-    })
-  }, [allDramas, q, platform, genre, year, status])
-
-  // pagination（复用你的 usePagedList）
-  const { page, totalPages, pageItems, goPrev, goNext, goPage } = usePagedList({
-    items: filtered,
-    pageSize: PAGE_SIZE,
-    resetKey: [q, platform, genre, year, status],
+  const {
+    q,
+    setQ,
+    filters,
+    setFilter,
+    optionsMap,
+    filteredItems,
+    reset,
+    resetKey,
+  } = useResourceFilters({
+    items: allDramas,
+    schema,
+    searchKey: (d) => d.title,
   })
 
-  function resetFilters() {
-    setQ('')
-    setPlatform('all')
-    setGenre('all')
-    setYear('all')
-    setStatus('all')
-  }
+  const { page, totalPages, pageItems, goPrev, goNext, goPage } = usePagedList({
+    items: filteredItems,
+    pageSize: PAGE_SIZE,
+    resetKey,
+  })
+
+  const filtersChildren = (
+    <>
+      <SelectFilter
+        label="平台"
+        value={filters.platform}
+        onChange={(v) => setFilter('platform', v)}
+        options={optionsMap.platform}
+      />
+      <SelectFilter
+        label="类型"
+        value={filters.genre}
+        onChange={(v) => setFilter('genre', v)}
+        options={optionsMap.genre}
+      />
+      <SelectFilter
+        label="年份"
+        value={filters.year}
+        onChange={(v) => setFilter('year', v)}
+        options={optionsMap.year}
+      />
+      <SelectFilter
+        label="状态"
+        value={filters.status}
+        onChange={(v) => setFilter('status', v)}
+        options={optionsMap.status}
+      />
+    </>
+  )
 
   return (
-    <div className="app-container">
-      <Navbar />
-
-      {/* 通用筛选栏 */}
-      <FiltersBar q={q} setQ={setQ} count={filtered.length} onReset={resetFilters}>
-        <SelectFilter
-          label="平台"
-          value={platform}
-          onChange={setPlatform}
-          options={platformOptions}
-        />
-        <SelectFilter
-          label="类型"
-          value={genre}
-          onChange={setGenre}
-          options={genreOptions}
-        />
-        <SelectFilter
-          label="年份"
-          value={year}
-          onChange={setYear}
-          options={yearOptions}
-        />
-        <SelectFilter
-          label="状态"
-          value={status}
-          onChange={setStatus}
-          options={statusOptions}
-        />
-      </FiltersBar>
-
-      {/* Grid */}
-      <section className="library-section">
-        {filtered.length === 0 ? (
-          <div className="empty-state">
-            <h3>没有匹配结果</h3>
-            <p>试试换个关键词或清空筛选条件。</p>
-            <button className="filter-btn" onClick={resetFilters}>
-              清空筛选
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="drama-grid">
-              {pageItems.map((item) => (
-                <DramaCard key={item.id} item={item} />
-              ))}
-            </div>
-
-            {/* 分页（始终显示） */}
-            <Pager
-              page={page}
-              totalPages={totalPages}
-              onPrev={goPrev}
-              onNext={goNext}
-              onGo={goPage}
-            />
-          </>
-        )}
-      </section>
-
-      <Footer />
-    </div>
+    <ResourceLibraryPage
+      q={q}
+      setQ={setQ}
+      count={filteredItems.length}
+      onReset={reset}
+      filtersChildren={filtersChildren}
+      page={page}
+      totalPages={totalPages}
+      pageItems={pageItems}
+      onPrev={goPrev}
+      onNext={goNext}
+      onGo={goPage}
+      renderCard={(item) => <DramaCard key={item.id} item={item} />}
+      gridClassName="drama-grid"
+    />
   )
 }
