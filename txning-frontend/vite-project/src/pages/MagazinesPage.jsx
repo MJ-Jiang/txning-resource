@@ -1,15 +1,9 @@
 import { useMemo } from 'react'
 import MagazineCard from '../components/cards/MagazineCard'
-import SelectFilter from '../components/SelectFilter'
-import usePagedList from '../hooks/usePagedList'
-import useResourceFilters from '../hooks/useResourceFilters'
-import ResourceLibraryPage from '../components/channels/ResourceLibraryPage'
-import { mockResources } from '../data/mockResources'
-
-const PAGE_SIZE = 25
-
+import ResourceListContainer from '../components/channels/ResourceListContainer'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 function getMagazineTypes(m) {
-  // 兼容：types / type / tags
   if (Array.isArray(m.types) && m.types.length) return m.types
   if (m.type) return [m.type]
   if (Array.isArray(m.tags) && m.tags.length) return m.tags
@@ -17,11 +11,6 @@ function getMagazineTypes(m) {
 }
 
 export default function MagazinesPage() {
-  const allMagazines = useMemo(
-    () => mockResources.filter((x) => x.category === 'magazines'),
-    []
-  )
-
   const schema = useMemo(
     () => [
       {
@@ -46,65 +35,17 @@ export default function MagazinesPage() {
     []
   )
 
-  const {
-    q,
-    setQ,
-    filters,
-    setFilter,
-    optionsMap,
-    filteredItems,
-    reset,
-    resetKey,
-  } = useResourceFilters({
-    items: allMagazines,
-    schema,
-    searchKey: (m) => m.title,
-  })
-
-  const { page, totalPages, pageItems, goPrev, goNext, goPage } = usePagedList({
-    items: filteredItems,
-    pageSize: PAGE_SIZE,
-    resetKey,
-  })
-
-  const filtersChildren = (
-    <>
-      <SelectFilter
-        label="年份"
-        value={filters.year}
-        onChange={(v) => setFilter('year', v)}
-        options={optionsMap.year}
-      />
-      <SelectFilter
-        label="类型"
-        value={filters.type}
-        onChange={(v) => setFilter('type', v)}
-        options={optionsMap.type}
-      />
-      <SelectFilter
-        label="状态"
-        value={filters.status}
-        onChange={(v) => setFilter('status', v)}
-        options={optionsMap.status}
-      />
-    </>
-  )
-
   return (
-    <ResourceLibraryPage
-      q={q}
-      setQ={setQ}
-      count={filteredItems.length}
-      onReset={reset}
-      filtersChildren={filtersChildren}
-      page={page}
-      totalPages={totalPages}
-      pageItems={pageItems}
-      onPrev={goPrev}
-      onNext={goNext}
-      onGo={goPage}
-      renderCard={(item) => <MagazineCard key={item.id} item={item} />}
-      gridClassName="drama-grid"
-    />
+    <>
+      <Navbar />
+      <ResourceListContainer
+        category="magazines"
+        schema={schema}
+        renderCard={(item) => <MagazineCard key={item.id} item={item} />}
+        gridClassName="drama-grid"
+        searchKey={(m) => m.title}
+      />
+      <Footer />
+    </>
   )
 }

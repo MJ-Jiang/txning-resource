@@ -7,7 +7,7 @@ import MagazinesPage from './pages/MagazinesPage'
 import InterviewPage from './pages/InterviewPage'
 import EventsPage from './pages/EventsPage'
 export default function App() {
-return (
+  return (
     <>
       <ScrollToTop />
       <Routes>

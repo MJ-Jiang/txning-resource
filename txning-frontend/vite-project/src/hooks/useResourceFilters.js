@@ -15,7 +15,9 @@ function uniqNumbersDesc(arr) {
 }
 
 function normalizeQuery(q) {
-  return String(q ?? '').trim().toLowerCase()
+  return String(q ?? '')
+    .trim()
+    .toLowerCase()
 }
 
 /**

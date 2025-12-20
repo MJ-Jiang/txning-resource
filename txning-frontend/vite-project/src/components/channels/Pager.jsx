@@ -52,7 +52,11 @@ export default function Pager({ page, totalPages, onPrev, onNext, onGo }) {
         )}
       </div>
 
-      <button className="pager-btn" onClick={onNext} disabled={page >= totalPages}>
+      <button
+        className="pager-btn"
+        onClick={onNext}
+        disabled={page >= totalPages}
+      >
         下一页
       </button>
     </div>

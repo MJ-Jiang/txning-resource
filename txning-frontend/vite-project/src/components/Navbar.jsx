@@ -5,7 +5,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="logo">
         <i className="fa-solid fa-bolt" style={{ color: 'var(--dark)' }}></i>{' '}
-        田栩宁
+        田栩宁资源网
       </div>
 
       <ul className="nav-links">
@@ -13,9 +13,7 @@ export default function Navbar() {
           <NavLink
             to="/"
             end
-            className={({ isActive }) =>
-              `nav-item ${isActive ? 'active' : ''}`
-            }
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             主页
           </NavLink>
@@ -24,9 +22,7 @@ export default function Navbar() {
         <li>
           <NavLink
             to="/dramas"
-            className={({ isActive }) =>
-              `nav-item ${isActive ? 'active' : ''}`
-            }
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             影视剧
           </NavLink>
@@ -35,9 +31,7 @@ export default function Navbar() {
         <li>
           <NavLink
             to="/endorsements"
-            className={({ isActive }) =>
-              `nav-item ${isActive ? 'active' : ''}`
-            }
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             商务杂志
           </NavLink>
@@ -46,9 +40,7 @@ export default function Navbar() {
         <li>
           <NavLink
             to="/interviews"
-            className={({ isActive }) =>
-              `nav-item ${isActive ? 'active' : ''}`
-            }
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             综艺访谈
           </NavLink>
@@ -57,9 +49,7 @@ export default function Navbar() {
         <li>
           <NavLink
             to="/events"
-            className={({ isActive }) =>
-              `nav-item ${isActive ? 'active' : ''}`
-            }
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             官方活动
           </NavLink>
@@ -68,9 +58,7 @@ export default function Navbar() {
         <li>
           <NavLink
             to="/gallery"
-            className={({ isActive }) =>
-              `nav-item ${isActive ? 'active' : ''}`
-            }
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             图频
           </NavLink>

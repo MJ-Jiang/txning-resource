@@ -1,11 +1,9 @@
-import Navbar from '../Navbar'
-import Footer from '../Footer'
 import Pager from './Pager'
 import FiltersBar from './FiltersBar'
 
 /**
  * 通用资源列表页骨架：
- * - Navbar / Footer
+
  * - FiltersBar（children 插槽塞 SelectFilter）
  * - 空态
  * - Grid + Pager
@@ -32,8 +30,6 @@ export default function ResourceLibraryPage({
 }) {
   return (
     <div className="app-container">
-      <Navbar />
-
       <FiltersBar q={q} setQ={setQ} count={count} onReset={onReset}>
         {filtersChildren}
       </FiltersBar>
@@ -63,8 +59,6 @@ export default function ResourceLibraryPage({
           </>
         )}
       </section>
-
-      <Footer />
     </div>
   )
 }

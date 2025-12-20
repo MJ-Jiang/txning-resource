@@ -1,7 +1,7 @@
 export default function Banner() {
   return (
     <div className="app-container">
-              {/* Banner 轮播区域 */}
+      {/* Banner 轮播区域 */}
       <header className="banner-section">
         <div className="banner-bg-pattern"></div>
 
@@ -23,7 +23,9 @@ export default function Banner() {
           <h1 className="banner-title">
             BORN TO
             <br />
-            <span style={{ color: 'white', WebkitTextStroke: '3px var(--dark)' }}>
+            <span
+              style={{ color: 'white', WebkitTextStroke: '3px var(--dark)' }}
+            >
               SHINE
             </span>
           </h1>
@@ -58,5 +60,5 @@ export default function Banner() {
         </div>
       </header>
     </div>
-  );
+  )
 }

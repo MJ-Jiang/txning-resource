@@ -6,7 +6,11 @@ import { useEffect, useMemo, useState } from 'react'
  * - pageSize: 每页多少条（默认25）
  * - resetKey: 任意会导致筛选变化的依赖数组（变化就回到第1页）
  */
-export default function usePagedList({ items = [], pageSize = 25, resetKey = [] }) {
+export default function usePagedList({
+  items = [],
+  pageSize = 25,
+  resetKey = [],
+}) {
   const [page, setPage] = useState(1)
 
   // 总页数
@@ -53,7 +57,7 @@ export default function usePagedList({ items = [], pageSize = 25, resetKey = [] 
 
   return {
     page: safePage,
-    setPage, 
+    setPage,
     totalPages,
     pageItems,
     goPrev,

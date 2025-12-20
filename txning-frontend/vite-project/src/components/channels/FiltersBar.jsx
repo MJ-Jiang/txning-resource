@@ -1,10 +1,4 @@
-export default function FiltersBar({
-  q,
-  setQ,
-  count,
-  onReset,
-  children,
-}) {
+export default function FiltersBar({ q, setQ, count, onReset, children }) {
   return (
     <div className="filters-bar">
       <div className="filters-left">

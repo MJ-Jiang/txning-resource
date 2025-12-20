@@ -1,12 +1,8 @@
 import { useMemo } from 'react'
 import DramaCard from '../components/cards/DramaCard'
-import SelectFilter from '../components/SelectFilter'
-import usePagedList from '../hooks/usePagedList'
-import useResourceFilters from '../hooks/useResourceFilters'
-import ResourceLibraryPage from '../components/channels/ResourceLibraryPage'
-import { mockResources } from '../data/mockResources'
-
-const PAGE_SIZE = 25
+import ResourceListContainer from '../components/channels/ResourceListContainer'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 function getDramaPlatform(d) {
   if (d.platform) return d.platform
@@ -21,11 +17,6 @@ function getDramaGenres(d) {
 }
 
 export default function DramasPage() {
-  const allDramas = useMemo(
-    () => mockResources.filter((x) => x.category === 'dramas'),
-    []
-  )
-
   const schema = useMemo(
     () => [
       {
@@ -45,7 +36,6 @@ export default function DramasPage() {
         label: '年份',
         defaultValue: 'all',
         getValue: (d) => d.year,
-        // 年份通常希望是数字降序：useResourceFilters 默认 name==='year' 会这样做
       },
       {
         name: 'status',
@@ -57,71 +47,17 @@ export default function DramasPage() {
     []
   )
 
-  const {
-    q,
-    setQ,
-    filters,
-    setFilter,
-    optionsMap,
-    filteredItems,
-    reset,
-    resetKey,
-  } = useResourceFilters({
-    items: allDramas,
-    schema,
-    searchKey: (d) => d.title,
-  })
-
-  const { page, totalPages, pageItems, goPrev, goNext, goPage } = usePagedList({
-    items: filteredItems,
-    pageSize: PAGE_SIZE,
-    resetKey,
-  })
-
-  const filtersChildren = (
-    <>
-      <SelectFilter
-        label="平台"
-        value={filters.platform}
-        onChange={(v) => setFilter('platform', v)}
-        options={optionsMap.platform}
-      />
-      <SelectFilter
-        label="类型"
-        value={filters.genre}
-        onChange={(v) => setFilter('genre', v)}
-        options={optionsMap.genre}
-      />
-      <SelectFilter
-        label="年份"
-        value={filters.year}
-        onChange={(v) => setFilter('year', v)}
-        options={optionsMap.year}
-      />
-      <SelectFilter
-        label="状态"
-        value={filters.status}
-        onChange={(v) => setFilter('status', v)}
-        options={optionsMap.status}
-      />
-    </>
-  )
-
   return (
-    <ResourceLibraryPage
-      q={q}
-      setQ={setQ}
-      count={filteredItems.length}
-      onReset={reset}
-      filtersChildren={filtersChildren}
-      page={page}
-      totalPages={totalPages}
-      pageItems={pageItems}
-      onPrev={goPrev}
-      onNext={goNext}
-      onGo={goPage}
-      renderCard={(item) => <DramaCard key={item.id} item={item} />}
-      gridClassName="drama-grid"
-    />
+    <>
+      <Navbar />
+      <ResourceListContainer
+        category="dramas"
+        schema={schema}
+        renderCard={(item) => <DramaCard key={item.id} item={item} />}
+        gridClassName="drama-grid"
+        searchKey={(d) => d.title}
+      />
+      <Footer />
+    </>
   )
 }
