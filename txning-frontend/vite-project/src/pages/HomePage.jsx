@@ -1,12 +1,12 @@
 import Navbar from "../components/Navbar";
 import Footer from '../components/Footer'
 import Banner from '../components/Banner.jsx'
-import HomeSection from '../components/HomeSection'
-import MagazineGrid from '../components/lists/MagazineGrid'
-import DramaScroller from '../components/lists/DramaScroller'
-import InterviewGrid from '../components/lists/InterviewGrid'
-import EventsTimeline from '../components/lists/EventsTimeline'
-import GalleryGrid from '../components/lists/GalleryGrid'
+import HomeSection from '../components/lists/HomeSection.jsx'
+import MagazineGrid from '../components/lists/MagazineGrid.jsx'
+import DramaScroller from '../components/lists/DramaScroller.jsx'
+import InterviewGrid from '../components/lists/InterviewGrid.jsx'
+import EventsTimeline from '../components/lists/EventsTimeline.jsx'
+import GalleryGrid from '../components/lists/GalleryGrid.jsx'
 import { mockResources } from '../data/mockResources'
 import { mockFeatured } from '../data/mockFeatured'
 export default function HomePage() {
@@ -26,9 +26,11 @@ export default function HomePage() {
   .filter((x) => x.category === 'gallery')
   .filter((x) => mockFeatured.gallery.includes(x.id))
   return (
-    <div className="app-container">
+    <>
+     <Navbar />
+    <main className="app-container">
 
-      <Navbar />
+     
 
       <Banner />
 
@@ -55,6 +57,7 @@ export default function HomePage() {
   <GalleryGrid items={galleryItems} />
 </HomeSection>
       <Footer />
-    </div>
+    </main>
+    </>
   )
 }
