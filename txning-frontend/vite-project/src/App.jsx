@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import DramasPage from './pages/DramasPage'
 import HomePage from './pages/HomePage'
 import ScrollToTop from './components/ScrollToTop'
+import MagazinesPage from './pages/MagazinesPage'
 export default function App() {
 return (
     <>
@@ -10,6 +11,7 @@ return (
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/dramas" element={<DramasPage />} />
+        <Route path="/endorsement" element={<MagazinesPage />} />
       </Routes>
     </>
   )
