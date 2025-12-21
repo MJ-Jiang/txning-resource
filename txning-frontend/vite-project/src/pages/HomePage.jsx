@@ -8,23 +8,19 @@ import InterviewGrid from '../components/lists/InterviewGrid.jsx'
 import EventsTimeline from '../components/lists/EventsTimeline.jsx'
 import GalleryGrid from '../components/lists/GalleryGrid.jsx'
 import { mockResources } from '../data/mockResources'
-import { mockFeatured } from '../data/mockFeatured'
+
 export default function HomePage() {
-  const magazineItems = mockResources
-    .filter((x) => x.category === 'magazines')
-    .filter((x) => mockFeatured.magazines.includes(x.id))
-  const dramaItems = mockResources
-    .filter((x) => x.category === 'dramas')
-    .filter((x) => mockFeatured.dramas.includes(x.id))
-  const interviewItems = mockResources
-    .filter((x) => x.category === 'interviews')
-    .filter((x) => mockFeatured.interviews.includes(x.id))
-  const eventItems = mockResources
-    .filter((x) => x.category === 'events')
-    .filter((x) => mockFeatured.events.includes(x.id))
-  const galleryItems = mockResources
-    .filter((x) => x.category === 'gallery')
-    .filter((x) => mockFeatured.gallery.includes(x.id))
+  const getFeaturedByCategory = (category) =>
+    mockResources.filter(
+      (x) => x.category === category && x.isFeatured === true
+    )
+
+  const magazineItems = getFeaturedByCategory('magazines')
+  const dramaItems = getFeaturedByCategory('dramas')
+  const interviewItems = getFeaturedByCategory('interviews')
+  const eventItems = getFeaturedByCategory('events')
+  const galleryItems = getFeaturedByCategory('gallery')
+
   return (
     <>
       <Navbar />
@@ -56,8 +52,8 @@ export default function HomePage() {
         <HomeSection title="图频" subtitle="GALLERY" to="/gallery">
           <GalleryGrid items={galleryItems} />
         </HomeSection>
-        <Footer />
       </main>
+      <Footer />
     </>
   )
 }

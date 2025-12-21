@@ -12,6 +12,7 @@ export const mockResources = [
     year: 2023,
     status: '已发布',
     type: '商务',
+    isFeatured: true,
   },
   {
     id: 'mag-2',
@@ -26,6 +27,7 @@ export const mockResources = [
     year: 2025,
     status: '已发布',
     type: '商务',
+    isFeatured: true,
   },
   {
     id: 'mag-3',
@@ -40,6 +42,7 @@ export const mockResources = [
     year: 2023,
     status: '待发售',
     type: '杂志',
+    isFeatured: true,
   },
   {
     id: 'mag-4',
@@ -54,6 +57,7 @@ export const mockResources = [
     year: 2023,
     status: '已到期',
     type: '商务',
+    isFeatured: true,
   },
   // ===== dramas =====
   {
@@ -69,6 +73,7 @@ export const mockResources = [
     tagStyle: undefined, // 使用默认红色（CSS 里 .movie-tag 背景是 accent-red）
     platforms: ['youtube'],
     alt: 'Movie',
+    isFeatured: true,
   },
   {
     id: 'drama-2',
@@ -82,6 +87,7 @@ export const mockResources = [
     status: '待播',
     tagStyle: { background: '#888' },
     alt: 'Movie',
+    isFeatured: true,
   },
   {
     id: 'drama-3',
@@ -96,6 +102,7 @@ export const mockResources = [
     tagStyle: undefined,
     platforms: ['腾讯视频'],
     alt: 'Movie',
+    isFeatured: true,
   },
   {
     id: 'drama-4',
@@ -110,6 +117,7 @@ export const mockResources = [
     tagStyle: { background: '#888' },
     platforms: ['youtube'],
     alt: 'Movie',
+    isFeatured: true,
   },
   {
     id: 'drama-5',
@@ -125,6 +133,7 @@ export const mockResources = [
     tagStyle: undefined,
     platforms: ['院线'], // 可选
     alt: 'Movie',
+    isFeatured: true,
   },
   {
     id: 'drama-6',
@@ -456,6 +465,7 @@ export const mockResources = [
     tagStyle: undefined,
     year: 2023,
     type: '综艺',
+    isFeatured: true,
   },
   {
     id: 'int-2',
@@ -465,6 +475,7 @@ export const mockResources = [
     thumbUrl:
       'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2787&auto=format&fit=crop',
     alt: 'Interview',
+    isFeatured: true,
   },
   // ===== events =====
   {
@@ -482,6 +493,7 @@ export const mockResources = [
       fontWeight: 'bold',
       borderRadius: '5px',
     },
+    isFeatured: true,
   },
   {
     id: 'evt-2',
@@ -497,6 +509,7 @@ export const mockResources = [
       fontWeight: 'bold',
       borderRadius: '5px',
     },
+    isFeatured: true,
   },
   // 追加在 mockResources 数组里即可
   {
@@ -508,6 +521,7 @@ export const mockResources = [
     alt: 'Pic',
     // 未来联动：这条媒体属于哪部剧/哪本杂志/哪次访谈等
     related: { dramaIds: [], magazineIds: [], interviewIds: [] },
+    isFeatured: true,
   },
   {
     id: 'media-2',
@@ -517,6 +531,7 @@ export const mockResources = [
       'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?q=80&w=2803&auto=format&fit=crop',
     alt: 'Pic',
     related: { dramaIds: [], magazineIds: [], interviewIds: [] },
+    isFeatured: true,
   },
   {
     id: 'media-3',
@@ -526,6 +541,7 @@ export const mockResources = [
       'https://images.unsplash.com/photo-1496345647009-l6d9506e23b9?q=80&w=2836&auto=format&fit=crop',
     alt: 'Pic',
     related: { dramaIds: [], magazineIds: [], interviewIds: [] },
+    isFeatured: true,
   },
   {
     id: 'media-4',
@@ -535,6 +551,7 @@ export const mockResources = [
       'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2788&auto=format&fit=crop',
     alt: 'Pic',
     related: { dramaIds: [], magazineIds: [], interviewIds: [] },
+    isFeatured: true,
   },
   {
     id: 'media-5',
@@ -544,5 +561,6 @@ export const mockResources = [
       'https://images.unsplash.com/photo-1516726817505-f5ed825624d8?q=80&w=2787&auto=format&fit=crop',
     alt: 'Pic',
     related: { dramaIds: [], magazineIds: [], interviewIds: [] },
+    isFeatured: true,
   },
 ]
