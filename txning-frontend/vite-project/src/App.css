@@ -158,6 +158,80 @@ body {
   font-size: clamp(0.95rem, 1.2vw, 1.05rem);
   padding: clamp(0.45rem, 0.8vw, 0.6rem) clamp(0.75rem, 1.6vw, 1.2rem);
 }
+.site-footer {
+  background: var(--dark);
+  color: var(--white);
+  padding: clamp(2.5rem, 6vw, 5rem);
+  text-align: center;
+  position: relative;
+}
+
+.footer-deco {
+  color: var(--primary);
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1rem; 
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* 标题：别太挤 */
+.site-footer .footer-title {
+  font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+  font-weight: 900;
+  margin: 0.75rem 0 1.25rem;
+}
+
+/* 社交 icons：更像一组控件 */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin: 1rem 0 2.25rem;
+}
+
+/* 统一占位盒子：稍大一点更协调 */
+.social-icons a {
+  width: clamp(32px, 7vw, 40px);
+  height: clamp(32px, 7vw, 40px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  transition: transform 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.social-icons i {
+  font-size: 100%;
+  line-height: 1;
+}
+
+/* 关键：解决 IMG 基线/上浮问题 */
+.social-icons img {
+  display: block;
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+
+.social-icons a:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* 版权文字：弱化一点更高级 */
+.site-footer .footer-copy {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
 
 
 
@@ -603,49 +677,7 @@ body {
         
         .gallery-item:hover .gallery-overlay { opacity: 1; }
 
-        /* Footer */
-        .site-footer {
-            background: var(--dark);
-            color: var(--white);
-            padding: 5rem;
-            text-align: center;
-            position: relative;
-        }
-        .footer-deco {
-            color: var(--primary);
-            font-size: 3rem;
-            margin-bottom: 2rem;
-            animation: pulse 2s infinite;
-        }
-
-
-/* 统一“占位盒子” */
-.social-icons a {
-  width: clamp(24px, 5vw, 32px);
-  height: clamp(24px, 5vw, 32px);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Font Awesome */
-.social-icons i {
-  font-size: 100%;
-  line-height: 1;
-}
-
-/* SVG / img */
-.social-icons img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-/* 可选：hover */
-.social-icons a:hover {
-  transform: translateY(-2px);
-  opacity: 0.85;
-}
+        
 
 
 /* ===== Dramas Page ===== */
