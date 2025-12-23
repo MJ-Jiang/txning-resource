@@ -7,7 +7,7 @@ export default function DramaCard({ item }) {
           {item.status}
         </div>
       ) : null}
-
+{/* 推荐比例2 : 3 */}
       <img
         src={item.posterUrl}
         className="movie-poster"

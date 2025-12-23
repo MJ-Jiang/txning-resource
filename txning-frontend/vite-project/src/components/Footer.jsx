@@ -4,9 +4,7 @@ export default function Footer() {
       <div className="footer-deco">
         <i className="fa-solid fa-lemon"></i>
       </div>
-      <h2 className="footer-title" >
-        田栩宁资源站
-      </h2>
+      <h2 className="footer-title">田栩宁资源站</h2>
       <div
         style={{
           display: 'flex',

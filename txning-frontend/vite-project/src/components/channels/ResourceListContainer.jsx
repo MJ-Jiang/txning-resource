@@ -34,6 +34,7 @@ export default function ResourceListContainer({
   // 可选：显示控制（详情页推荐区可能不需要搜索/重置）
   showSearch = true,
   showReset = true,
+  stickyFilters = true,
 }) {
   const sourceItems = useMemo(() => {
     if (Array.isArray(items)) return items
@@ -81,6 +82,7 @@ export default function ResourceListContainer({
 
   return (
     <ResourceLibraryPage
+      stickyFilters={stickyFilters}
       q={qProp}
       setQ={setQProp}
       count={filteredItems.length}

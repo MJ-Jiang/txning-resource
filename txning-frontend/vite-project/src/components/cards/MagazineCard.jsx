@@ -16,3 +16,4 @@ export default function MagazineCard({ item }) {
     </div>
   )
 }
+// 3:4 或 4:5比例图片

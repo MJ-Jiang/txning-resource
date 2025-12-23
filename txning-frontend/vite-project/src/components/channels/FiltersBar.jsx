@@ -2,7 +2,7 @@ export default function FiltersBar({ q, setQ, count, onReset, children }) {
   return (
     <div className="filters-bar">
       <div className="filters-left">
-        <div className="filter-item">
+        <div className="filter-item filter-search">
           <label>搜索</label>
           <input
             className="filter-input"
@@ -11,9 +11,7 @@ export default function FiltersBar({ q, setQ, count, onReset, children }) {
             placeholder="输入关键词…"
           />
         </div>
-
-        {/* 各频道自定义筛选项插槽 */}
-        {children}
+        <div className="filters-grid">{children}</div>
       </div>
 
       <div className="filters-right">

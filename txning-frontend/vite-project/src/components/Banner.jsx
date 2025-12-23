@@ -1,64 +1,54 @@
-export default function Banner() {
+import { useEffect, useState } from 'react'
+
+export default function Banner({
+  banners = [], // [{ imgSrc, href, alt }]
+  autoPlay = true,
+  interval = 4500,
+}) {
+  const validBanners = banners.filter((b) => b?.imgSrc)
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    if (!autoPlay || validBanners.length <= 1) return
+    const timer = setInterval(() => {
+      setIndex((i) => (i + 1) % validBanners.length)
+    }, interval)
+    return () => clearInterval(timer)
+  }, [autoPlay, interval, validBanners.length])
+
+  if (validBanners.length === 0) return null
+
   return (
-    <div className="app-container">
-      {/* Banner 轮播区域 */}
-      <header className="banner-section">
-        <div className="banner-bg-pattern"></div>
-
-        {/* 背景装饰闪电 */}
-        <i className="fa-solid fa-bolt banner-lightning-bg"></i>
-
-        {/* 漂浮柠檬 */}
-        <div
-          className="lemon-deco lemon-spin"
-          style={{ top: '15%', left: '8%' }}
-        ></div>
-        <div
-          className="lemon-deco"
-          style={{ bottom: '20%', left: '45%', transform: 'scale(0.6)' }}
-        ></div>
-
-        <div className="banner-content">
-          <div className="banner-tag">#全能艺人 / ALL ROUNDER</div>
-          <h1 className="banner-title">
-            BORN TO
-            <br />
-            <span
-              style={{ color: 'white', WebkitTextStroke: '3px var(--dark)' }}
-            >
-              SHINE
-            </span>
-          </h1>
-          <p
-            style={{
-              fontSize: '1.2rem',
-              fontWeight: 600,
-              marginBottom: '2.5rem',
-              width: '80%',
-            }}
+    <section className="hero-wrap">
+      <div
+        className="hero-track"
+        style={{ transform: `translateX(${-index * 100}%)` }}
+      >
+        {validBanners.map((b, i) => (
+          <a
+            key={i}
+            className="hero"
+            href={b.href || '#'}
+            aria-label={b.alt || `Banner ${i + 1}`}
           >
-            2025 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx。
-          </p>
-          <a href="#" className="banner-btn">
-            了解行程 <i className="fa-solid fa-arrow-right"></i>
+            <img className="hero__img" src={b.imgSrc} alt={b.alt || ''} />
           </a>
-        </div>
+        ))}
+      </div>
 
-        <div className="banner-visual">
-          {/* 示意人物立绘，具有破格效果 */}
-          <img
-            src="https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=2787&auto=format&fit=crop"
-            className="banner-person"
-            alt="Star Portrait"
-          />
+      {validBanners.length > 1 && (
+        <div className="hero-dots">
+          {validBanners.map((_, i) => (
+            <button
+              key={i}
+              className={`hero-dot ${i === index ? 'is-active' : ''}`}
+              onClick={() => setIndex(i)}
+              aria-label={`Go to banner ${i + 1}`}
+            />
+          ))}
         </div>
-
-        <div className="banner-controls">
-          <div className="control-dot active"></div>
-          <div className="control-dot"></div>
-          <div className="control-dot"></div>
-        </div>
-      </header>
-    </div>
+      )}
+    </section>
   )
 }
+/*desktop: 1920 × 720 px  phone: 1080 × 1350 px*/

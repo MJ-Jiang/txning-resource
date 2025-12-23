@@ -10,6 +10,7 @@ import FiltersBar from './FiltersBar'
  */
 export default function ResourceLibraryPage({
   // FiltersBar props
+  stickyFilters = true,
   q,
   setQ,
   count,
@@ -29,7 +30,9 @@ export default function ResourceLibraryPage({
   gridClassName = 'drama-grid',
 }) {
   return (
-    <div className="app-container">
+    <div
+      className={`app-container ${stickyFilters ? 'filters-sticky' : 'filters-static'}`}
+    >
       <FiltersBar q={q} setQ={setQ} count={count} onReset={onReset}>
         {filtersChildren}
       </FiltersBar>

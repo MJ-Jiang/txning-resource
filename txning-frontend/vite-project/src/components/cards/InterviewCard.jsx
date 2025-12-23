@@ -16,3 +16,4 @@ export default function InterviewCard({ item }) {
     </div>
   )
 }
+// 头像一比一比例

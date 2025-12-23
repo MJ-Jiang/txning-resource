@@ -22,10 +22,28 @@ export default function HomePage() {
   const galleryItems = getFeaturedByCategory('gallery')
 
   return (
-    <>
+    <div className="page">
       <Navbar />
       <main className="app-container">
-        <Banner />
+        <Banner
+          banners={[
+            {
+              imgSrc: '/banner1.jpg',
+              href: '/page1',
+              alt: 'Banner 1',
+            },
+            {
+              imgSrc: '/banner2.jpg',
+              href: '/page2',
+              alt: 'Banner 2',
+            },
+            {
+              imgSrc: '/banner3.jpg',
+              href: '/page3',
+              alt: 'Banner 3',
+            },
+          ]}
+        />
         <HomeSection
           className="section section-movie"
           title="影视剧"
@@ -54,6 +72,6 @@ export default function HomePage() {
         </HomeSection>
       </main>
       <Footer />
-    </>
+    </div>
   )
 }
