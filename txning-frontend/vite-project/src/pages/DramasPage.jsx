@@ -48,16 +48,16 @@ export default function DramasPage() {
   )
 
   return (
-    <>
+    <div className="page">
       <Navbar />
       <ResourceListContainer
         category="dramas"
         schema={schema}
         renderCard={(item) => <DramaCard key={item.id} item={item} />}
-        gridClassName="drama-grid"
+        gridClassName="card-grid"
         searchKey={(d) => d.title}
       />
       <Footer />
-    </>
+    </div>
   )
 }

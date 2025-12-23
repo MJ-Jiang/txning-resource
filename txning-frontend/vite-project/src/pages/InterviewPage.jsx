@@ -53,7 +53,7 @@ export default function InterviewPage() {
         category="interviews"
         schema={schema}
         renderCard={(item) => <DramaCard key={item.id} item={item} />}
-        gridClassName="drama-grid"
+        gridClassName="card-grid"
         searchKey={(d) => d.title}
       />
       <Footer />

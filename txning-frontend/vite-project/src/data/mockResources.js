@@ -225,6 +225,81 @@ export const mockResources = [
     platforms: ['院线'], // 可选
     alt: 'Movie',
   },
+    {
+    id: 'drama-12',
+    category: 'dramas',
+    slug: 'fast-rush',
+    title: '极速狂飙',
+    year: 2020,
+    genres: ['动作'],
+    posterUrl:
+      'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+    status: '即将上线', // 可选：released / upcoming / ongoing
+    tagStyle: undefined,
+    platforms: ['院线'], // 可选
+    alt: 'Movie',
+  },
+    {
+    id: 'drama-13',
+    category: 'dramas',
+    slug: 'fast-rush',
+    title: '极速狂飙',
+    year: 2020,
+    genres: ['动作'],
+    posterUrl:
+      'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+    status: '即将上线', // 可选：released / upcoming / ongoing
+    tagStyle: undefined,
+    platforms: ['院线'], // 可选
+    alt: 'Movie',
+  },
+    {
+    id: 'drama-14',
+    category: 'dramas',
+    slug: 'fast-rush',
+    title: '极速狂飙',
+    year: 2020,
+    genres: ['动作'],
+    posterUrl:
+      'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+    status: '即将上线', // 可选：released / upcoming / ongoing
+    tagStyle: undefined,
+    platforms: ['院线'], // 可选
+    alt: 'Movie',
+  },
+    {
+    id: 'drama-15',
+    category: 'dramas',
+    slug: 'fast-rush',
+    title: '极速狂飙',
+    year: 2020,
+    genres: ['动作'],
+    posterUrl:
+      'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+    status: '即将上线', // 可选：released / upcoming / ongoing
+    tagStyle: undefined,
+    platforms: ['院线'], // 可选
+    alt: 'Movie',
+  },
+    {
+    id: 'drama-16',
+    category: 'dramas',
+    slug: 'fast-rush',
+    title: '极速狂飙',
+    year: 2020,
+    genres: ['动作'],
+    posterUrl:
+      'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
+
+    status: '即将上线', // 可选：released / upcoming / ongoing
+    tagStyle: undefined,
+    platforms: ['院线'], // 可选
+    alt: 'Movie',
+  },
   {
     id: 'int-1',
     category: 'interviews',
@@ -260,13 +335,6 @@ export const mockResources = [
     title: '上海粉丝见面会',
     location: '上海梅赛德斯奔驰文化中心 | 19:30 PM',
     link: '#',
-    buttonStyle: {
-      background: 'var(--dark)',
-      color: 'white',
-      padding: '10px 20px',
-      fontWeight: 'bold',
-      borderRadius: '5px',
-    },
     isFeatured: true,
   },
   {
@@ -277,12 +345,6 @@ export const mockResources = [
     title: '年度时尚盛典红毯',
     location: '北京 ｜ 待定',
     link: '#',
-    buttonStyle: {
-      border: '2px solid var(--dark)',
-      padding: '8px 18px',
-      fontWeight: 'bold',
-      borderRadius: '5px',
-    },
     isFeatured: true,
   },
     {
@@ -293,12 +355,6 @@ export const mockResources = [
     title: '年度时尚盛典红毯',
     location: '北京 ｜ 待定',
     link: '#',
-    buttonStyle: {
-      border: '2px solid var(--dark)',
-      padding: '8px 18px',
-      fontWeight: 'bold',
-      borderRadius: '5px',
-    },
     isFeatured: true,
   },
   // 追加在 mockResources 数组里即可

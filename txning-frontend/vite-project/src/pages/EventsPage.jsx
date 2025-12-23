@@ -42,7 +42,7 @@ export default function EventsPage() {
         category="events"
         schema={schema}
         renderCard={(item) => <MagazineCard key={item.id} item={item} />}
-        gridClassName="drama-grid"
+        gridClassName="card-grid"
         searchKey={(m) => m.title}
       />
       <Footer />

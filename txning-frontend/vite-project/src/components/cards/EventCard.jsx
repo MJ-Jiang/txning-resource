@@ -7,7 +7,7 @@ export default function EventCard({ item }) {
       </div>
 
       <div className="event-details">
-        <h3 style={{ fontSize: '1.5rem', marginBottom: '5px' }}>
+        <h3 style={{ fontSize: 'clamp(1.05rem, 2.2vw, 1.25rem)', marginBottom: '5px' }}>
           {item.title}
         </h3>
         <p style={{ color: '#666' }}>
@@ -15,7 +15,7 @@ export default function EventCard({ item }) {
         </p>
       </div>
 
-      <a href={item.link ?? '#'} style={item.buttonStyle}>
+      <a href={item.link ?? '#'} className="event-btn">
         INFO
       </a>
     </div>

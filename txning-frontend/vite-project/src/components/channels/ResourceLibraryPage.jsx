@@ -27,7 +27,7 @@ export default function ResourceLibraryPage({
 
   // render
   renderCard,
-  gridClassName = 'drama-grid',
+  gridClassName = 'card-grid',
 }) {
   return (
     <div

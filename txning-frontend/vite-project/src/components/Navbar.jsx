@@ -1,13 +1,32 @@
 import { NavLink } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
+const MOBILE_BP = 768
+
 export default function Navbar() {
   const [open, setOpen] = useState(false)
 
+  // 1) 浏览器前进/后退时关菜单（你原来就有）
   useEffect(() => {
     const close = () => setOpen(false)
     window.addEventListener('popstate', close)
     return () => window.removeEventListener('popstate', close)
+  }, [])
+
+  // 2) ✅ 关键：从小屏变大屏时自动关菜单（解决“放大后柠檬不消失”）
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BP}px)`)
+
+    const handleChange = (e) => {
+      // 变成桌面端（不再匹配 max-width）就关掉
+      if (!e.matches) setOpen(false)
+    }
+
+    // 初始化：如果一开始就是桌面，也确保是关闭状态
+    if (!mq.matches) setOpen(false)
+
+    mq.addEventListener('change', handleChange)
+    return () => mq.removeEventListener('change', handleChange)
   }, [])
 
   return (
@@ -28,6 +47,8 @@ export default function Navbar() {
       </button>
 
       <ul className={`nav-links ${open ? 'open' : ''}`}>
+        <i className="fa-solid fa-lemon nav-lemon-big" aria-hidden="true"></i>
+
         <li>
           <NavLink
             to="/"
