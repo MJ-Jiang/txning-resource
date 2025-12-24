@@ -17,7 +17,7 @@ export default function HomeSection({
 
         {to && (
           <Link to={to} className="more-link">
-            VIEW ALL <i className="fa-solid fa-circle-arrow-right"></i>
+            更多 <i className="fa-solid fa-circle-arrow-right"></i>
           </Link>
         )}
       </div>

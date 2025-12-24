@@ -117,8 +117,7 @@ img { display: block; width: 100%; object-fit: cover; }
 
   background: transparent;
   border: 2px solid var(--dark);
-  border-radius: 14px;
-  padding: 0.45rem 0.7rem;
+  border-radius: 10px;
   line-height: 1;
 
   /* 关键：防止被挤没 */
@@ -129,7 +128,7 @@ img { display: block; width: 100%; object-fit: cover; }
 
   /* ✅ 关键：放在菜单项左侧的大空白里 */
   left: 10%;
-  top: 22%;
+  top: 16%;
 
   /* ✅ 很大，但透明 */
   font-size: clamp(160px, 28vw, 360px);
@@ -326,7 +325,7 @@ img { display: block; width: 100%; object-fit: cover; }
 .section-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   gap: 1rem;
 
   margin-bottom: clamp(1.25rem, 2.5vw, 3rem);
@@ -334,10 +333,12 @@ img { display: block; width: 100%; object-fit: cover; }
   padding-bottom: clamp(0.75rem, 1.2vw, 1rem);
 
   min-width: 0;
+  flex-wrap: nowrap;
 }
 
 .section-title {
-  font-size: clamp(1.8rem, 2.6vw, 2.4rem)
+  flex: 1 1 auto;   
+  font-size: clamp(1.4rem, 1.8vw, 1.6rem);
   font-weight: 900;
   text-transform: uppercase;
   position: relative;
@@ -366,6 +367,8 @@ img { display: block; width: 100%; object-fit: cover; }
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+  flex: 0 0 auto;
+  margin-left: auto; 
 }
 
 .more-link i {
@@ -753,7 +756,7 @@ img { display: block; width: 100%; object-fit: cover; }
 
 /* 日期块 */
 .event-date {
-  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-size: clamp(1.05rem, 2.2vw, 1.4rem);
   font-weight: 900;
   line-height: 1.05;
 
@@ -769,7 +772,7 @@ img { display: block; width: 100%; object-fit: cover; }
   margin-top: 4px;
 }
 .event-btn {
-  height: 34px;                 /* ⬅ 比原来 42px 小一档 */
+  height: 34px;                 
   padding: 0 14px;
   display: inline-flex;
   align-items: center;
@@ -781,7 +784,7 @@ img { display: block; width: 100%; object-fit: cover; }
   border-radius: 10px;
   border: 2px solid var(--dark);
 
-  font-size: 0.85rem;           /* ⬅ 很关键：视觉立刻降级 */
+  font-size: 0.8rem;           /* ⬅ 很关键：视觉立刻降级 */
   font-weight: 800;
   letter-spacing: 0.02em;
 
@@ -897,6 +900,8 @@ img { display: block; width: 100%; object-fit: cover; }
   flex-wrap: wrap;
   gap: 1rem;
   align-items: end;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(8.5ch, 1fr);
 }
 
 /* 单项 */
@@ -956,13 +961,7 @@ img { display: block; width: 100%; object-fit: cover; }
   transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
-@media (hover: hover) {
-  .filter-btn:hover {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--dark);
-    background: var(--primary);
-  }
-}
+
 
 .filter-count {
   font-weight: 800;
@@ -976,6 +975,100 @@ img { display: block; width: 100%; object-fit: cover; }
 }
 .filters-static .filters-bar {
   position: static;
+}
+/* ThemeSelect */
+.filter-item,
+.ts {
+  min-width: 9ch;
+}
+.ts-label {
+  display: block;
+  font-size: 0.9rem;         
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: #111;
+}
+
+.ts-btn{
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 2px solid #111;
+  border-radius: 14px;
+  background: #fff;         /* ✅ 回归白色 */
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 9ch;
+  box-shadow: none; 
+}
+
+
+
+.ts-value {
+  font-size: 0.8rem;          /* 和正文一致 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ts-caret {
+  font-size: 0.8rem;  
+  opacity: .7;
+}
+.ts-pop {
+  position: relative;
+}
+
+.ts-list {
+  position: absolute;
+
+  top: 6px;
+  left: 0;
+  width: 100%;
+  max-height: 240px;
+
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+
+  background: #fff;         /* ✅ 白色 */
+  border: 1.5px solid #111; /* 比按钮轻一点 */
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.15); /* 很轻 */
+
+  overflow-y: auto;
+  scrollbar-width: none;    /* Firefox 隐藏滚动条 */
+}
+
+.ts-list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* 选项：接近原生 */
+.ts-opt {
+  padding: 8px 10px;
+  font-size: 0.8rem;          /* 和正文一致 */
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ts-opt.is-sel {
+  font-weight: 600;
+}
+.ts-check {
+  display: none;
 }
 
 /* 列表区域 */
@@ -1080,6 +1173,11 @@ img { display: block; width: 100%; object-fit: cover; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 28px;                /* ⬅ 固定尺寸，避免 padding 撑大 */
+    height: 25px;
+    padding: 0;                 /* ⬅ 关键：去掉 padding */
+
+
   }
 
   /* 下拉菜单：脱离横排占位 */
@@ -1103,13 +1201,16 @@ img { display: block; width: 100%; object-fit: cover; }
 
   .nav-links.open {
     display: flex;
+    border-bottom: none;
+    padding-top: 8px;
+  padding-bottom: 8px;
   }
 
   .nav-item {
-    font-size: 1rem;
-    line-height: 1.1;
-    padding: 0.45rem 0.8rem;
-    border-radius: 18px;
+    font-size: 0.8rem;
+    line-height: 1;
+    padding: 0.35rem 0.6rem;
+    border-radius: 15px;
   }
 
   .nav-item:hover {
@@ -1121,10 +1222,7 @@ img { display: block; width: 100%; object-fit: cover; }
   .hero-wrap {
     aspect-ratio: 16 / 10;
   }
-  .section-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+
   .movie-scroller {
     scroll-snap-type: x mandatory;
     padding-bottom: 1rem;
@@ -1150,14 +1248,15 @@ img { display: block; width: 100%; object-fit: cover; }
   .event-date {
     min-width: auto;
     text-align: left;
-    font-size: 1.4rem;
+    font-size: 1rem;
   }
 
   .event-date span {
     display: inline;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     margin-left: 0.4rem;
   }
+
   .gallery-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: clamp(140px, 24vw, 200px);
@@ -1215,7 +1314,9 @@ img { display: block; width: 100%; object-fit: cover; }
 
   /* 小屏下拉宽度更舒服，避免过长 */
   .filter-select {
-    width: clamp(9ch, 28vw, 14ch);
+    width: 100%;
+    min-width: 0;
+    font-size: 12px;
   }
   .library-section {
     padding: 2rem 1.25rem 4rem; /* 左右别太大，否则挤 */
@@ -1248,28 +1349,8 @@ img { display: block; width: 100%; object-fit: cover; }
   }
 }
 @media (max-width: 420px) {
-  .filter-select {
-    font-size: 0.85rem;
-  }
-  .filters-bar {
-    gap: 0.6rem;
-    padding: 0.85rem 1rem;
-  }
-
-  .filter-search .filter-input {
-    width: 100%; /* 超小屏直接占满，避免挤 */
-  }
-
-  .filter-input,
-  .filter-select,
-  .filter-btn {
-    height: 38px;
-  }
-
-  .filters-grid {
-    gap: 0.6rem;
-  }
-    .gallery-grid {
+  
+  .gallery-grid {
     grid-template-columns: 1fr;
     grid-auto-rows: clamp(180px, 60vw, 260px);
   }
@@ -1284,6 +1365,89 @@ img { display: block; width: 100%; object-fit: cover; }
     padding-left: 1rem;
     padding-right: 1rem; /* 关键：给两列腾空间 */
   }
+.filters-bar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "search right"
+      "grid   grid";
+    gap: 0.5rem 0.6rem;
+    padding: 0.65rem 0.8rem; /* 更薄一点，接近你图里的密度 */
+    align-items: end;
+  }
+
+  .filters-left { display: contents; }
+
+  /* 第一行：搜索不要再 width:100% 强行占满 */
+  .filter-search { grid-area: search; min-width: 0; }
+  .filter-search .filter-input {
+    width: min(32ch, 100%);
+    min-width: 0;
+  }
+
+  /* 第一行右侧：固定在右上角（和图里一致） */
+  .filters-right {
+    grid-area: right;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  /* ✅ 第二行筛选：改成 grid，一行塞下（不重叠的关键是 minmax(0,1fr) + min-width:0） */
+  .filters-grid {
+    grid-area: grid;
+    display: grid;
+    grid-auto-flow: column;                 /* 强制一行 */
+    grid-auto-columns: minmax(0, 1fr);      /* 每个筛选平均分，允许缩到 0 */
+    gap: 0.55rem;
+    align-items: end;
+    min-width: 0;
+    margin-top: 0.35rem;
+  }
+
+  /* 每个筛选项允许缩小（否则会把列撑爆然后互相挤） */
+  .filters-grid .filter-item { min-width: 0; }
+
+  /* label 保留，但更紧凑 */
+  .filters-grid label,
+  .filter-item label {
+    font-size: 0.6rem;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* 太窄时不要把布局撑坏 */
+  }
+
+  /* select 必须 width:100% + min-width:0，避免出现“控件重叠” */
+  .filter-select {
+    width: 100%;
+    min-width: 0;
+    font-size: 0.6rem;
+  }
+
+  .filter-input,
+  .filter-select,
+  .filter-btn {
+    height: 30px;
+    font-size: 0.6rem;
+    
+  }
+  .filter-count{
+    font-size: 0.6rem;
+  }
+
+  .ts-label{ font-size: 0.8rem; margin-bottom: 4px; }
+  .ts-btn{ height: 34px; border-radius: 12px;font-size: 0.8rem; }
+  .ts-list{ border-radius: 12px; font-size: 0.8rem;}
+  .ts-value{font-size: 0.6rem;}
+  .ts-opt{font-size: 0.6rem;}
+  .pager{gap: 6px;}
+  .pager-btn{  height: 30px; border-radius: 12px; font-size: 0.6rem; }
+  .pager-page{ height: 30px; border-radius: 12px; font-size: 0.6rem; }
+  .pager-ellipsis{ height: 30px; border-radius: 12px; font-size: 0.6rem; }
 
 }
 

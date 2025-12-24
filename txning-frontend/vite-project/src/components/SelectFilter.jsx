@@ -1,19 +1,22 @@
+import ThemeSelect from './ThemeSelect';
+
 export default function SelectFilter({ label, value, onChange, options }) {
+  const opts = [
+    { value: 'all', label: '全部' },
+    ...options.map((opt) => ({
+      value: String(opt),
+      label: String(opt),
+    })),
+  ];
+
   return (
     <div className="filter-item">
-      <label>{label}</label>
-      <select
-        className="filter-select"
+      <ThemeSelect
+        label={label}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        <option value="all">全部</option>
-        {options.map((opt) => (
-          <option key={String(opt)} value={String(opt)}>
-            {opt}
-          </option>
-        ))}
-      </select>
+        onChange={onChange}
+        options={opts}
+      />
     </div>
-  )
+  );
 }

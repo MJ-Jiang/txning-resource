@@ -149,6 +149,7 @@ export const mockResources = [
     tagStyle: undefined,
     platforms: ['院线'], // 可选
     alt: 'Movie',
+      isFeatured: true,
   },
   {
     id: 'drama-7',
