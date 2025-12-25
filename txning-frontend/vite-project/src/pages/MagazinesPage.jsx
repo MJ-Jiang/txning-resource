@@ -39,7 +39,7 @@ export default function MagazinesPage() {
     <>
       <Navbar />
       <ResourceListContainer
-        category="magazines"
+        category="endorsements"
         schema={schema}
         renderCard={(item) => <MagazineCard key={item.id} item={item} />}
         gridClassName="card-grid"

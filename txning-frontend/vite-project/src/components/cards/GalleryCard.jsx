@@ -1,7 +1,7 @@
+import { Link } from 'react-router-dom'
 const ICON_CLASS_MAP = {
   image: 'fa-heart',
   video: 'fa-play',
-  album: 'fa-expand',
 }
 
 export default function GalleryCard({ item }) {
@@ -9,7 +9,7 @@ export default function GalleryCard({ item }) {
 
   return (
     <div className="gallery-item">
-      <img src={item.thumbUrl} alt={item.alt ?? 'Pic'} />
+      <img src={item.posterUrl} alt={item.alt ?? 'Pic'} />
       <div className="gallery-overlay">
         <i className={`fa-solid ${icon}`} style={{ fontSize: '2rem' }}></i>
       </div>

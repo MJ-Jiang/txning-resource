@@ -66,7 +66,7 @@ export default function Navbar() {
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             onClick={() => setOpen(false)}
           >
-            影视剧
+            影视剧综
           </NavLink>
         </li>
 
@@ -77,16 +77,6 @@ export default function Navbar() {
             onClick={() => setOpen(false)}
           >
             商务杂志
-          </NavLink>
-        </li>
-
-        <li>
-          <NavLink
-            to="/interviews"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-            onClick={() => setOpen(false)}
-          >
-            综艺访谈
           </NavLink>
         </li>
 
@@ -107,6 +97,15 @@ export default function Navbar() {
             onClick={() => setOpen(false)}
           >
             图频
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/aboutme"
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            onClick={() => setOpen(false)}
+          >
+            关于我
           </NavLink>
         </li>
       </ul>

@@ -12,7 +12,7 @@ export default function ResourceListContainer({
   schema,
   renderCard,
 
-  pageSize, 
+  pageSize,
   searchKey = (item) => item?.title ?? '',
 
   gridClassName = 'card-grid',
@@ -38,7 +38,10 @@ export default function ResourceListContainer({
 
   const schemaWithDefaults = useMemo(() => {
     return schema.map((f) => {
-      const hasInit = Object.prototype.hasOwnProperty.call(initialFilters, f.name)
+      const hasInit = Object.prototype.hasOwnProperty.call(
+        initialFilters,
+        f.name
+      )
       return hasInit ? { ...f, defaultValue: initialFilters[f.name] } : f
     })
   }, [schema, initialFilters])

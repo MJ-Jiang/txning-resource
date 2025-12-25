@@ -10,9 +10,9 @@ function getDramaPlatform(d) {
   return ''
 }
 
-function getDramaGenres(d) {
-  if (Array.isArray(d.genres)) return d.genres
-  if (d.genre) return [d.genre]
+function getDramaTypes(d) {
+  if (Array.isArray(d.type)) return d.type
+  if (d.type) return [d.type]
   return []
 }
 
@@ -26,10 +26,10 @@ export default function DramasPage() {
         getValue: (d) => getDramaPlatform(d),
       },
       {
-        name: 'genre',
+        name: 'type',
         label: '类型',
         defaultValue: 'all',
-        getValue: (d) => getDramaGenres(d), // array
+        getValue: (d) => getDramaTypes(d), // array
       },
       {
         name: 'year',

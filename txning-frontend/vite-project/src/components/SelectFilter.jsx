@@ -1,4 +1,4 @@
-import ThemeSelect from './ThemeSelect';
+import ThemeSelect from './ThemeSelect'
 
 export default function SelectFilter({ label, value, onChange, options }) {
   const opts = [
@@ -7,7 +7,7 @@ export default function SelectFilter({ label, value, onChange, options }) {
       value: String(opt),
       label: String(opt),
     })),
-  ];
+  ]
 
   return (
     <div className="filter-item">
@@ -18,5 +18,5 @@ export default function SelectFilter({ label, value, onChange, options }) {
         options={opts}
       />
     </div>
-  );
+  )
 }

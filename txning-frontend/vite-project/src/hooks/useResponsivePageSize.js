@@ -5,7 +5,8 @@ export default function useResponsivePageSize(
   desktopSize = 25,
   breakpoint = 768
 ) {
-  const getSize = () => (window.innerWidth <= breakpoint ? mobileSize : desktopSize)
+  const getSize = () =>
+    window.innerWidth <= breakpoint ? mobileSize : desktopSize
   const [pageSize, setPageSize] = useState(getSize)
 
   useEffect(() => {
