@@ -232,7 +232,7 @@ export const mockResources = [
     alt: 'Mag',
     status: '已到期',
     shop: 'https://www.example.com/shop/tiffany-2023',
-    isFeatured: true,
+    isFeatured: false,
     desc: '以“日常高光”为主题的品牌挚友推广，包含短片、平面物料与线下快闪联动，呈现经典系列的现代佩戴方式。',
     createdAt: '2025-12-23T16:40:00.000Z',
     createdBy: 'admin_001',

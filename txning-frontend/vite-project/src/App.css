@@ -7,6 +7,10 @@
   --accent-red: #ff5e57;
   --border-width: 3px;
   --navbar-h: clamp(64px, 7vw, 80px);
+  --fz-body: 1rem; /* 桌面16 / 手机14 */
+  --fz-ui: 0.9375rem; /* 桌面15 / 手机约13 */
+  --fz-small: 0.875rem; /* 桌面14 / 手机约12 */
+  --fz-tiny: 0.8125rem;
 }
 * {
   margin: 0;
@@ -19,7 +23,6 @@ body {
     sans-serif;
   background-color: var(--bg-light);
   color: var(--dark);
-  margin: 0;
   overflow-x: hidden;
 }
 .page {
@@ -28,12 +31,12 @@ body {
   grid-template-rows: auto 1fr auto;
 }
 html {
+  font-size: 16px;
   scroll-padding-top: var(--navbar-h);
   -webkit-text-size-adjust: 100%;
 }
 /* ===== 主容器：桌面端卡片 ===== */
 
-/* 通用样式 */
 a {
   text-decoration: none;
   color: inherit;
@@ -50,21 +53,15 @@ img {
 .navbar {
   height: var(--navbar-h);
   padding: 0 clamp(1rem, 4vw, 4rem);
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   background: rgba(255, 245, 199, 0.9);
   backdrop-filter: blur(10px);
   border-bottom: var(--border-width) solid var(--dark);
-
   position: sticky;
   top: 0;
   z-index: 1000;
-
-  /* 关键：给移动端下拉菜单一个定位参照，同时避免子项撑爆 */
-  position: sticky;
   min-width: 0;
 }
 
@@ -94,7 +91,6 @@ img {
   gap: clamp(0.4rem, 1.2vw, 1rem);
   align-items: center;
 
-  list-style: none;
   margin: 0;
   padding: 0;
 }
@@ -104,15 +100,12 @@ img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  font-size: var(--fz-ui);
   padding: clamp(0.45rem, 0.8vw, 0.6rem) clamp(0.75rem, 1.6vw, 1.2rem);
-
   font-weight: 700;
   border-radius: 30px;
   border: 2px solid transparent;
   transition: all 0.3s;
-
   white-space: nowrap;
 }
 
@@ -127,7 +120,6 @@ img {
 /* 汉堡按钮：桌面隐藏 */
 .nav-toggle {
   display: none;
-
   background: transparent;
   border: 2px solid var(--dark);
   border-radius: 10px;
@@ -143,7 +135,6 @@ img {
   left: 10%;
   top: 16%;
 
-  /* ✅ 很大，但透明 */
   font-size: clamp(160px, 28vw, 360px);
   color: var(--primary);
   opacity: 0.1;
@@ -213,7 +204,7 @@ img {
 .site-footer .footer-title {
   font-size: clamp(1.6rem, 4.5vw, 2.4rem);
   font-weight: 900;
-  margin: 0.75rem 0 1.25rem;
+  margin: 0.75rem 0 1rem;
 }
 
 /* 社交 icons */
@@ -262,7 +253,7 @@ img {
 
 /*  */
 .site-footer .footer-copy {
-  font-size: 0.95rem;
+  font-size: var(--fz-small);
   opacity: 0.85;
 }
 
@@ -484,7 +475,7 @@ img {
   color: white;
   padding: 4px 8px;
   font-weight: 900;
-  font-size: 0.8rem;
+  font-size: var(--fz-tiny);
   border-radius: 999px;
 }
 
@@ -507,13 +498,12 @@ img {
 }
 
 .mag-card {
+  display: grid;
+  grid-template-rows: 1fr auto; /* ✅ 图区域撑满，info 只占一行高度 */
+  height: 100%; /* ✅ 让网格项拉满 */
   background: var(--white);
   border: var(--border-width) solid var(--dark);
-  position: relative;
   min-width: 0;
-  transition:
-    transform 0.3s,
-    box-shadow 0.3s;
 }
 
 @media (hover: hover) {
@@ -523,7 +513,6 @@ img {
   }
 }
 
-/* 图片容器：高度用 clamp 自适应，不再固定 380px */
 .mag-img-container {
   aspect-ratio: 3 / 4;
   overflow: hidden;
@@ -556,20 +545,21 @@ img {
   border: 2px solid var(--dark);
 
   font-weight: 900;
-  font-size: 0.8rem;
+  font-size: var(--fz-tiny);
   z-index: 2;
 }
 
 .mag-info {
-  padding: clamp(0.9rem, 1.4vw, 1.2rem);          
+  padding: clamp(0.9rem, 1.4vw, 1.2rem);
   display: flex;
-  align-items: center;     
+  align-items: center;
   min-width: 0;
+  font-weight: 900;
 }
 
 .mag-title {
   color: #666;
-  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  font-size: var(--fz-small);
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -580,7 +570,7 @@ img {
    04 官方活动 - 时间轴（含适配）
    ========================= */
 .section-event {
-  background: #ffd64f;
+  background: var(--primary);
 }
 .events-list {
   margin-top: 2rem;
@@ -667,7 +657,7 @@ img {
   border-radius: 10px;
   border: 2px solid var(--dark);
 
-  font-size: 0.8rem; /* ⬅ 很关键：视觉立刻降级 */
+  font-size: var(--fz-tiny);
   font-weight: 800;
   letter-spacing: 0.02em;
 
@@ -801,7 +791,7 @@ img {
 }
 
 .filter-item label {
-  font-size: 0.9rem;
+  font-size: var(--fz-small);
   font-weight: 800;
 }
 
@@ -815,7 +805,7 @@ img {
   font-weight: 700;
   outline: none;
   max-width: 100%;
-  font-size: 0.9rem;
+  font-size: var(--fz-small);
 }
 
 /* 控件宽度（桌面） */
@@ -854,6 +844,7 @@ img {
 .filter-count {
   font-weight: 800;
   white-space: nowrap;
+  font-size: var(--fz-ui);
 }
 /* sticky/static */
 .filters-sticky .filters-bar {
@@ -871,7 +862,7 @@ img {
 }
 .ts-label {
   display: block;
-  font-size: 0.9rem;
+  font-size: var(--fz-small);
   font-weight: 600;
   margin: 0 0 6px;
   color: #111;
@@ -894,14 +885,14 @@ img {
 }
 
 .ts-value {
-  font-size: 0.8rem; /* 和正文一致 */
+  font-size: var(--fz-small);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .ts-caret {
-  font-size: 0.8rem;
+  font-size: var(--fz-small);
   opacity: 0.7;
 }
 .ts-pop {
@@ -910,7 +901,7 @@ img {
 
 .ts-list {
   position: absolute;
-
+  font-size: var(--fz-small);
   top: 6px;
   left: 0;
   width: 100%;
@@ -937,7 +928,7 @@ img {
 /* 选项：接近原生 */
 .ts-opt {
   padding: 8px 10px;
-  font-size: 0.8rem; /* 和正文一致 */
+  font-size: var(--fz-small);
   border-radius: 8px;
 
   display: flex;
@@ -959,7 +950,7 @@ img {
 
 /* 列表区域 */
 .library-section {
-  padding: 2.5rem clamp(1rem, 4vw, 6rem) 5rem;
+  padding: 2.5rem clamp(1rem, 4vw, 6rem) 2.5rem;
 }
 
 /* 网格：桌面 5 列，逐级降 */
@@ -979,7 +970,7 @@ img {
 
 /* 分页 */
 .pager {
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1024,6 +1015,11 @@ img {
   cursor: pointer;
   box-shadow: 3px 3px 0 var(--dark);
   transition: 0.2s;
+}
+.pager-btn,
+.pager-page,
+.pager-ellipsis {
+  font-size: var(--fz-ui);
 }
 .pager-page:hover {
   transform: translate(2px, 2px);
@@ -1082,23 +1078,21 @@ img {
   background: #f3f1ea;
 }
 
-
 .general-thumb {
   width: 100%;
   height: 100%;
-  object-fit: contain; 
+  object-fit: contain;
   display: block;
 }
-
 
 .general-thumb--placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: #faf8ef; /
+  background: #faf8ef;
   color: rgba(0, 0, 0, 0.35);
-  font-size: 12px;
+  font-size: var(--fz-tiny);
   font-weight: 600;
 }
 
@@ -1108,13 +1102,12 @@ img {
   padding: 6px 10px;
   border-radius: 999px;
   font-weight: 700;
-  font-size: 12px;
+  font-size: var(--fz-tiny);
   line-height: 1;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
-
 
 .general-badge {
   top: 10px;
@@ -1123,17 +1116,32 @@ img {
   color: #3a2f00;
 }
 
-
 .general-type {
   left: 10px;
   bottom: 10px;
   background: rgba(255, 255, 255, 0.88);
   color: rgba(0, 0, 0, 0.72);
 }
+@media (max-width: 1200px) {
+  .mag-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .events-list {
+    border-left: none;
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .event-marker {
+    display: none; /* 小屏隐藏轴点 */
+  }
+}
 
 /* 手机适配 */
 @media (max-width: 768px) {
-  /* 关键：让下拉菜单定位相对 navbar 本身 */
+  html {
+    font-size: 14px;
+  }
   .navbar {
     padding: 0 1rem;
     position: sticky; /* 保持 sticky */
@@ -1146,7 +1154,7 @@ img {
     justify-content: center;
     width: 28px; /* ⬅ 固定尺寸，避免 padding 撑大 */
     height: 25px;
-    padding: 0; /* ⬅ 关键：去掉 padding */
+    padding: 0;
   }
 
   /* 下拉菜单：脱离横排占位 */
@@ -1176,7 +1184,6 @@ img {
   }
 
   .nav-item {
-    font-size: 0.8rem;
     line-height: 1;
     padding: 0.35rem 0.6rem;
     border-radius: 15px;
@@ -1185,9 +1192,7 @@ img {
   .nav-item:hover {
     transform: none;
   }
-  .nav-lemon-big {
-    display: none;
-  }
+
   .nav-links.open .nav-lemon-big {
     display: block;
   }
@@ -1203,30 +1208,27 @@ img {
   .movie-item {
     scroll-snap-align: start;
   }
-  .events-list {
-    border-left: none;
-    margin-left: 0;
-    padding-left: 0;
-  }
-
-  .event-marker {
-    display: none; /* 小屏隐藏轴点 */
-  }
 
   .event-card {
     flex-direction: column;
     align-items: flex-start;
+    padding: 0.85rem; /* ✅ 更紧凑 */
+    gap: 0.6rem; /* ✅ 更紧凑 */
+    border-width: 2px;
+  }
+  .event-item {
+    margin-bottom: 1rem;
   }
 
   .event-date {
     min-width: auto;
     text-align: left;
-    font-size: 1rem;
+    font-size: var(--fz-small);
   }
 
   .event-date span {
     display: inline;
-    font-size: 0.8rem;
+    font-size: var(--fz-tiny);
     margin-left: 0.4rem;
   }
 
@@ -1293,10 +1295,9 @@ img {
   .filter-select {
     width: 100%;
     min-width: 0;
-    font-size: 12px;
   }
   .library-section {
-    padding: 2rem 1.25rem 4rem; /* 左右别太大，否则挤 */
+    padding: 2rem 1.25rem 2rem; /* 左右别太大，否则挤 */
   }
 
   .card-grid {
@@ -1304,25 +1305,10 @@ img {
   }
 }
 
-/* 小屏：尾巴居中，避免贴边 */
-@media (max-width: 520px) {
-  .mag-grid {
-    grid-template-columns: 1fr;
-  }
-  .interview-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .interview-card::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .interview-card::before {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
 @media (max-width: 420px) {
+  .mag-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .gallery-grid {
     grid-template-columns: 1fr;
     grid-auto-rows: clamp(180px, 60vw, 260px);
@@ -1338,7 +1324,7 @@ img {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
   }
-  library-section {
+  .library-section {
     padding-left: 1rem;
     padding-right: 1rem; /* 关键：给两列腾空间 */
   }
@@ -1349,7 +1335,7 @@ img {
       'search right'
       'grid   grid';
     gap: 0.5rem 0.6rem;
-    padding: 0.65rem 0.8rem; /* 更薄一点，接近你图里的密度 */
+    padding: 0.65rem 0.8rem;
     align-items: end;
   }
 
@@ -1397,7 +1383,6 @@ img {
   /* label 保留，但更紧凑 */
   .filters-grid label,
   .filter-item label {
-    font-size: 0.6rem;
     line-height: 1.1;
     margin-bottom: 4px;
     white-space: nowrap;
@@ -1409,37 +1394,23 @@ img {
   .filter-select {
     width: 100%;
     min-width: 0;
-    font-size: 0.6rem;
   }
 
   .filter-input,
   .filter-select,
   .filter-btn {
     height: 30px;
-    font-size: 0.6rem;
-  }
-  .filter-count {
-    font-size: 0.6rem;
   }
 
   .ts-label {
-    font-size: 0.8rem;
     margin-bottom: 4px;
   }
   .ts-btn {
     height: 34px;
     border-radius: 12px;
-    font-size: 0.8rem;
   }
   .ts-list {
     border-radius: 12px;
-    font-size: 0.8rem;
-  }
-  .ts-value {
-    font-size: 0.6rem;
-  }
-  .ts-opt {
-    font-size: 0.6rem;
   }
   .pager {
     gap: 6px;
@@ -1447,32 +1418,13 @@ img {
   .pager-btn {
     height: 30px;
     border-radius: 12px;
-    font-size: 0.6rem;
   }
   .pager-page {
     height: 30px;
     border-radius: 12px;
-    font-size: 0.6rem;
   }
   .pager-ellipsis {
     height: 30px;
     border-radius: 12px;
-    font-size: 0.6rem;
-  }
-}
-
-@media (max-width: 1200px) {
-  .mag-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-/* 平板：2 列 */
-@media (max-width: 900px) {
-  .mag-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .interview-grid {
-    grid-template-columns: 1fr;
   }
 }

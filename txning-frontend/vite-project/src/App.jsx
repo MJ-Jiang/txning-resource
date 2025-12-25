@@ -6,6 +6,7 @@ import ScrollToTop from './components/ScrollToTop'
 import MagazinesPage from './pages/MagazinesPage'
 import EventsPage from './pages/EventsPage'
 import DramaDetailPage from './pages/DramaDetailPage'
+import AboutPage from './pages/AboutPage'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/endorsements" element={<MagazinesPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/detail/:category/:slug" element={<DramaDetailPage />} />
+        <Route path="/aboutme" element={<AboutPage />} />
       </Routes>
     </>
   )
