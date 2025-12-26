@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+
 export default function EventCard({ item }) {
-  const href = `/detail/${item.category}/${item.id}`
+  const href = `/detail/${item.category}/${item.slug}`
+
   return (
     <Link to={href} className="card-link">
       <div className="event-card">
@@ -10,22 +12,15 @@ export default function EventCard({ item }) {
         </div>
 
         <div className="event-details">
-          <h3
-            style={{
-              marginBottom: '5px',
-            }}
-          >
-            {item.title}
-          </h3>
+          <h3 style={{ marginBottom: '5px' }}>{item.title}</h3>
           <p style={{ color: '#666' }}>
             <i className="fa-solid fa-location-dot"></i> {item.location} {'| '}
             {item.time}
           </p>
         </div>
 
-        <a href={item.link ?? '#'} className="event-btn">
-          INFO
-        </a>
+        {/* ✅ 不能再用 <a>，改成 span 不会破坏 DOM 规则 */}
+        <span className="event-btn">INFO</span>
       </div>
     </Link>
   )

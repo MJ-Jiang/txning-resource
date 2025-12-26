@@ -1,45 +1,50 @@
 import { useMemo } from 'react'
-import MagazineCard from '../components/cards/MagazineCard'
+import DramaCard from '../components/cards/DramaCard'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
-export default function MagazinesPage() {
+export default function DramasPage() {
   const schema = useMemo(
     () => [
       {
-        name: 'year',
-        label: '年份',
+        name: 'platform',
+        label: '平台',
         defaultValue: 'all',
-        getValue: (m) => m.year,
+        getValue: (d) => d.platforms,
       },
       {
         name: 'type',
         label: '类型',
         defaultValue: 'all',
-        getValue: (m) => m.type,
+        getValue: (d) => d.type,
+      },
+      {
+        name: 'year',
+        label: '年份',
+        defaultValue: 'all',
+        getValue: (d) => d.year,
       },
       {
         name: 'status',
         label: '状态',
         defaultValue: 'all',
-        getValue: (m) => m.status,
+        getValue: (d) => d.status,
       },
     ],
     []
   )
-
   return (
-    <>
+    <div className="page">
       <Navbar />
       <ResourceListContainer
-        category="endorsements"
+        category="dramas"
         schema={schema}
-        renderCard={(item) => <MagazineCard key={item.id} item={item} />}
+        renderCard={(item) => <DramaCard key={item.id} item={item} />}
         gridClassName="card-grid"
-        searchKey={(m) => m.title}
+        searchKey={(d) => d.title}
       />
       <Footer />
-    </>
+    </div>
   )
 }

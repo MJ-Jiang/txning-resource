@@ -19,7 +19,7 @@ export default function MagazineCard({ item }) {
       <div className="mag-card">
         <div className="mag-img-container">
           <div className="mag-sticker" style={stickerStyle}>
-            {item.stickerText}
+            {item.title}
           </div>
 
           <img
@@ -29,7 +29,7 @@ export default function MagazineCard({ item }) {
           />
         </div>
         <div className="mag-info">
-          <p className="mag-title">{item.title}</p>
+          <p className="mag-title">{item.stickerText}</p>
         </div>
       </div>
     </Link>

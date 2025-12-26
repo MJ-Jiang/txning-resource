@@ -8,7 +8,7 @@ export default function GeneralCard({ item }) {
 
   const cover = item.posterUrl
   const platform = item.platform
-  const type = item.type
+  const mediaType = item.mediaType
   const desc = item.desc ?? ''
   const alt = item.alt ?? item.title ?? desc ?? ''
 
@@ -26,7 +26,7 @@ export default function GeneralCard({ item }) {
         )}
 
         {platform && <div className="general-badge">{platform}</div>}
-        {type && <div className="general-type">{type}</div>}
+        {mediaType && <div className="general-type">{mediaType}</div>}
       </div>
     </div>
   )

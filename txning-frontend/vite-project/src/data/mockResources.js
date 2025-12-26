@@ -134,13 +134,13 @@ export const mockResources = [
     id: 'endorse-1',
     category: 'endorsements',
     slug: 'global-ambassador-2023',
-    title: '全球品牌代言人',
+    stickerText: '全球品牌代言人',
     year: 2023,
     type: '商务',
     posterUrl:
       'https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2864&auto=format&fit=crop',
 
-    stickerText: '巴黎欧莱雅',
+    title: '巴黎欧莱雅',
     alt: '巴黎欧莱雅',
 
     status: '代言中',
@@ -160,12 +160,12 @@ export const mockResources = [
     id: 'endorse-2',
     category: 'endorsements',
     slug: 'loreal-global-ambassador-2025',
-    title: '全球品牌代言人',
+    stickerText: '全球品牌代言人',
     year: 2025,
     type: '商务',
     posterUrl:
       'https://images.unsplash.com/photo-1611048267451-e6ed903d4a38?q=80&w=2944&auto=format&fit=crop',
-    stickerText: '韩束',
+    title: '韩束',
     alt: '韩束',
     status: '代言中',
     isFeatured: true,
@@ -185,12 +185,12 @@ export const mockResources = [
     id: 'endorse-3',
     category: 'endorsements',
     slug: 'elle-men-sep-2023',
-    title: 'ELLE MEN 秋季刊',
+    stickerText: 'ELLE MEN 秋季刊',
     year: 2023,
     type: '杂志',
     posterUrl:
       'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2940&auto=format&fit=crop',
-    stickerText: '费家罗',
+    title: '费家罗',
     alt: '费家罗',
     status: '待发售',
     isFeatured: true,
@@ -209,12 +209,12 @@ export const mockResources = [
     id: 'endorse-4',
     category: 'endorsements',
     slug: 'tiffany-brand-friend-2023',
-    title: 'TIFFANY & CO.',
+    stickerText: 'TIFFANY & CO.',
     year: 2023,
     type: '商务',
     posterUrl:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
-    stickerText: 'BKT',
+    title: 'BKT',
     alt: 'BKT',
     status: '已到期',
     isFeatured: false,
@@ -234,23 +234,22 @@ export const mockResources = [
     id: 'evt-1',
     category: 'events',
     slug: 'shanghai-fan-meeting-2025', // 用于跳转详情页
-
+    posterUrl:
+      'https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2864&auto=format&fit=crop',
     day: '24',
     month: 'NOV',
     year: 2025,
-
     title: '上海粉丝见面会',
     time: '19:30',
     location: '上海梅赛德斯奔驰文化中心',
-
+    stickerText: '上海梅赛德斯奔驰文化中心',
     type: '剧宣', // 商务直播 / 红毯 / 剧宣 等
     status: '即将进行',
     city: '上海',
     alt: '上海粉丝见面会',
     desc: '主演将与观众近距离互动，分享幕后故事与拍摄趣事，并现场回应粉丝提问。',
-
     isFeatured: true,
-
+    relatedId: ['drama-1'],
     createdAt: '2025-12-18T09:20:00.000Z',
     createdBy: 'admin_001',
   },
@@ -259,7 +258,8 @@ export const mockResources = [
     id: 'evt-2',
     category: 'events',
     slug: 'annual-fashion-gala-red-carpet-2025',
-
+    posterUrl:
+      'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
     day: '10',
     month: 'DEC',
     year: 2025,
@@ -267,10 +267,10 @@ export const mockResources = [
     title: '年度时尚盛典红毯',
     time: null, // 时间未知就用 null，不要字符串
     location: '北京',
-    city: '北京 ',
+    city: ['北京', '上海'],
     type: '红毯',
     status: '即将进行',
-
+    stickerText: '北京国家体育馆',
     alt: '年度时尚盛典红毯',
     desc: '年度时尚盛典红毯环节，众多品牌与艺人亮相，展示当季设计与造型趋势。',
 
@@ -284,11 +284,12 @@ export const mockResources = [
     id: 'evt-3',
     category: 'events',
     slug: 'annual-fashion-gala-live-2025',
-
+    posterUrl:
+      'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
     day: '10',
     month: 'DEC',
     year: 2025,
-
+    stickerText: '北京国家体育馆',
     title: '年度时尚盛典官方直播',
     time: null,
     location: '北京',
@@ -308,11 +309,12 @@ export const mockResources = [
   {
     id: 'ugc-1',
     category: 'ugc',
+    title: '上海粉丝见面会', // 活动标题
     parentId: ['drama-1', 'evt-1'],
+    year: 2025,
     linkUrl: 'https://www.bilibili.com/video/BV1xxxxxx1',
-    mediaType: 'video', // image | video
+    mediaType: '视频', // image | video
     platform: 'Bilibili', // Bilibili | Xiaohongshu | Weibo | Douyin
-    type: '视频', // 视频 | 图片
     posterUrl:
       'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=2787&auto=format&fit=crop',
     desc: '节奏向混剪，含名场面与高燃转场，适合新观众快速入坑。',
@@ -322,11 +324,12 @@ export const mockResources = [
   {
     id: 'ugc-2',
     category: 'ugc',
+    title: '微博营业', // 活动标题
+    year: 2025,
     parentId: ['drama-1'],
     linkUrl: 'https://www.bilibili.com/video/BV2yyyyyy2',
-    mediaType: 'video',
+    mediaType: '视频',
     platform: 'Bilibili',
-    type: '视频',
     posterUrl:
       'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2788&auto=format&fit=crop',
     desc: '剧情梳理+彩蛋盘点：把关键线索按时间线捋清楚，结尾有反转提示（轻剧透）。',
@@ -336,11 +339,12 @@ export const mockResources = [
   {
     id: 'ugc-3',
     category: 'ugc',
+    title: '微博营业',
+    year: 2025,
     parentId: ['evt-1'],
     linkUrl: 'https://www.xiaohongshu.com/explore/ugc3xxxx',
-    mediaType: 'image',
+    mediaType: '图片',
     platform: '小红书',
-    type: '图片',
     posterUrl:
       'https://images.unsplash.com/photo-1496345647009-l6d9506e23b9?q=80&w=2836&auto=format&fit=crop',
     desc: '现场返图合集：舞台灯光很绝，近景表情管理满分（9宫格）。',
@@ -350,11 +354,11 @@ export const mockResources = [
   {
     id: 'ugc-4',
     category: 'ugc',
+    title: '微博营业',
     parentId: ['drama-1', 'evt-1'],
     linkUrl: 'https://weibo.com/xxxxxx/ugc4xxxx',
-    mediaType: 'image',
+    mediaType: '图片',
     platform: '微博',
-    type: '图片',
     posterUrl:
       'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2788&auto=format&fit=crop',
     desc: '微博饭拍：签名环节+互动瞬间，附简短repo（无剧透）。',
@@ -364,11 +368,11 @@ export const mockResources = [
   {
     id: 'ugc-5',
     category: 'ugc',
+    title: '微博营业',
     parentId: ['drama-1'],
     linkUrl: 'https://www.douyin.com/video/ugc5xxxx',
-    mediaType: 'video',
+    mediaType: '视频',
     platform: '抖音',
-    type: '视频',
     posterUrl:
       'https://images.unsplash.com/photo-1516726817505-f5ed825624d8?q=80&w=2787&auto=format&fit=crop',
     desc: '30秒高能剪辑：救援名场面+爆点BGM，适合短视频传播。',

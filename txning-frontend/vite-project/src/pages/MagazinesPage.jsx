@@ -11,19 +11,19 @@ export default function MagazinesPage() {
         name: 'year',
         label: '年份',
         defaultValue: 'all',
-        getValue: (m) => (m.year ? String(m.year).trim() : ''),
+        getValue: (m) => m.year,
       },
       {
         name: 'type',
         label: '类型',
         defaultValue: 'all',
-        getValue: (m) => (m.type ? String(m.type).trim() : ''),
+        getValue: (m) => m.type,
       },
       {
         name: 'status',
         label: '状态',
         defaultValue: 'all',
-        getValue: (m) => (m.status ? String(m.status).trim() : ''),
+        getValue: (m) => m.status,
       },
     ],
     []
