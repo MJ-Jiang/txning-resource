@@ -1,63 +1,45 @@
 import { useMemo } from 'react'
-import DramaCard from '../components/cards/DramaCard'
+import MagazineCard from '../components/cards/MagazineCard'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
-function getDramaPlatform(d) {
-  if (d.platform) return d.platform
-  if (Array.isArray(d.platforms) && d.platforms.length) return d.platforms[0]
-  return ''
-}
-
-function getDramaTypes(d) {
-  if (Array.isArray(d.type)) return d.type
-  if (d.type) return [d.type]
-  return []
-}
-
-export default function DramasPage() {
+export default function MagazinesPage() {
   const schema = useMemo(
     () => [
       {
-        name: 'platform',
-        label: '平台',
+        name: 'year',
+        label: '年份',
         defaultValue: 'all',
-        getValue: (d) => getDramaPlatform(d),
+        getValue: (m) => m.year,
       },
       {
         name: 'type',
         label: '类型',
         defaultValue: 'all',
-        getValue: (d) => getDramaTypes(d), // array
-      },
-      {
-        name: 'year',
-        label: '年份',
-        defaultValue: 'all',
-        getValue: (d) => d.year,
+        getValue: (m) => m.type,
       },
       {
         name: 'status',
         label: '状态',
         defaultValue: 'all',
-        getValue: (d) => d.status,
+        getValue: (m) => m.status,
       },
     ],
     []
   )
 
   return (
-    <div className="page">
+    <>
       <Navbar />
       <ResourceListContainer
-        category="dramas"
+        category="endorsements"
         schema={schema}
-        renderCard={(item) => <DramaCard key={item.id} item={item} />}
+        renderCard={(item) => <MagazineCard key={item.id} item={item} />}
         gridClassName="card-grid"
-        searchKey={(d) => d.title}
+        searchKey={(m) => m.title}
       />
       <Footer />
-    </div>
+    </>
   )
 }

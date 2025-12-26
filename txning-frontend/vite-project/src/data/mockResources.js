@@ -89,7 +89,7 @@ export const mockResources = [
     posterUrl:
       'https://images.unsplash.com/photo-1594909122845-861c4f9c16cb?q=80&w=2940&auto=format&fit=crop',
     status: '已完结',
-    platforms: ['youtube'],
+    platforms: ['youtube', '腾讯视频'],
     platformLinks: {
       youtube: 'https://www.youtube.com/playlist?list=youth-party-full',
     },
@@ -136,20 +136,16 @@ export const mockResources = [
     slug: 'global-ambassador-2023',
     title: '全球品牌代言人',
     year: 2023,
-    issue: undefined,
     type: '商务',
     posterUrl:
       'https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2864&auto=format&fit=crop',
 
-    stickerText: 'OCT COVER',
-    stickerStyle: { background: '#FFC107', color: '#1A1A1A' },
-    alt: 'Mag',
+    stickerText: '巴黎欧莱雅',
+    alt: '巴黎欧莱雅',
 
     status: '代言中',
-    shop: 'https://www.example.com/shop/global-ambassador-2023',
     isFeatured: true,
     desc: '品牌宣布其为年度全球代言人，参与主视觉拍摄与线下活动推广，并同步上线限定礼盒与联名物料。',
-
     createdAt: '2025-12-20T10:12:00.000Z',
     createdBy: 'admin_001',
     shopLinks: [
@@ -166,15 +162,12 @@ export const mockResources = [
     slug: 'loreal-global-ambassador-2025',
     title: '全球品牌代言人',
     year: 2025,
-    issue: undefined,
     type: '商务',
     posterUrl:
       'https://images.unsplash.com/photo-1611048267451-e6ed903d4a38?q=80&w=2944&auto=format&fit=crop',
-    stickerText: 'BRAND',
-    alt: 'Brand',
-
+    stickerText: '韩束',
+    alt: '韩束',
     status: '代言中',
-    shop: 'https://www.example.com/shop/loreal-2025',
     isFeatured: true,
     desc: '以“自信与能量”为主题的全球广告企划，覆盖电视、户外、社媒与直播间联动，并推出年度限定周边。',
 
@@ -193,18 +186,13 @@ export const mockResources = [
     category: 'endorsements',
     slug: 'elle-men-sep-2023',
     title: 'ELLE MEN 秋季刊',
-    subTitle: '内页大片 / 时尚解析',
     year: 2023,
-    issue: '9月',
     type: '杂志',
     posterUrl:
       'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2940&auto=format&fit=crop',
-
-    stickerText: 'SEP ISSUE',
-    stickerStyle: { background: '#FFFFFF', color: '#111111' },
-    alt: 'Mag',
+    stickerText: '费家罗',
+    alt: '费家罗',
     status: '待发售',
-    shop: 'https://www.example.com/shop/elle-men-2023-sep',
     isFeatured: true,
     desc: '以“秋季质感”为主线，呈现三组造型大片与时尚解析专访，聚焦衣橱经典单品与城市通勤风格。',
     createdAt: '2025-12-22T12:05:00.000Z',
@@ -222,16 +210,13 @@ export const mockResources = [
     category: 'endorsements',
     slug: 'tiffany-brand-friend-2023',
     title: 'TIFFANY & CO.',
-    subTitle: '品牌挚友推广',
     year: 2023,
-    issue: undefined,
     type: '商务',
     posterUrl:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
-    stickerText: 'NEW',
-    alt: 'Mag',
+    stickerText: 'BKT',
+    alt: 'BKT',
     status: '已到期',
-    shop: 'https://www.example.com/shop/tiffany-2023',
     isFeatured: false,
     desc: '以“日常高光”为主题的品牌挚友推广，包含短片、平面物料与线下快闪联动，呈现经典系列的现代佩戴方式。',
     createdAt: '2025-12-23T16:40:00.000Z',
@@ -260,7 +245,7 @@ export const mockResources = [
 
     type: '剧宣', // 商务直播 / 红毯 / 剧宣 等
     status: '即将进行',
-
+    city: '上海',
     alt: '上海粉丝见面会',
     desc: '主演将与观众近距离互动，分享幕后故事与拍摄趣事，并现场回应粉丝提问。',
 
@@ -282,7 +267,7 @@ export const mockResources = [
     title: '年度时尚盛典红毯',
     time: null, // 时间未知就用 null，不要字符串
     location: '北京',
-
+    city: '北京 ',
     type: '红毯',
     status: '即将进行',
 
@@ -307,7 +292,7 @@ export const mockResources = [
     title: '年度时尚盛典官方直播',
     time: null,
     location: '北京',
-
+    city: '北京',
     type: '商务直播',
     status: '即将进行',
 

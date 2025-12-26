@@ -12,7 +12,6 @@ export default function EventCard({ item }) {
         <div className="event-details">
           <h3
             style={{
-              fontSize: 'clamp(1.05rem, 2.2vw, 1.25rem)',
               marginBottom: '5px',
             }}
           >

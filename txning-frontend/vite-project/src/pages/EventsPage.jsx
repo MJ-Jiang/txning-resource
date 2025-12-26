@@ -3,12 +3,6 @@ import MagazineCard from '../components/cards/MagazineCard'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-function getEventTypes(m) {
-  if (Array.isArray(m.types) && m.types.length) return m.types
-  if (m.type) return [m.type]
-  if (Array.isArray(m.tags) && m.tags.length) return m.tags
-  return []
-}
 
 export default function EventsPage() {
   const schema = useMemo(
@@ -20,16 +14,22 @@ export default function EventsPage() {
         getValue: (m) => m.year,
       },
       {
-        name: 'type',
-        label: '类型',
-        defaultValue: 'all',
-        getValue: (m) => getEventTypes(m), // array
-      },
-      {
         name: 'status',
         label: '状态',
         defaultValue: 'all',
         getValue: (m) => m.status,
+      },
+      {
+        name: 'type',
+        label: '类型',
+        defaultValue: 'all',
+        getValue: (m) => m.type,
+      },
+      {
+        name: 'city',
+        label: '地点',
+        defaultValue: 'all',
+        getValue: (m) => m.city, // array
       },
     ],
     []

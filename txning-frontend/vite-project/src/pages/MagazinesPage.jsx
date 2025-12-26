@@ -3,12 +3,6 @@ import MagazineCard from '../components/cards/MagazineCard'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-function getMagazineTypes(m) {
-  if (Array.isArray(m.types) && m.types.length) return m.types
-  if (m.type) return [m.type]
-  if (Array.isArray(m.tags) && m.tags.length) return m.tags
-  return []
-}
 
 export default function MagazinesPage() {
   const schema = useMemo(
@@ -17,19 +11,19 @@ export default function MagazinesPage() {
         name: 'year',
         label: '年份',
         defaultValue: 'all',
-        getValue: (m) => m.year,
+        getValue: (m) => (m.year ? String(m.year).trim() : ''),
       },
       {
         name: 'type',
         label: '类型',
         defaultValue: 'all',
-        getValue: (m) => getMagazineTypes(m), // array
+        getValue: (m) => (m.type ? String(m.type).trim() : ''),
       },
       {
         name: 'status',
         label: '状态',
         defaultValue: 'all',
-        getValue: (m) => m.status,
+        getValue: (m) => (m.status ? String(m.status).trim() : ''),
       },
     ],
     []

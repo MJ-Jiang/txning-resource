@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom'
 const STATUS_STYLE = {
   待播: { background: '#888' },
-  待播中: { background: '#888' },
   即将上线: { background: '#2F6BFF' },
-  待映: { background: '#2F6BFF' },
+  待映: { background: '#888' },
   即将上映: { background: '#2F6BFF' },
   热播中: { background: '#E53935' },
   热映中: { background: '#E53935' },
