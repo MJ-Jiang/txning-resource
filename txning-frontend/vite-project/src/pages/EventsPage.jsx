@@ -36,7 +36,7 @@ export default function EventsPage() {
   )
 
   return (
-    <>
+    <div className="page">
       <Navbar />
       <ResourceListContainer
         category="events"
@@ -46,6 +46,6 @@ export default function EventsPage() {
         searchKey={(m) => m.title}
       />
       <Footer />
-    </>
+    </div>
   )
 }

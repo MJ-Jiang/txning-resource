@@ -1,71 +1,173 @@
-function pickCover(item) {
-  return item?.coverUrl ?? item?.cover ?? item?.poster ?? item?.image ?? ''
+function toArray(v) {
+  if (!v) return []
+  return Array.isArray(v) ? v : [v]
 }
 
-function getDramaPlatform(d) {
-  if (d?.platform) return d.platform
-  if (Array.isArray(d?.platforms) && d.platforms.length) return d.platforms[0]
-  return ''
+function joinText(v, sep = ' / ') {
+  return toArray(v).filter(Boolean).join(sep)
 }
 
-function getDramaGenres(d) {
-  if (Array.isArray(d?.genres)) return d.genres
-  if (d?.genre) return [d.genre]
-  return []
+function getPlatforms(d) {
+  if (!Array.isArray(d?.platforms)) return []
+  return d.platforms
+    .map((p) => ({ key: p?.key ?? '', url: p?.url ?? '' }))
+    .filter((p) => p.key && p.url)
 }
 
-/**
- * 影视详情大卡片
- * 只负责展示 drama 信息，不处理路由、不处理 UGC、不处理筛选
- */
+/** 平台白名单：只认这些 */
+const PLATFORM_ICON_MAP = {
+  腾讯视频: '/icons/tc.svg',
+  bilibili: '/icons/bilibili.svg',
+  YouTube: '/icons/youtube.svg',
+  爱奇艺: '/icons/iqiyi.svg',
+  芒果TV: '/icons/mgtv.svg',
+  优酷视频: '/icons/youku.svg',
+}
+
+function IconImg({ src, alt, className }) {
+  if (!src) return null
+  return (
+    <img
+      className={className}
+      src={src}
+      alt={alt}
+      onError={() => {
+        console.error('Icon load failed:', src)
+      }}
+    />
+  )
+}
+
 export default function DramaDetailCard({ drama }) {
   if (!drama) return null
 
-  const cover = pickCover(drama)
-  const platform = getDramaPlatform(drama)
-  const genres = getDramaGenres(drama)
-  const desc = drama?.desc ?? drama?.description ?? drama?.summary ?? ''
+  const {
+    posterUrl,
+    title,
+    type,
+    genres,
+    year,
+    episodes,
+    rated,
+    ratedLink,
+    desc,
+  } = drama
+
+  const platforms = getPlatforms(drama)
 
   return (
-    <div className="detail-card">
-      <div className="detail-top">
-        {/* 封面 */}
-        <div className="detail-cover">
-          {cover ? (
-            <img className="detail-cover-img" src={cover} alt={drama.title} />
-          ) : (
-            <div className="detail-cover-placeholder" />
-          )}
-        </div>
-
-        {/* 信息区 */}
-        <div className="detail-info">
-          <h2 className="detail-title">{drama.title}</h2>
-
-          <div className="detail-meta">
-            {drama.year && <span className="meta-chip">{drama.year}</span>}
-            {platform && <span className="meta-chip">{platform}</span>}
-            {drama.status && <span className="meta-chip">{drama.status}</span>}
+    <section className="page-container">
+      <div className="detail-card">
+        <div className="detail-grid">
+          {/* 封面 */}
+          <div className="detail-cover">
+            {posterUrl ? (
+              <img className="detail-cover-img" src={posterUrl} alt={title} />
+            ) : (
+              <div className="detail-cover-placeholder" />
+            )}
           </div>
 
-          {genres.length > 0 && (
-            <div className="detail-tags">
-              {genres.map((g) => (
-                <span key={g} className="tag-chip">
-                  {g}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* 信息区 */}
+          <div className="detail-info">
+            <h1 className="detail-title">{title}</h1>
 
-          {desc && (
-            <div className="detail-desc-wrap">
-              <h3 className="detail-subtitle">简介</h3>
-              <p className="detail-desc">{desc}</p>
+            <div className="detail-kv">
+              {type?.length > 0 && (
+                <div className="kv-row">
+                  <div className="kv-k">分类</div>
+                  <div className="kv-v">{joinText(type)}</div>
+                </div>
+              )}
+
+              {genres?.length > 0 && (
+                <div className="kv-row">
+                  <div className="kv-k">类型</div>
+                  <div className="kv-v">{joinText(genres)}</div>
+                </div>
+              )}
+
+              {year && (
+                <div className="kv-row">
+                  <div className="kv-k">年份</div>
+                  <div className="kv-v">{year}</div>
+                </div>
+              )}
+
+              {episodes && (
+                <div className="kv-row">
+                  <div className="kv-k">集数</div>
+                  <div className="kv-v">{episodes}</div>
+                </div>
+              )}
+
+              {(rated || ratedLink) && (
+                <div className="kv-row">
+                  <div className="kv-k kv-k--icon">
+                    <a
+                      className="kv-ico-link"
+                      href={ratedLink || '#'}
+                      target={ratedLink ? '_blank' : undefined}
+                      rel={ratedLink ? 'noreferrer' : undefined}
+                      onClick={(e) => {
+                        if (!ratedLink) e.preventDefault()
+                      }}
+                      title="豆瓣"
+                    >
+                      <IconImg
+                        className="kv-ico"
+                        src="/icons/db.svg"
+                        alt="豆瓣"
+                      />
+                    </a>
+                  </div>
+                  <div className="kv-v">{rated}</div>
+                </div>
+              )}
+
+              {/* 播放：只显示平台 logo，无文字废话 */}
+              {platforms.length > 0 && (
+                <div className="kv-row">
+                  <div className="kv-k">播放</div>
+                  <div className="kv-v">
+                    <div className="platform-row">
+                      {platforms.map((p) => {
+                        const iconSrc = PLATFORM_ICON_MAP[p.key]
+                        if (!iconSrc) return null
+
+                        return (
+                          <a
+                            key={p.key}
+                            className="platform-link"
+                            href={p.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            title={p.key}
+                          >
+                            <IconImg
+                              className="platform-logo"
+                              src={iconSrc}
+                              alt={p.key}
+                            />
+                          </a>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
+
+        {/* 简介 */}
+        {desc && (
+          <div className="detail-desc">
+            <div className="detail-desc-hd">简介</div>
+            <p className="detail-desc-text">{desc}</p>
+          </div>
+        )}
       </div>
-    </div>
+    </section>
   )
 }

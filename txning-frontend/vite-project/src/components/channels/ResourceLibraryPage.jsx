@@ -1,13 +1,6 @@
 import Pager from './Pager'
 import FiltersBar from './FiltersBar'
 
-/**
- * 通用资源列表页骨架：
-
- * - FiltersBar（children 插槽塞 SelectFilter）
- * - 空态
- * - Grid + Pager
- */
 export default function ResourceLibraryPage({
   // FiltersBar props
   stickyFilters = true,

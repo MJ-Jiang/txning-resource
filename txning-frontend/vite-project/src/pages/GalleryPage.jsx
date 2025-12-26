@@ -59,7 +59,7 @@ export default function GalleryPage() {
   )
 
   return (
-    <>
+    <div className="page">
       <Navbar />
 
       <ResourceListContainer
@@ -71,6 +71,6 @@ export default function GalleryPage() {
       />
 
       <Footer />
-    </>
+    </div>
   )
 }

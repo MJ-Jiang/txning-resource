@@ -30,10 +30,21 @@ export default function ResourceListContainer({
   // ✅ 最终 pageSize：props 优先，否则用响应式的
   const finalPageSize = pageSize ?? responsivePageSize
 
+  function getIdNum(item) {
+    if (!item || !item.id) return -1
+    const match = String(item.id).match(/(\d+)\s*$/)
+    return match ? Number(match[1]) : -1
+  }
+
   const sourceItems = useMemo(() => {
-    if (Array.isArray(items)) return items
-    if (category) return mockResources.filter((x) => x.category === category)
-    return []
+    const list = Array.isArray(items)
+      ? items
+      : category
+        ? mockResources.filter((x) => x.category === category)
+        : []
+
+    // ✅ 按 id 数字部分倒序
+    return [...list].sort((a, b) => getIdNum(b) - getIdNum(a))
   }, [items, category])
 
   const schemaWithDefaults = useMemo(() => {

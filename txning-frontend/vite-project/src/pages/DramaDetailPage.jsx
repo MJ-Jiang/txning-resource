@@ -51,7 +51,7 @@ export default function DramaDetailPage() {
         <DramaDetailCard drama={drama} />
       </section>
 
-      <h3 className="section-title">相关内容</h3>
+      <h3 className="related-title">相关内容</h3>
 
       <ResourceListContainer
         withShell={false}
@@ -72,6 +72,12 @@ export default function DramaDetailPage() {
             label: '类型',
             defaultValue: 'all',
             getValue: (x) => x.mediaType,
+          },
+          {
+            name: 'year',
+            label: '年份',
+            defaultValue: 'all',
+            getValue: (x) => x.year,
           },
         ]}
         renderCard={(item) => <GeneralCard key={item.id} item={item} />}

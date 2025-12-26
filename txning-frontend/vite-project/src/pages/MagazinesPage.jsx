@@ -30,7 +30,7 @@ export default function MagazinesPage() {
   )
 
   return (
-    <>
+    <div className="page">
       <Navbar />
       <ResourceListContainer
         category="endorsements"
@@ -40,6 +40,6 @@ export default function MagazinesPage() {
         searchKey={(m) => m.title}
       />
       <Footer />
-    </>
+    </div>
   )
 }

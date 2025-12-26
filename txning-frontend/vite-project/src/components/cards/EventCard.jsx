@@ -19,7 +19,6 @@ export default function EventCard({ item }) {
           </p>
         </div>
 
-        {/* ✅ 不能再用 <a>，改成 span 不会破坏 DOM 规则 */}
         <span className="event-btn">INFO</span>
       </div>
     </Link>

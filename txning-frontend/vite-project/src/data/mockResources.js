@@ -10,17 +10,20 @@ export const mockResources = [
     posterUrl:
       'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
     status: '热映中',
-    platforms: ['youtube'],
-    platformLinks: {
-      youtube: 'https://www.youtube.com/watch?v=deep-sea-rescue-trailer',
-    },
+    platforms: [
+      { key: '腾讯视频', url: 'https://v.qq.com/xxx' },
+      { key: 'bilibili', url: 'https://www.bilibili.com/xxx' },
+    ],
+    ratedLink: 'https://movie.douban.com/subject/35600001/',
+    rated: 8.5,
+    // platforms: ['youtube'],
+    // platformLinks: {
+    //   youtube: 'https://www.youtube.com/watch?v=deep-sea-rescue-trailer',
+    // },
     alt: 'Movie',
     isFeatured: true,
     desc: '一次深海事故让救援队被迫下潜到未知海沟，氧气、时间与人性同时见底。队长必须在救人与保命之间做出选择。',
-    episodes: '电影 · 116分钟',
-    rated: 7.6,
-    ratedLink: 'https://movie.douban.com/subject/35600001/',
-
+    episodes: 116,
     createdAt: '2025-12-01T10:12:33.000Z',
     createdBy: 'admin_001',
   },
@@ -367,6 +370,19 @@ export const mockResources = [
 
   {
     id: 'ugc-5',
+    category: 'ugc',
+    title: '微博营业',
+    parentId: ['drama-1'],
+    linkUrl: 'https://www.douyin.com/video/ugc5xxxx',
+    mediaType: '视频',
+    platform: '抖音',
+    posterUrl:
+      'https://images.unsplash.com/photo-1516726817505-f5ed825624d8?q=80&w=2787&auto=format&fit=crop',
+    desc: '30秒高能剪辑：救援名场面+爆点BGM，适合短视频传播。',
+    isFeatured: true,
+  },
+  {
+    id: 'ugc-６',
     category: 'ugc',
     title: '微博营业',
     parentId: ['drama-1'],
