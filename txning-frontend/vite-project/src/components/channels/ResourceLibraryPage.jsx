@@ -23,9 +23,7 @@ export default function ResourceLibraryPage({
   gridClassName = 'card-grid',
 }) {
   return (
-    <div
-      className={`app-container ${stickyFilters ? 'filters-sticky' : 'filters-static'}`}
-    >
+    <div className={`app-container ${stickyFilters ? 'filters-sticky' : ''}`}>
       <FiltersBar q={q} setQ={setQ} count={count} onReset={onReset}>
         {filtersChildren}
       </FiltersBar>

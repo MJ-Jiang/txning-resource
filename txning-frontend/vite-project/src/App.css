@@ -7,6 +7,7 @@
   --accent-red: #ff5e57;
   --border-width: 3px;
   --navbar-h: clamp(64px, 7vw, 80px);
+  --fz-title: 1.25rem; /* 桌面20 / 手机约18 */
   --fz-body: 1rem; /* 桌面16 / 手机14 */
   --fz-ui: 0.9375rem; /* 桌面15 / 手机约13 */
   --fz-small: 0.875rem; /* 桌面14 / 手机约12 */
@@ -54,6 +55,7 @@ img {
   width: 100%;
   object-fit: cover;
 }
+
 /* ===== Navbar ===== */
 .navbar {
   height: var(--navbar-h);
@@ -61,7 +63,7 @@ img {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 245, 199, 0.9);
+  background: rgba(255, 245, 199, 0.99);
 
   border-bottom: var(--border-width) solid var(--dark);
   position: sticky;
@@ -105,9 +107,9 @@ img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--fz-ui);
+  font-size: var(--fz-title);
   padding: clamp(0.45rem, 0.8vw, 0.6rem) clamp(0.75rem, 1.6vw, 1.2rem);
-  font-weight: 700;
+  font-weight: 600;
   border-radius: 30px;
   border: 2px solid transparent;
   transition: all 0.3s;
@@ -180,9 +182,6 @@ img {
   background-color: var(--bg-light);
   min-height: auto;
   position: relative;
-
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
-
   overflow: visible;
 }
 .site-footer {
@@ -489,6 +488,12 @@ img {
 }
 .movie-item .movie-desc h4 {
   color: #fff5c7;
+  white-space: nowrap;
+}
+.movie-item .movie-desc p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* =========================
@@ -746,7 +751,7 @@ img {
 /* ===== Base ===== */
 .filters-bar {
   z-index: 900;
-  background: rgba(255, 245, 199, 0.92);
+  background: rgba(255, 245, 199, 0.99);
   backdrop-filter: blur(10px);
 
   padding: 1.05rem clamp(1rem, 4vw, 6rem);
@@ -984,18 +989,18 @@ img {
 
 .detail-card {
   margin: 18px 0 22px;
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
 
-  background: rgba(255, 255, 255, 0.55);
+  background: #fffdf2;
   border: 1px solid rgba(20, 20, 20, 0.14);
 }
 
 /* 主区域 */
 .detail-grid {
   display: grid;
-  grid-template-columns: 150px 1fr; /* 手机端也比之前更大 */
-  gap: 18px;
+  grid-template-columns: 150px 1fr;
+  gap: 2rem;
   padding: 18px;
   align-items: start;
 }
@@ -1004,7 +1009,7 @@ img {
 .detail-cover {
   width: 100%;
   aspect-ratio: 3 / 4;
-  border-radius: 18px;
+  border-radius: 16px;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(20, 20, 20, 0.12);
@@ -1028,25 +1033,24 @@ img {
   min-width: 0;
 }
 
-/* 标题：保留更醒目，但不夸张 */
 .detail-title {
   margin: 0 0 12px;
   color: #111;
-  line-height: 1.12;
-  font-size: 1.6rem;
-  font-weight: 800; /* 你如果连标题也不想加粗，把这里改成 500 */
+  line-height: 1.1;
+  font-size: var(--fz-title);
+  font-weight: 800;
 }
 
 /* 键值行：全部正常字重 */
 .detail-kv {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .kv-row {
   display: grid;
   grid-template-columns: 3.5em 1fr;
-  gap: 12px;
+
   align-items: start;
 }
 
@@ -1062,50 +1066,12 @@ img {
 }
 .kv-k,
 .kv-v {
-  line-height: 1.1; /* 默认一般是 1.5+ */
+  line-height: 1.1;
 }
 
 .kv-ico {
-  width: 20px; /* 原来 ~24px */
-  height: 20px;
-}
-
-/* 评分行：icon + 数字（数字不做样式） */
-.row-inline {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.icon-link {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-.icon-link[aria-disabled='true'] {
-  opacity: 0.55;
-  cursor: default;
-}
-
-.plain-num {
-  font-weight: 400;
-  color: rgba(0, 0, 0, 0.82);
-}
-
-/* 播放行：video icon + 平台 logo */
-.play-line {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 6px;
-}
-
-.platform-logos {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  width: 18px; /* 原来 ~24px */
+  height: 18px;
 }
 
 .platform-link {
@@ -1120,7 +1086,7 @@ img {
 }
 
 .platform-logo {
-  height: 20px; /* 平台 logo 更像“入口” */
+  height: 18px;
   width: auto;
   display: block;
   margin-right: 5px;
@@ -1129,7 +1095,7 @@ img {
 /* 简介区 */
 .detail-desc {
   padding: 16px 18px 18px;
-  background: rgba(255, 255, 255, 0.35);
+  background: transparent;
   border-top: 1px solid rgba(20, 20, 20, 0.1);
 }
 
@@ -1144,6 +1110,35 @@ img {
   line-height: 1.7;
   color: rgba(0, 0, 0, 0.84);
   font-weight: 400;
+}
+.library-section.detail-design {
+  padding-top: 12px;
+  padding-bottom: 0px;
+}
+.library-section.related-header {
+  padding-top: 0px;
+  padding-bottom: 10px;
+}
+
+.related-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.related-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: #111;
+}
+
+.related-divider {
+  margin-top: 10px;
+  height: 1px;
+  background: rgba(20, 20, 20, 0.1);
 }
 
 /* 网格：桌面 5 列，逐级降 */
@@ -1431,17 +1426,6 @@ img {
   html {
     font-size: 14px;
   }
-  .detail-main {
-    grid-template-columns: 180px 1fr;
-    gap: 18px;
-    padding: 18px;
-  }
-  .detail-title2 {
-    font-size: 1.75rem;
-  }
-  .detail-desc2 {
-    padding: 14px 18px 18px;
-  }
   .navbar {
     padding: 0 1rem;
     position: sticky; /* 保持 sticky */
@@ -1599,7 +1583,9 @@ img {
   .library-section {
     padding: 2rem 1.25rem 2rem; /* 左右别太大，否则挤 */
   }
-
+  .detail-grid {
+    gap: 1.2rem;
+  }
   .card-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

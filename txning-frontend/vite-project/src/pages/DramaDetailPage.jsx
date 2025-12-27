@@ -47,11 +47,15 @@ export default function DramaDetailPage() {
   return (
     <div className="page">
       <Navbar />
-      <section className="library-section">
+      <section className="library-section detail-design">
         <DramaDetailCard drama={drama} />
       </section>
-
-      <h3 className="related-title">相关内容</h3>
+      <section className="library-section related-header">
+        <div className="related-head">
+          <h2>相关内容</h2>
+        </div>
+        <div className="related-divider" />
+      </section>
 
       <ResourceListContainer
         withShell={false}

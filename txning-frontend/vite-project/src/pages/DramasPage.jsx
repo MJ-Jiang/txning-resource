@@ -11,7 +11,7 @@ export default function DramasPage() {
         name: 'platform',
         label: '平台',
         defaultValue: 'all',
-        getValue: (d) => d.platforms,
+        getValue: (d) => d.platforms.map((item) => item.key),
       },
       {
         name: 'type',

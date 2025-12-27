@@ -12,14 +12,10 @@ export const mockResources = [
     status: '热映中',
     platforms: [
       { key: '腾讯视频', url: 'https://v.qq.com/xxx' },
-      { key: 'bilibili', url: 'https://www.bilibili.com/xxx' },
+      { key: 'Bilibili', url: 'https://www.bilibili.com/xxx' },
     ],
     ratedLink: 'https://movie.douban.com/subject/35600001/',
     rated: 8.5,
-    // platforms: ['youtube'],
-    // platformLinks: {
-    //   youtube: 'https://www.youtube.com/watch?v=deep-sea-rescue-trailer',
-    // },
     alt: 'Movie',
     isFeatured: true,
     desc: '一次深海事故让救援队被迫下潜到未知海沟，氧气、时间与人性同时见底。队长必须在救人与保命之间做出选择。',
@@ -39,10 +35,7 @@ export const mockResources = [
     posterUrl:
       'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2825&auto=format&fit=crop',
     status: '待播',
-    platforms: ['腾讯视频'],
-    platformLinks: {
-      腾讯视频: 'https://v.qq.com/x/cover/neon-district.html',
-    },
+    platforms: [{ key: '腾讯视频', url: 'https://v.qq.com/xxx' }],
     alt: 'Movie',
     isFeatured: true,
     desc: '在数据统治的城市里，街区由算法划分阶层。一名“记忆修补师”意外发现自己被篡改过的过去，从而卷入一场针对系统的反向清算。',
@@ -65,10 +58,7 @@ export const mockResources = [
     posterUrl:
       'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2940&auto=format&fit=crop',
     status: '热播中',
-    platforms: ['腾讯视频'],
-    platformLinks: {
-      腾讯视频: 'https://v.qq.com/x/cover/silent-witness.html',
-    },
+    platforms: [{ key: '腾讯视频', url: 'https://v.qq.com/xxx' }],
     alt: 'Movie',
     isFeatured: true,
 
@@ -92,10 +82,12 @@ export const mockResources = [
     posterUrl:
       'https://images.unsplash.com/photo-1594909122845-861c4f9c16cb?q=80&w=2940&auto=format&fit=crop',
     status: '已完结',
-    platforms: ['youtube', '腾讯视频'],
-    platformLinks: {
-      youtube: 'https://www.youtube.com/playlist?list=youth-party-full',
-    },
+    platforms: [
+      {
+        key: 'Youtube',
+        url: 'https://www.youtube.com/playlist?list=youth-party-full',
+      },
+    ],
     alt: 'Movie',
     isFeatured: true,
     desc: '一群住在同一屋檐下的年轻人，用任务、表演与真心话把尴尬变成友情。最后一集的告别，让每个人都学会了如何更好地成为自己。',
@@ -118,10 +110,7 @@ export const mockResources = [
     posterUrl:
       'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
     status: '即将上线',
-    platforms: ['院线'],
-    platformLinks: {
-      院线: 'https://www.maoyan.com/films/fast-rush',
-    },
+    platforms: [{ key: '院线', url: null }],
     alt: 'Movie',
     isFeatured: true,
     desc: '退役车手被迫回到赛道：不是为了冠军，而是为了救人。一次“合法的非法比赛”让他重新点燃引擎，也点燃了更大的阴谋。',
@@ -313,7 +302,7 @@ export const mockResources = [
     id: 'ugc-1',
     category: 'ugc',
     title: '上海粉丝见面会', // 活动标题
-    parentId: ['drama-1', 'evt-1'],
+    parentId: ['drama-1', 'evt-1', 'endorse-1'],
     year: 2025,
     linkUrl: 'https://www.bilibili.com/video/BV1xxxxxx1',
     mediaType: '视频', // image | video
@@ -344,7 +333,7 @@ export const mockResources = [
     category: 'ugc',
     title: '微博营业',
     year: 2025,
-    parentId: ['evt-1'],
+    parentId: ['evt-1', 'endorse-1'],
     linkUrl: 'https://www.xiaohongshu.com/explore/ugc3xxxx',
     mediaType: '图片',
     platform: '小红书',
