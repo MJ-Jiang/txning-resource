@@ -18,6 +18,7 @@ export const mockResources = [
     rated: 8.5,
     alt: 'Movie',
     isFeatured: true,
+    ticketLinks: [{ platform: '大麦', url: 'https://www.damai.cn/xxx' }],
     desc: '一次深海事故让救援队被迫下潜到未知海沟，氧气、时间与人性同时见底。队长必须在救人与保命之间做出选择。',
     episodes: 116,
     createdAt: '2025-12-01T10:12:33.000Z',

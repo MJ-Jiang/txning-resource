@@ -22,7 +22,22 @@ const PLATFORM_ICON_MAP = {
   芒果TV: '/icons/mgtv.svg',
   优酷视频: '/icons/youku.svg',
 }
-
+const TICKET_ICON_MAP = {
+  大麦: '/icons/damai.svg',
+  猫眼: '/icons/maoyan.svg',
+  票星球: '/icons/piaoxingqiu.svg',
+  纷玩岛: '/icons/fenwandao.svg',
+  秀动: '/icons/xiudong.svg',
+  抖音: '/icons/douyin.svg',
+  小红书: '/icons/xhs.svg',
+  官方: '/icons/link.svg',
+}
+function getTicketLinks(d) {
+  if (!Array.isArray(d?.ticketLinks)) return []
+  return d.ticketLinks
+    .map((t) => ({ platform: t?.platform ?? '', url: t?.url ?? '' }))
+    .filter((t) => t.platform && t.url)
+}
 function IconImg({ src, alt, className }) {
   if (!src) return null
   return (
@@ -51,9 +66,9 @@ export default function DramaDetailCard({ drama }) {
     ratedLink,
     desc,
   } = drama
-
+  const ticketLinks = getTicketLinks(drama)
   const platforms = getPlatforms(drama)
-
+  const showTickets = ticketLinks.length > 0
   return (
     <div className="detail-card">
       <div className="detail-grid">
@@ -146,6 +161,36 @@ export default function DramaDetailCard({ drama }) {
                             className="platform-logo"
                             src={iconSrc}
                             alt={p.key}
+                          />
+                        </a>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+            {showTickets && (
+              <div className="kv-row">
+                <div className="kv-k">购票</div>
+                <div className="kv-v">
+                  <div className="platform-row">
+                    {ticketLinks.map((t) => {
+                      const iconSrc = TICKET_ICON_MAP[t.platform]
+                      const finalIcon = iconSrc || '/icons/link.svg'
+
+                      return (
+                        <a
+                          key={`${t.platform}-${t.url}`}
+                          className="platform-link"
+                          href={t.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          title={t.platform}
+                        >
+                          <IconImg
+                            className="platform-logo"
+                            src={finalIcon}
+                            alt={t.platform}
                           />
                         </a>
                       )
