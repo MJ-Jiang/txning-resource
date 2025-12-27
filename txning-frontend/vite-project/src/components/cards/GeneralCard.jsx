@@ -1,16 +1,33 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+
+function isHttpUrl(v) {
+  return typeof v === 'string' && /^https?:\/\//i.test(v)
+}
 
 export default function GeneralCard({ item }) {
   if (!item) return null
-
-  const href = item.linkUrl
-  const clickable = Boolean(href)
 
   const cover = item.posterUrl
   const platform = item.platform
   const mediaType = item.mediaType
   const desc = item.desc ?? ''
   const alt = item.alt ?? item.title ?? desc ?? ''
+
+  // 站内详情页（按你项目约定）
+  const internalHref = useMemo(() => {
+    if (!item.category || !item.slug) return ''
+    return `/detail/${item.category}/${item.slug}`
+  }, [item.category, item.slug])
+
+  // 外链（如有）
+  const externalHref = item.linkUrl || ''
+
+  const isExternal = isHttpUrl(externalHref)
+  const isInternal = !isExternal && Boolean(internalHref)
+
+  // 是否可点击：外链 or 站内链接任意一个成立
+  const clickable = isExternal || isInternal
 
   const [confirmOpen, setConfirmOpen] = useState(false)
 
@@ -31,79 +48,94 @@ export default function GeneralCard({ item }) {
     </div>
   )
 
-  const onClickCard = (e) => {
-    if (!clickable) return
+  // 外链：拦截点击 -> 弹确认
+  const onClickExternal = (e) => {
+    if (!isExternal) return
     e.preventDefault()
     setConfirmOpen(true)
   }
 
-  const onGo = () => {
-    window.open(href, '_blank', 'noopener,noreferrer')
+  const onGoExternal = () => {
+    window.open(externalHref, '_blank', 'noopener,noreferrer')
     setConfirmOpen(false)
   }
 
-  return (
-    <>
-      <a
-        className="card-link"
-        href={href || undefined}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={onClickCard}
-      >
+  // 1) 站内：直接 Link 跳转
+  if (isInternal) {
+    return (
+      <Link to={internalHref} className="card-link">
         {CardInner}
-      </a>
+      </Link>
+    )
+  }
 
-      {confirmOpen && (
-        <div
-          className="ext-modal-overlay"
-          onClick={() => setConfirmOpen(false)}
+  // 2) 外链：弹窗确认后再打开
+  if (isExternal) {
+    return (
+      <>
+        <a
+          className="card-link"
+          href={externalHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onClickExternal}
         >
+          {CardInner}
+        </a>
+
+        {confirmOpen && (
           <div
-            className="ext-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="ext-modal-title"
-            onClick={(e) => e.stopPropagation()}
+            className="ext-modal-overlay"
+            onClick={() => setConfirmOpen(false)}
           >
-            {/* 右上角关闭按钮 */}
-            <button
-              className="ext-modal-close"
-              type="button"
-              aria-label="关闭"
-              onClick={() => setConfirmOpen(false)}
+            <div
+              className="ext-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="ext-modal-title"
+              onClick={(e) => e.stopPropagation()}
             >
-              ×
-            </button>
-
-            <div className="ext-modal-title" id="ext-modal-title">
-              即将前往{platform ? `「${platform}」` : '第三方网站'}
-            </div>
-
-            <div className="ext-modal-body">
-              <div className="ext-modal-desc">你即将打开以下链接：</div>
-              <div className="ext-modal-url">{href}</div>
-            </div>
-
-            <div className="ext-modal-actions">
               <button
-                className="ext-btn ext-btn-ghost"
+                className="ext-modal-close"
                 type="button"
+                aria-label="关闭"
                 onClick={() => setConfirmOpen(false)}
               >
-                暂不
+                ×
               </button>
-              <button
-                className="ext-btn ext-btn-primary"
-                type="button"
-                onClick={onGo}
-              >
-                确定
-              </button>
+
+              <div className="ext-modal-title" id="ext-modal-title">
+                即将前往{platform ? `「${platform}」` : '第三方网站'}
+              </div>
+
+              <div className="ext-modal-body">
+                <div className="ext-modal-desc">你即将打开以下链接：</div>
+                <div className="ext-modal-url">{externalHref}</div>
+              </div>
+
+              <div className="ext-modal-actions">
+                <button
+                  className="ext-btn ext-btn-ghost"
+                  type="button"
+                  onClick={() => setConfirmOpen(false)}
+                >
+                  暂不
+                </button>
+                <button
+                  className="ext-btn ext-btn-primary"
+                  type="button"
+                  onClick={onGoExternal}
+                >
+                  确定
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </>
-  )
+        )}
+      </>
+    )
+  }
+
+  // 3) 都没有：不可点击
+  return <div className="card-link">{CardInner}</div>
 }

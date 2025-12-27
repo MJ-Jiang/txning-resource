@@ -10,52 +10,133 @@ import EventDetailCard from '../components/detail/EventDetailCard'
 import { mockResources } from '../data/mockResources'
 import useResponsivePageSize from '../hooks/useResponsivePageSize'
 
+function toArray(v) {
+  if (!v) return []
+  return Array.isArray(v) ? v : [v]
+}
+
+/** 实体 → GeneralCard 可用结构 */
+function toGeneralEntityCard(entity) {
+  return {
+    ...entity,
+
+    // 封面统一
+    posterUrl: entity.posterUrl,
+
+    // 站内跳转
+    url: `/detail/${entity.category}/${entity.slug}`,
+    isExternal: false,
+
+    // 给「来源」筛选用
+    sourceType: entity.category,
+
+    // ⚠️ 关键：实体卡【不提供 mediaType】
+    mediaType: undefined,
+
+    // 其他字段给筛选兜底
+    platform: entity.platform ?? '本站',
+    year: entity.year ?? 'all',
+  }
+}
+
 export default function DetailPage() {
   const { category, slug } = useParams()
   const pageSize = useResponsivePageSize(12, 25, 768)
 
-  // 1) 通用变量名
-  const item = mockResources.find(
-    (x) => x.category === category && x.slug === slug
-  )
+  /** 当前详情页对象 */
+  const item = useMemo(() => {
+    return mockResources.find((x) => x.category === category && x.slug === slug)
+  }, [category, slug])
 
-  // 2) 找不到文案按分类变
   const emptyText =
     category === 'endorsements'
       ? '找不到该商务／杂志'
       : category === 'events'
         ? '找不到该活动'
-        : '找不到该影视' // 默认按 drama
+        : '找不到该影视'
 
-  // 3) 大卡片按分类变
+  /** 大卡片 */
   const detailCard = useMemo(() => {
     if (!item) return null
-
-    if (category === 'endorsements') {
+    if (category === 'endorsements')
       return <EndorsementDetailCard endorsement={item} />
-    }
-    if (category === 'events') {
-      return <EventDetailCard event={item} />
-    }
-    // 默认 drama
+    if (category === 'events') return <EventDetailCard event={item} />
     return <DramaDetailCard drama={item} />
   }, [item, category])
 
-  // 4) relatedUGC：逻辑不变，改用 item
+  /** 相关 UGC（老逻辑，不动） */
   const relatedUGC = useMemo(() => {
     if (!item) return []
+    const selfId = String(item.id)
 
     return mockResources.filter((x) => {
       if (x.category !== 'ugc') return false
-
       const p = x.parentId
-      if (Array.isArray(p)) return p.includes(item.id)
+      if (Array.isArray(p)) return p.map(String).includes(selfId)
       if (typeof p === 'string' || typeof p === 'number')
-        return String(p) === String(item.id)
-
+        return String(p) === selfId
       return false
     })
   }, [item])
+
+  /** 相关实体（incoming：谁把自己挂到我下面） */
+  const relatedEntities = useMemo(() => {
+    if (!item) return []
+    const selfId = String(item.id)
+
+    return mockResources
+      .filter((x) => x.category !== 'ugc')
+      .filter((x) => toArray(x.relatedId).map(String).includes(selfId))
+      .filter((x) => String(x.id) !== selfId)
+      .map(toGeneralEntityCard)
+  }, [item])
+
+  /** 合并 + 去重 */
+  const relatedItems = useMemo(() => {
+    const all = [...relatedEntities, ...relatedUGC]
+    const seen = new Set()
+    const out = []
+
+    for (const x of all) {
+      const id = String(x.id ?? '')
+      if (!id || seen.has(id)) continue
+      seen.add(id)
+      out.push(x)
+    }
+    return out
+  }, [relatedEntities, relatedUGC])
+
+  /** ✅ 关键判断：是否存在 UGC */
+  const hasUGC = relatedItems.some((x) => x.category === 'ugc')
+
+  /** ✅ 关键：动态构造筛选 schema */
+  const schema = [
+    {
+      name: 'platform',
+      label: '平台',
+      defaultValue: 'all',
+      getValue: (x) => x.platform ?? 'all',
+    },
+
+    // ⭐ 只有在【存在 UGC】时，才提供「类型」筛选
+    ...(hasUGC
+      ? [
+          {
+            name: 'mediaType',
+            label: '类型',
+            defaultValue: 'all',
+            getValue: (x) => x.mediaType,
+          },
+        ]
+      : []),
+
+    {
+      name: 'year',
+      label: '年份',
+      defaultValue: 'all',
+      getValue: (x) => x.year ?? 'all',
+    },
+  ]
 
   if (!item) {
     return (
@@ -87,31 +168,12 @@ export default function DetailPage() {
       <ResourceListContainer
         withShell={false}
         stickyFilters={false}
-        items={relatedUGC}
+        items={relatedItems}
         pageSize={pageSize}
         gridClassName="card-grid"
         searchKey={(x) => x.title}
-        schema={[
-          {
-            name: 'platform',
-            label: '平台',
-            defaultValue: 'all',
-            getValue: (x) => x.platform,
-          },
-          {
-            name: 'mediaType',
-            label: '类型',
-            defaultValue: 'all',
-            getValue: (x) => x.mediaType,
-          },
-          {
-            name: 'year',
-            label: '年份',
-            defaultValue: 'all',
-            getValue: (x) => x.year,
-          },
-        ]}
-        renderCard={(item) => <GeneralCard key={item.id} item={item} />}
+        schema={schema}
+        renderCard={(it) => <GeneralCard key={it.id} item={it} />}
       />
 
       <Footer />

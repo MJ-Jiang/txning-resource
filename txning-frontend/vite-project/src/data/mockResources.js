@@ -2,6 +2,7 @@ export const mockResources = [
   {
     id: 'drama-1',
     category: 'dramas',
+    relatedId: ['evt-1', 'evt-2'],
     slug: 'deep-sea-rescue',
     title: '深海救援',
     year: 2023,
@@ -226,6 +227,7 @@ export const mockResources = [
   {
     id: 'evt-1',
     category: 'events',
+    relatedId: ['drama-1', 'endorse-1', 'evt-2'],
     slug: 'shanghai-fan-meeting-2025',
     posterUrl:
       'https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2864&auto=format&fit=crop',
@@ -244,7 +246,6 @@ export const mockResources = [
     alt: '上海粉丝见面会',
     desc: '主演将与观众近距离互动，分享幕后故事与拍摄趣事，并现场回应粉丝提问。',
     isFeatured: true,
-    relatedId: ['drama-1'],
     ticketLinks: [{ platform: '大麦', url: '...' }],
 
     createdAt: '2025-12-18T09:20:00.000Z',
@@ -254,10 +255,11 @@ export const mockResources = [
   {
     id: 'evt-2',
     category: 'events',
+    relatedId: ['drama-1'],
     slug: 'annual-fashion-gala-red-carpet-2025',
     posterUrl:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
-    day: '10',
+    day: '15',
     month: 'DEC',
     year: 2025,
 
