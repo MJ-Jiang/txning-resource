@@ -7,20 +7,23 @@ function joinText(v, sep = ' / ') {
   return toArray(v).filter(Boolean).join(sep)
 }
 
-function getPlatforms(d) {
-  if (!Array.isArray(d?.platforms)) return []
-  return d.platforms
-    .map((p) => ({ key: p?.key ?? '', url: p?.url ?? '' }))
-    .filter((p) => p.key && p.url)
+function getTicketLinks(d) {
+  if (!Array.isArray(d?.ticketLinks)) return []
+  return d.ticketLinks
+    .map((t) => ({ platform: t?.platform ?? '', url: t?.url ?? '' }))
+    .filter((t) => t.platform && t.url)
 }
 
-const PLATFORM_ICON_MAP = {
-  腾讯视频: '/icons/tc.svg',
-  Bilibili: '/icons/bilibili.svg',
-  YouTube: '/icons/youtube.svg',
-  爱奇艺: '/icons/iqiyi.svg',
-  芒果TV: '/icons/mgtv.svg',
-  优酷视频: '/icons/youku.svg',
+// 你可以按实际平台继续补全
+const TICKET_ICON_MAP = {
+  大麦: '/icons/damai.svg',
+  猫眼: '/icons/maoyan.svg',
+  票星球: '/icons/piaoxingqiu.svg',
+  纷玩岛: '/icons/fenwandao.svg',
+  秀动: '/icons/xiudong.svg',
+  抖音: '/icons/douyin.svg',
+  小红书: '/icons/xhs.svg',
+  官方: '/icons/link.svg',
 }
 
 function IconImg({ src, alt, className }) {
@@ -37,22 +40,72 @@ function IconImg({ src, alt, className }) {
   )
 }
 
-export default function EventDetailCard({ drama }) {
-  if (!drama) return null
+/**
+ * 推荐：数据里 status 用英文（upcoming/ongoing/ended/canceled/postponed）
+ * 如果你现在还是中文 status，也能显示：下面做了兼容
+ */
+const EVENT_STATUS_META = {
+  upcoming: { label: '即将进行' },
+  ongoing: { label: '进行中' },
+  ended: { label: '已结束' },
+  canceled: { label: '已取消' },
+  postponed: { label: '已延期' },
+}
+
+// 兼容中文直接传进来的情况（可删）
+const EVENT_STATUS_ALIAS = {
+  即将进行: 'upcoming',
+  进行中: 'ongoing',
+  已结束: 'ended',
+  已取消: 'canceled',
+  已延期: 'postponed',
+}
+
+function normalizeEventStatus(status) {
+  if (!status) return ''
+  return EVENT_STATUS_ALIAS[status] || status
+}
+
+function formatEventDateTime({ year, month, day, time }) {
+  // 你现在 month 是 'NOV' 这种展示型，直接拼就好
+  const y = year ? String(year) : ''
+  const m = month ? String(month).toUpperCase() : ''
+  const d = day ? String(day).padStart(2, '0') : ''
+  const t = time ? String(time) : ''
+  // 输出：2025 NOV 24 19:30
+  return [y, m, d, t].filter(Boolean).join(' ')
+}
+
+export default function EventDetailCard({ event }) {
+  if (!event) return null
 
   const {
     posterUrl,
     title,
-    type,
-    genres,
+    alt,
+    city,
+    location,
     year,
-    episodes,
-    rated,
-    ratedLink,
+    month,
+    day,
+    time,
+    type,
+    status,
+    stickerText,
     desc,
-  } = drama
+  } = event
 
-  const platforms = getPlatforms(drama)
+  const ticketLinks = getTicketLinks(event)
+
+  const normalizedStatus = normalizeEventStatus(status)
+  const statusLabel =
+    EVENT_STATUS_META[normalizedStatus]?.label ||
+    (typeof status === 'string' ? status : '')
+
+  const dateTimeText = formatEventDateTime({ year, month, day, time })
+
+  // 购票：有就显示，没有就不显示（你要求的行为）
+  const showTickets = ticketLinks.length > 0
 
   return (
     <div className="detail-card">
@@ -60,10 +113,17 @@ export default function EventDetailCard({ drama }) {
         {/* 封面 */}
         <div className="detail-cover">
           {posterUrl ? (
-            <img className="detail-cover-img" src={posterUrl} alt={title} />
+            <img
+              className="detail-cover-img"
+              src={posterUrl}
+              alt={alt || title}
+            />
           ) : (
             <div className="detail-cover-placeholder" />
           )}
+
+          {/* 角标：你给的 stickerText 可直接显示（比如场馆名/活动亮点） */}
+          {stickerText && <div className="detail-sticker">{stickerText}</div>}
         </div>
 
         {/* 信息区 */}
@@ -71,81 +131,66 @@ export default function EventDetailCard({ drama }) {
           <h1 className="detail-title">{title}</h1>
 
           <div className="detail-kv">
-            {type?.length > 0 && (
+            {city && (
               <div className="kv-row">
-                <div className="kv-k">分类</div>
+                <div className="kv-k">城市</div>
+                <div className="kv-v">{city}</div>
+              </div>
+            )}
+
+            {location && (
+              <div className="kv-row">
+                <div className="kv-k">地点</div>
+                <div className="kv-v">{location}</div>
+              </div>
+            )}
+
+            {dateTimeText && (
+              <div className="kv-row">
+                <div className="kv-k">时间</div>
+                <div className="kv-v">{dateTimeText}</div>
+              </div>
+            )}
+
+            {type && (
+              <div className="kv-row">
+                <div className="kv-k">类型</div>
                 <div className="kv-v">{joinText(type)}</div>
               </div>
             )}
 
-            {genres?.length > 0 && (
+            {statusLabel && (
               <div className="kv-row">
-                <div className="kv-k">类型</div>
-                <div className="kv-v">{joinText(genres)}</div>
-              </div>
-            )}
-
-            {year && (
-              <div className="kv-row">
-                <div className="kv-k">年份</div>
-                <div className="kv-v">{year}</div>
-              </div>
-            )}
-
-            {episodes && (
-              <div className="kv-row">
-                <div className="kv-k">集数</div>
-                <div className="kv-v">{episodes}</div>
-              </div>
-            )}
-
-            {(rated || ratedLink) && (
-              <div className="kv-row">
-                <div className="kv-k kv-k--icon">
-                  <a
-                    className="kv-ico-link"
-                    href={ratedLink || '#'}
-                    target={ratedLink ? '_blank' : undefined}
-                    rel={ratedLink ? 'noreferrer' : undefined}
-                    onClick={(e) => {
-                      if (!ratedLink) e.preventDefault()
-                    }}
-                    title="豆瓣"
-                  >
-                    <IconImg
-                      className="kv-ico"
-                      src="/icons/db.svg"
-                      alt="豆瓣"
-                    />
-                  </a>
+                <div className="kv-k">状态</div>
+                <div className="kv-v">
+                  {/* 如果你不做不同状态不同颜色，就保持一个 class */}
+                  <span className="status-badge">{statusLabel}</span>
                 </div>
-                <div className="kv-v">{rated}</div>
               </div>
             )}
 
-            {/* 播放：只显示平台 logo，无文字废话 */}
-            {platforms.length > 0 && (
+            {showTickets && (
               <div className="kv-row">
-                <div className="kv-k">播放</div>
+                <div className="kv-k">购票</div>
                 <div className="kv-v">
                   <div className="platform-row">
-                    {platforms.map((p) => {
-                      const iconSrc = PLATFORM_ICON_MAP[p.key]
-                      if (!iconSrc) return null
+                    {ticketLinks.map((t) => {
+                      const iconSrc = TICKET_ICON_MAP[t.platform]
+                      const finalIcon = iconSrc || '/icons/link.svg'
 
                       return (
                         <a
-                          key={p.key}
+                          key={`${t.platform}-${t.url}`}
                           className="platform-link"
-                          href={p.url}
+                          href={t.url}
                           target="_blank"
                           rel="noreferrer"
-                          title={p.key}
+                          title={t.platform}
                         >
                           <IconImg
                             className="platform-logo"
-                            src={iconSrc}
-                            alt={p.key}
+                            src={finalIcon}
+                            alt={t.platform}
                           />
                         </a>
                       )

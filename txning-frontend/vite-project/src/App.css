@@ -1031,6 +1031,7 @@ img {
 /* 信息区 */
 .detail-info {
   min-width: 0;
+  align-self: center;
 }
 
 .detail-title {

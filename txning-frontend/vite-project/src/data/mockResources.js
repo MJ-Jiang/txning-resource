@@ -225,23 +225,27 @@ export const mockResources = [
   {
     id: 'evt-1',
     category: 'events',
-    slug: 'shanghai-fan-meeting-2025', // 用于跳转详情页
+    slug: 'shanghai-fan-meeting-2025',
     posterUrl:
       'https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2864&auto=format&fit=crop',
+
     day: '24',
     month: 'NOV',
     year: 2025,
-    title: '上海粉丝见面会',
     time: '19:30',
-    location: '上海梅赛德斯奔驰文化中心',
-    stickerText: '上海梅赛德斯奔驰文化中心',
-    type: '剧宣', // 商务直播 / 红毯 / 剧宣 等
-    status: '即将进行',
+
+    title: '上海粉丝见面会',
     city: '上海',
+    location: '上海梅赛德斯奔驰文化中心',
+
+    type: '剧宣',
+    status: 'upcoming', // 建议英文
     alt: '上海粉丝见面会',
     desc: '主演将与观众近距离互动，分享幕后故事与拍摄趣事，并现场回应粉丝提问。',
     isFeatured: true,
     relatedId: ['drama-1'],
+    ticketLinks: [{ platform: '大麦', url: '...' }],
+
     createdAt: '2025-12-18T09:20:00.000Z',
     createdBy: 'admin_001',
   },
