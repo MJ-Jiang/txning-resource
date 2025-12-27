@@ -379,7 +379,7 @@ export const mockResources = [
     id: 'ugc-６',
     category: 'ugc',
     title: '微博营业',
-    parentId: ['drama-1'],
+    parentId: ['drama-1', 'personal'],
     linkUrl: 'https://www.douyin.com/video/ugc5xxxx',
     mediaType: '视频',
     platform: '抖音',

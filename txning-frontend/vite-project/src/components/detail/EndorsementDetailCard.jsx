@@ -64,7 +64,7 @@ export default function EndorsementDetailCard({ endorsement }) {
   const statusLabel =
     ENDORSEMENT_STATUS_META[status]?.label ||
     (typeof status === 'string' ? status : '')
-  const showTickets = ticketLinks.length > 0
+
   return (
     <div className="detail-card">
       <div className="detail-grid">

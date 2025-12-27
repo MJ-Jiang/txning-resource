@@ -20,7 +20,7 @@ function getRelatedTypes(item) {
   if (p.some((id) => String(id).startsWith('endorse-'))) {
     types.push('商务杂志')
   }
-  if (p.some((id) => String(id).startsWith('personal-'))) {
+  if (p.some((id) => String(id).startsWith('personal'))) {
     types.push('个人营业')
   }
 
