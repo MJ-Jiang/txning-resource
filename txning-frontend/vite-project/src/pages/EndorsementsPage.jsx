@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import MagazineCard from '../components/cards/MagazineCard'
+import MagazineCard from '../components/cards/EndorsementCard'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'

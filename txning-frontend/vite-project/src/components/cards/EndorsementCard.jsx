@@ -9,7 +9,7 @@ const STICKER_STYLE_BY_TYPE = {
   },
 }
 
-export default function MagazineCard({ item }) {
+export default function EndorsementCard({ item }) {
   const href = `/detail/${item.category}/${item.slug}`
 
   const stickerStyle =
@@ -29,7 +29,7 @@ export default function MagazineCard({ item }) {
           />
         </div>
         <div className="mag-info">
-          <p className="mag-title">{item.stickerText}</p>
+          <p className="mag-title">{item.role}</p>
         </div>
       </div>
     </Link>

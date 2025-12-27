@@ -126,7 +126,7 @@ export const mockResources = [
     id: 'endorse-1',
     category: 'endorsements',
     slug: 'global-ambassador-2023',
-    stickerText: '全球品牌代言人',
+    role: '全球品牌代言人',
     year: 2023,
     type: '商务',
     posterUrl:
@@ -135,14 +135,14 @@ export const mockResources = [
     title: '巴黎欧莱雅',
     alt: '巴黎欧莱雅',
 
-    status: '代言中',
+    status: 'active',
     isFeatured: true,
     desc: '品牌宣布其为年度全球代言人，参与主视觉拍摄与线下活动推广，并同步上线限定礼盒与联名物料。',
     createdAt: '2025-12-20T10:12:00.000Z',
     createdBy: 'admin_001',
     shopLinks: [
       {
-        platform: '官方商城',
+        platform: '微店',
         url: 'https://www.example.com/shop/tiffany-2023',
       },
     ],
@@ -152,14 +152,14 @@ export const mockResources = [
     id: 'endorse-2',
     category: 'endorsements',
     slug: 'loreal-global-ambassador-2025',
-    stickerText: '全球品牌代言人',
+    role: '全球品牌代言人',
     year: 2025,
     type: '商务',
     posterUrl:
       'https://images.unsplash.com/photo-1611048267451-e6ed903d4a38?q=80&w=2944&auto=format&fit=crop',
     title: '韩束',
     alt: '韩束',
-    status: '代言中',
+    status: 'soldout',
     isFeatured: true,
     desc: '以“自信与能量”为主题的全球广告企划，覆盖电视、户外、社媒与直播间联动，并推出年度限定周边。',
 
@@ -177,7 +177,7 @@ export const mockResources = [
     id: 'endorse-3',
     category: 'endorsements',
     slug: 'elle-men-sep-2023',
-    stickerText: 'ELLE MEN 秋季刊',
+    role: 'ELLE MEN 秋季刊',
     year: 2023,
     type: '杂志',
     posterUrl:
@@ -201,7 +201,7 @@ export const mockResources = [
     id: 'endorse-4',
     category: 'endorsements',
     slug: 'tiffany-brand-friend-2023',
-    stickerText: 'TIFFANY & CO.',
+    role: 'TIFFANY & CO.',
     year: 2023,
     type: '商务',
     posterUrl:

@@ -2,7 +2,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Banner from '../components/Banner.jsx'
 import HomeSection from '../components/lists/HomeSection.jsx'
-import MagazineGrid from '../components/lists/MagazineGrid.jsx'
+import EndorsementGrid from '../components/lists/EndorsementGrid.jsx'
 import DramaScroller from '../components/lists/DramaScroller.jsx'
 import EventsTimeline from '../components/lists/EventsTimeline.jsx'
 import GalleryGrid from '../components/lists/GalleryGrid.jsx'
@@ -14,7 +14,7 @@ export default function HomePage() {
       (x) => x.category === category && x.isFeatured === true
     )
 
-  const magazineItems = getFeaturedByCategory('endorsements')
+  const endorsementItems = getFeaturedByCategory('endorsements')
   const dramaItems = getFeaturedByCategory('dramas')
   const eventItems = getFeaturedByCategory('events')
   const galleryItems = getFeaturedByCategory('ugc')
@@ -51,7 +51,7 @@ export default function HomePage() {
           <DramaScroller items={dramaItems} />
         </HomeSection>
         <HomeSection title="商务杂志" subtitle="MAGAZINE" to="/endorsements">
-          <MagazineGrid items={magazineItems} />
+          <EndorsementGrid items={endorsementItems} />
         </HomeSection>
         <HomeSection
           className="section section-event"
