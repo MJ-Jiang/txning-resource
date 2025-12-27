@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
-import EndorsementCard from '../components/cards/EndorsementCard'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import EventpageCard from '../components/cards/EventpageCard'
 
 export default function EventsPage() {
   const schema = useMemo(
@@ -41,7 +41,7 @@ export default function EventsPage() {
       <ResourceListContainer
         category="events"
         schema={schema}
-        renderCard={(item) => <EndorsementCard key={item.id} item={item} />}
+        renderCard={(item) => <EventpageCard key={item.id} item={item} />}
         gridClassName="card-grid"
         searchKey={(m) => m.title}
       />

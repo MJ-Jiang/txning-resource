@@ -266,7 +266,7 @@ export const mockResources = [
     location: '北京',
     city: ['北京', '上海'],
     type: '红毯',
-    status: '即将进行',
+    status: 'upcoming',
     stickerText: '北京国家体育馆',
     alt: '年度时尚盛典红毯',
     desc: '年度时尚盛典红毯环节，众多品牌与艺人亮相，展示当季设计与造型趋势。',
@@ -292,7 +292,7 @@ export const mockResources = [
     location: '北京',
     city: '北京',
     type: '商务直播',
-    status: '即将进行',
+    status: 'upcoming',
 
     alt: '年度时尚盛典直播',
     desc: '官方线上直播通道，同步呈现红毯与颁奖环节，并提供多机位观看体验。',

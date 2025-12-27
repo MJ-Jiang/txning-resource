@@ -686,6 +686,80 @@ img {
     transform: translate(1px, 1px);
   }
 }
+.evt-page-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.evt-page-media {
+  position: relative;
+}
+
+.evt-page-img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.evt-page-date {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.evt-page-month {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.evt-page-day {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.evt-page-status {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  opacity: 0.85;
+  background: var(--accent-red);
+  color: white;
+  padding: 4px 8px;
+  font-weight: 900;
+  font-size: var(--fz-tiny);
+  border-radius: 999px;
+}
+
+.evt-page-info {
+  padding: 12px;
+}
+
+.evt-page-title {
+  font-size: 16px;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.evt-page-location {
+  font-size: 13px;
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.evt-page-time {
+  margin-top: 4px;
+  font-size: 13px;
+}
 
 /* 05图频 - 拼贴 */
 
