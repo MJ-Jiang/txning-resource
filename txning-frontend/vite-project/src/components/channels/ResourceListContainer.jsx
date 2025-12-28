@@ -1,10 +1,10 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import usePagedList from '../../hooks/usePagedList'
 import useResourceFilters from '../../hooks/useResourceFilters'
 import ResourceLibraryPage from './ResourceLibraryPage'
 import FilterFields from './FilterFields'
-import { mockResources } from '../../data/mockResources'
 import useResponsivePageSize from '../../hooks/useResponsivePageSize'
+import { getResources } from '@/services/resources'
 
 export default function ResourceListContainer({
   category,
@@ -29,6 +29,20 @@ export default function ResourceListContainer({
 
   // ✅ 最终 pageSize：props 优先，否则用响应式的
   const finalPageSize = pageSize ?? responsivePageSize
+  const [fetchedResources, setFetchedResources] = useState([])
+
+  useEffect(() => {
+    let alive = true
+
+    ;(async () => {
+      const data = await getResources()
+      if (alive) setFetchedResources(data)
+    })()
+
+    return () => {
+      alive = false
+    }
+  }, [])
 
   function getIdNum(item) {
     if (!item || !item.id) return -1
@@ -40,7 +54,7 @@ export default function ResourceListContainer({
     const list = Array.isArray(items)
       ? items
       : category
-        ? mockResources.filter((x) => x.category === category)
+        ? fetchedResources.filter((x) => x.category === category)
         : []
 
     // ✅ 按 id 数字部分倒序

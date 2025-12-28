@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -7,7 +7,8 @@ import GeneralCard from '../components/cards/GeneralCard'
 import DramaDetailCard from '../components/detail/DramaDetailCard'
 import EndorsementDetailCard from '../components/detail/EndorsementDetailCard'
 import EventDetailCard from '../components/detail/EventDetailCard'
-import { mockResources } from '../data/mockResources'
+import { getResources } from '@/services/resources'
+
 import useResponsivePageSize from '../hooks/useResponsivePageSize'
 
 function toArray(v) {
@@ -42,11 +43,21 @@ function toGeneralEntityCard(entity) {
 export default function DetailPage() {
   const { category, slug } = useParams()
   const pageSize = useResponsivePageSize(12, 25, 768)
-
+  const [resources, setResources] = useState([])
+  useEffect(() => {
+    let alive = true
+    ;(async () => {
+      const data = await getResources()
+      if (alive) setResources(Array.isArray(data) ? data : [])
+    })()
+    return () => {
+      alive = false
+    }
+  }, [])
   /** 当前详情页对象 */
   const item = useMemo(() => {
-    return mockResources.find((x) => x.category === category && x.slug === slug)
-  }, [category, slug])
+    return resources.find((x) => x.category === category && x.slug === slug)
+  }, [category, slug, resources])
 
   const emptyText =
     category === 'endorsements'
@@ -69,7 +80,7 @@ export default function DetailPage() {
     if (!item) return []
     const selfId = String(item.id)
 
-    return mockResources.filter((x) => {
+    return resources.filter((x) => {
       if (x.category !== 'ugc') return false
       const p = x.parentId
       if (Array.isArray(p)) return p.map(String).includes(selfId)
@@ -84,7 +95,7 @@ export default function DetailPage() {
     if (!item) return []
     const selfId = String(item.id)
 
-    return mockResources
+    return resources
       .filter((x) => x.category !== 'ugc')
       .filter((x) => toArray(x.relatedId).map(String).includes(selfId))
       .filter((x) => String(x.id) !== selfId)

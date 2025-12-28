@@ -6,13 +6,21 @@ import EndorsementGrid from '../components/lists/EndorsementGrid.jsx'
 import DramaScroller from '../components/lists/DramaScroller.jsx'
 import EventsTimeline from '../components/lists/EventsTimeline.jsx'
 import GalleryGrid from '../components/lists/GalleryGrid.jsx'
-import { mockResources } from '../data/mockResources'
+import { useEffect, useState } from 'react'
+import { getResources } from '@/services/resources'
 
 export default function HomePage() {
+  const [resources, setResources] = useState([])
+  useEffect(() => {
+    async function loadResources() {
+      const data = await getResources()
+      setResources(data)
+    }
+    loadResources()
+  }, [])
+
   const getFeaturedByCategory = (category) =>
-    mockResources.filter(
-      (x) => x.category === category && x.isFeatured === true
-    )
+    resources.filter((x) => x.category === category && x.isFeatured === true)
 
   const endorsementItems = getFeaturedByCategory('endorsements')
   const dramaItems = getFeaturedByCategory('dramas')

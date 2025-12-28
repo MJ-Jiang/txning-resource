@@ -16,7 +16,7 @@ export default function HomeSection({
         </h2>
 
         {to && (
-          <Link to={to} className="more-link">
+          <Link to={to} className="more-link" aria-label={`更多 ${title}`}>
             更多 <i className="fa-solid fa-circle-arrow-right"></i>
           </Link>
         )}
