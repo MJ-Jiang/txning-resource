@@ -29,6 +29,7 @@ export default function GalleryCard({ item }) {
       {/* ✅ DOM结构不变：只加了事件/属性，不加任何包裹元素 */}
       <div
         className="gallery-item"
+        data-role="external-card"
         onClick={onCardClick}
         role={clickable ? 'button' : undefined}
         tabIndex={clickable ? 0 : undefined}

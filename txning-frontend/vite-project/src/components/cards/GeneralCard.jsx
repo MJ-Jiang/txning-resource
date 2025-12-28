@@ -75,6 +75,7 @@ export default function GeneralCard({ item }) {
       <>
         <a
           className="card-link"
+          data-role="external-card"
           href={externalHref}
           target="_blank"
           rel="noopener noreferrer"

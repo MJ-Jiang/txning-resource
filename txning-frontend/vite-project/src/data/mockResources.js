@@ -1,5 +1,41 @@
 export const mockResources = [
   {
+    posterUrl:
+      'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
+
+    href: '/dramas',
+    category: 'banners',
+    alt: '进入影视剧综频道',
+    title: '影视剧综',
+    description: '查看最新影视剧综条目',
+    platform: '本站',
+    isFeatured: true,
+  },
+  {
+    posterUrl:
+      'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
+
+    href: 'https://example.com/official',
+    category: 'banners',
+    alt: '微博之夜的任务',
+    title: '官方外链',
+    description: '打开第三方网站（示例）',
+    platform: '第三方网站',
+    isFeatured: true,
+  },
+  {
+    category: 'banners',
+    posterUrl:
+      'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
+
+    href: 'https://www.instagram.com/',
+    alt: '前往 Instagram',
+    title: '社交媒体',
+    description: '打开 Instagram',
+    platform: 'Instagram',
+    isFeatured: true,
+  },
+  {
     id: 'drama-1',
     category: 'dramas',
     relatedId: ['evt-1', 'evt-2'],
