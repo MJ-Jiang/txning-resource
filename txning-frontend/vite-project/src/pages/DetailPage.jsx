@@ -25,7 +25,7 @@ function toGeneralEntityCard(entity) {
     posterUrl: entity.posterUrl,
 
     // 站内跳转
-    url: `/detail/${entity.category}/${entity.slug}`,
+    url: `/detail/${entity.category}/${entity.id}`,
     isExternal: false,
 
     // 给「来源」筛选用
@@ -41,7 +41,7 @@ function toGeneralEntityCard(entity) {
 }
 
 export default function DetailPage() {
-  const { category, slug } = useParams()
+  const { category, id } = useParams()
   const pageSize = useResponsivePageSize(12, 25, 768)
   const [resources, setResources] = useState([])
   useEffect(() => {
@@ -56,22 +56,22 @@ export default function DetailPage() {
   }, [])
   /** 当前详情页对象 */
   const item = useMemo(() => {
-    return resources.find((x) => x.category === category && x.slug === slug)
-  }, [category, slug, resources])
+    return resources.find((x) => x.category === category && x.id === id)
+  }, [category, id, resources])
 
   const emptyText =
-    category === 'endorsements'
+    category === 'endorsement'
       ? '找不到该商务／杂志'
-      : category === 'events'
+      : category === 'event'
         ? '找不到该活动'
         : '找不到该影视'
 
   /** 大卡片 */
   const detailCard = useMemo(() => {
     if (!item) return null
-    if (category === 'endorsements')
+    if (category === 'endorsement')
       return <EndorsementDetailCard endorsement={item} />
-    if (category === 'events') return <EventDetailCard event={item} />
+    if (category === 'event') return <EventDetailCard event={item} />
     return <DramaDetailCard drama={item} />
   }, [item, category])
 

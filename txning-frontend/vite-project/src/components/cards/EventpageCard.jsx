@@ -14,7 +14,7 @@ const STATUS_STYLE = {
 }
 
 export default function EventpageCard({ item }) {
-  const href = `/detail/${item.category}/${item.slug}`
+  const href = `/detail/${item.category}/${item.id}`
 
   const statusLabel = EVENT_STATUS_LABEL[item.status] ?? item.status
   function StatusTag({ status }) {

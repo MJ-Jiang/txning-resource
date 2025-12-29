@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
-import MagazineCard from '../components/cards/EndorsementCard'
+import EndorsementCard from '../components/cards/EndorsementCard'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
-export default function MagazinesPage() {
+export default function EndorsementsPage() {
   const schema = useMemo(
     () => [
       {
@@ -33,9 +33,9 @@ export default function MagazinesPage() {
     <div className="page">
       <Navbar />
       <ResourceListContainer
-        category="endorsements"
+        category="endorsement"
         schema={schema}
-        renderCard={(item) => <MagazineCard key={item.id} item={item} />}
+        renderCard={(item) => <EndorsementCard key={item.id} item={item} />}
         gridClassName="card-grid"
         searchKey={(m) => m.title}
       />

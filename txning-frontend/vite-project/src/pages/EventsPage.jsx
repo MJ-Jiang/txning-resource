@@ -39,7 +39,7 @@ export default function EventsPage() {
     <div className="page">
       <Navbar />
       <ResourceListContainer
-        category="events"
+        category="event"
         schema={schema}
         renderCard={(item) => <EventpageCard key={item.id} item={item} />}
         gridClassName="card-grid"

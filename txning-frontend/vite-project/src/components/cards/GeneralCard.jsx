@@ -16,9 +16,9 @@ export default function GeneralCard({ item }) {
 
   // 站内详情页（按你项目约定）
   const internalHref = useMemo(() => {
-    if (!item.category || !item.slug) return ''
-    return `/detail/${item.category}/${item.slug}`
-  }, [item.category, item.slug])
+    if (!item.category || !item.id) return ''
+    return `/detail/${item.category}/${item.id}`
+  }, [item.category, item.id])
 
   // 外链（如有）
   const externalHref = item.linkUrl || ''

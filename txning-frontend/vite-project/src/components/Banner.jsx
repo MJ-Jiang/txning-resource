@@ -7,7 +7,7 @@ function isExternalHref(href) {
 }
 
 export default function Banner({
-  banners = [], // [{ posterUrl, href, alt?, title?, platform? }]
+  banners = [],
   autoPlay = true,
   interval = 4500,
 }) {
@@ -69,17 +69,17 @@ export default function Banner({
                 className="hero"
                 href={href}
                 data-role="banner"
-                aria-label={b.alt || b.title || `首页Banner`}
+                aria-label={b.poster_Alt || `首页Banner`}
                 onClick={(e) => {
                   if (!external) return
                   e.preventDefault()
-                  openExternalConfirm(href, b.platform || b.title)
+                  openExternalConfirm(href, b.platform)
                 }}
               >
                 <img
                   className="hero__img"
                   src={b.posterUrl}
-                  alt={b.alt || ''}
+                  alt={b.posterAlt || ''}
                 />
               </a>
             )

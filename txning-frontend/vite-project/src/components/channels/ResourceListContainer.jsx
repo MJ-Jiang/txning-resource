@@ -57,9 +57,8 @@ export default function ResourceListContainer({
         ? fetchedResources.filter((x) => x.category === category)
         : []
 
-    // ✅ 按 id 数字部分倒序
     return [...list].sort((a, b) => getIdNum(b) - getIdNum(a))
-  }, [items, category])
+  }, [items, category, fetchedResources])
 
   const schemaWithDefaults = useMemo(() => {
     return schema.map((f) => {

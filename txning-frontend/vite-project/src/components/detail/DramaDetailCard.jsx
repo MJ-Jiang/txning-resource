@@ -62,9 +62,9 @@ export default function DramaDetailCard({ drama }) {
     genres,
     year,
     episodes,
-    rated,
-    ratedLink,
-    desc,
+    ratingValue,
+    ratingUrl,
+    description,
   } = drama
   const ticketLinks = getTicketLinks(drama)
   const platforms = getPlatforms(drama)
@@ -114,16 +114,16 @@ export default function DramaDetailCard({ drama }) {
               </div>
             )}
 
-            {(rated || ratedLink) && (
+            {(ratingValue || ratingUrl) && (
               <div className="kv-row">
                 <div className="kv-k kv-k--icon">
                   <a
                     className="kv-ico-link"
-                    href={ratedLink || '#'}
-                    target={ratedLink ? '_blank' : undefined}
-                    rel={ratedLink ? 'noreferrer' : undefined}
+                    href={ratingUrl || '#'}
+                    target={ratingUrl ? '_blank' : undefined}
+                    rel={ratingUrl ? 'noreferrer' : undefined}
                     onClick={(e) => {
-                      if (!ratedLink) e.preventDefault()
+                      if (!ratingUrl) e.preventDefault()
                     }}
                     title="豆瓣"
                   >
@@ -134,7 +134,7 @@ export default function DramaDetailCard({ drama }) {
                     />
                   </a>
                 </div>
-                <div className="kv-v">{rated}</div>
+                <div className="kv-v">{ratingValue}</div>
               </div>
             )}
 
@@ -204,10 +204,10 @@ export default function DramaDetailCard({ drama }) {
       </div>
 
       {/* 简介 */}
-      {desc && (
+      {description && (
         <div className="detail-desc">
           <div className="detail-desc-hd">简介</div>
-          <p className="detail-desc-text">{desc}</p>
+          <p className="detail-desc-text">{description}</p>
         </div>
       )}
     </div>

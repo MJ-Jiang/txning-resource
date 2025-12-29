@@ -1,109 +1,106 @@
 export const mockResources = [
   {
-    posterUrl:
+    poster_url:
       'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
 
-    href: '/dramas',
+    href: '/drama',
     category: 'banners',
-    alt: '进入影视剧综频道',
-    title: '影视剧综',
-    description: '查看最新影视剧综条目',
+    poster_alt_zh: '进入影视剧综频道',
+    description_zh: '查看最新影视剧综条目',
     platform: '本站',
-    isFeatured: true,
+    is_featured: true,
   },
   {
-    posterUrl:
+    poster_url:
       'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
 
     href: 'https://example.com/official',
     category: 'banners',
-    alt: '微博之夜的任务',
-    title: '官方外链',
-    description: '打开第三方网站（示例）',
+    poster_alt_zh: '微博之夜的任务',
+    description_zh: '打开第三方网站（示例）',
     platform: '第三方网站',
-    isFeatured: true,
+    is_featured: true,
   },
   {
     category: 'banners',
-    posterUrl:
+    poster_url:
       'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
 
     href: 'https://www.instagram.com/',
-    alt: '前往 Instagram',
-    title: '社交媒体',
-    description: '打开 Instagram',
+    poster_alt_zh: '前往 Instagram',
+    description_zh: '打开 Instagram',
     platform: 'Instagram',
-    isFeatured: true,
+    is_featured: true,
   },
   {
     id: 'drama-1',
-    category: 'dramas',
+    category: 'drama',
     relatedId: ['evt-1', 'evt-2'],
-    slug: 'deep-sea-rescue',
-    title: '深海救援',
-    year: 2023,
+    title_zh: '深海救援',
+    release_year: 2023,
     genres: ['动作', '冒险'],
-    type: ['电影'],
-    posterUrl:
+    type: 'film',
+    poster_url:
       'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
-    status: '热映中',
+    status: 'now_showing',
     platforms: [
       { key: '腾讯视频', url: 'https://v.qq.com/xxx' },
       { key: 'Bilibili', url: 'https://www.bilibili.com/xxx' },
     ],
-    ratedLink: 'https://movie.douban.com/subject/35600001/',
-    rated: 8.5,
-    alt: 'Movie',
-    isFeatured: true,
+    rating_url: 'https://movie.douban.com/subject/35600001/',
+    rating_value: 8.5,
+    poster_alt_zh: 'Movie',
+    is_featured: true,
     ticketLinks: [{ platform: '大麦', url: 'https://www.damai.cn/xxx' }],
-    desc: '一次深海事故让救援队被迫下潜到未知海沟，氧气、时间与人性同时见底。队长必须在救人与保命之间做出选择。',
-    episodes: 116,
+    description_zh:
+      '一次深海事故让救援队被迫下潜到未知海沟，氧气、时间与人性同时见底。队长必须在救人与保命之间做出选择。',
+    episode_count: 116,
     createdAt: '2025-12-01T10:12:33.000Z',
     createdBy: 'admin_001',
   },
 
   {
     id: 'drama-2',
-    category: 'dramas',
-    slug: 'neon-district',
-    title: '霓虹街区',
-    year: 2024,
+    category: 'drama',
+    title_zh: '霓虹街区',
+    release_year: 2024,
     genres: ['科幻', '赛博朋克'],
-    type: ['电视剧'],
-    posterUrl:
+    type: 'tv_series',
+    poster_url:
       'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2825&auto=format&fit=crop',
-    status: '待播',
+    status: 'not_yet_released',
     platforms: [{ key: '腾讯视频', url: 'https://v.qq.com/xxx' }],
-    alt: 'Movie',
-    isFeatured: true,
-    desc: '在数据统治的城市里，街区由算法划分阶层。一名“记忆修补师”意外发现自己被篡改过的过去，从而卷入一场针对系统的反向清算。',
-    episodes: '共12集',
-    rated: 8.2,
-    ratedLink: 'https://movie.douban.com/subject/36620002/',
-
+    poster_alt_zh: 'Movie',
+    is_featured: true,
+    description_zh:
+      '在数据统治的城市里，街区由算法划分阶层。一名“记忆修补师”意外发现自己被篡改过的过去，从而卷入一场针对系统的反向清算。',
+    episode_count: '共12集',
+    rating_value: 8.2,
+    rating_url: 'https://movie.douban.com/subject/36620002/',
     createdAt: '2025-12-05T08:01:11.000Z',
     createdBy: 'admin_002',
   },
 
   {
     id: 'drama-3',
-    category: 'dramas',
-    slug: 'silent-witness',
-    title: '沉默的证人',
-    year: 2022,
-    genres: ['悬疑', '犯罪'],
-    type: ['电视剧'],
-    posterUrl:
-      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2940&auto=format&fit=crop',
-    status: '热播中',
-    platforms: [{ key: '腾讯视频', url: 'https://v.qq.com/xxx' }],
-    alt: 'Movie',
-    isFeatured: true,
+    category: 'drama',
 
-    desc: '一段无声证词牵出连环旧案：证人不说话、证据不说谎。刑警与法医在不断被推翻的结论里逼近真相，发现凶手可能就在“解释真相”的人群中。',
-    episodes: '共24集',
-    rated: 7.9,
-    ratedLink: 'https://movie.douban.com/subject/35499003/',
+    title_zh: '沉默的证人',
+    release_year: 2022,
+    genres: ['悬疑', '犯罪'],
+    type: 'tv_series',
+    poster_url:
+      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2940&auto=format&fit=crop',
+    status: 'now_showing',
+    platforms: [{ key: '腾讯视频', url: 'https://v.qq.com/xxx' }],
+    poster_alt_zh: 'Movie',
+    is_featured: true,
+
+    description_zh:
+      '一段无声证词牵出连环旧案：证人不说话、证据不说谎。刑警与法医在不断被推翻的结论里逼近真相，发现凶手可能就在“解释真相”的人群中。',
+    episode_count: '共24集',
+    rating_value: 7.9,
+    rated_url: 'https://movie.douban.com/subject/35499003/',
 
     createdAt: '2025-12-07T14:26:54.000Z',
     createdBy: 'admin_001',
@@ -111,27 +108,28 @@ export const mockResources = [
 
   {
     id: 'drama-4',
-    category: 'dramas',
-    slug: 'youth-party',
-    title: '青春派对',
-    year: 2021,
+    category: 'drama',
+
+    title_zh: '青春派对',
+    release_year: 2021,
     genres: ['综艺'],
-    type: ['短剧'],
-    posterUrl:
+    type: 'short_series',
+    poster_url:
       'https://images.unsplash.com/photo-1594909122845-861c4f9c16cb?q=80&w=2940&auto=format&fit=crop',
-    status: '已完结',
+    status: 'ended',
     platforms: [
       {
         key: 'Youtube',
         url: 'https://www.youtube.com/playlist?list=youth-party-full',
       },
     ],
-    alt: 'Movie',
-    isFeatured: true,
-    desc: '一群住在同一屋檐下的年轻人，用任务、表演与真心话把尴尬变成友情。最后一集的告别，让每个人都学会了如何更好地成为自己。',
-    episodes: '共10期',
-    rated: 7.3,
-    ratedLink: 'https://movie.douban.com/subject/35281234/',
+    poster_alt_zh: 'Movie',
+    is_featured: true,
+    description_zh:
+      '一群住在同一屋檐下的年轻人，用任务、表演与真心话把尴尬变成友情。最后一集的告别，让每个人都学会了如何更好地成为自己。',
+    episode_count: '共10期',
+    rating_value: 7.3,
+    rating_url: 'https://movie.douban.com/subject/35281234/',
 
     createdAt: '2025-12-09T19:05:10.000Z',
     createdBy: 'admin_003',
@@ -139,22 +137,23 @@ export const mockResources = [
 
   {
     id: 'drama-5',
-    category: 'dramas',
-    slug: 'fast-rush',
-    title: '极速狂飙',
-    year: 2020,
+    category: 'drama',
+
+    title_zh: '极速狂飙',
+    release_year: 2020,
     genres: ['动作'],
-    type: ['电影'],
-    posterUrl:
+    type: 'film',
+    poster_url:
       'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
-    status: '即将上线',
+    status: 'upcoming',
     platforms: [{ key: '院线', url: null }],
-    alt: 'Movie',
-    isFeatured: true,
-    desc: '退役车手被迫回到赛道：不是为了冠军，而是为了救人。一次“合法的非法比赛”让他重新点燃引擎，也点燃了更大的阴谋。',
-    episodes: '电影 · 102分钟',
-    rated: 6.9,
-    ratedLink: 'https://movie.douban.com/subject/35190012/',
+    poster_alt_alt: 'Movie',
+    is_featured: true,
+    description_zh:
+      '退役车手被迫回到赛道：不是为了冠军，而是为了救人。一次“合法的非法比赛”让他重新点燃引擎，也点燃了更大的阴谋。',
+    episode_count: '电影 · 102分钟',
+    rating_value: 6.9,
+    rating_url: 'https://movie.douban.com/subject/35190012/',
 
     createdAt: '2025-12-12T11:42:07.000Z',
     createdBy: 'admin_002',
@@ -162,8 +161,8 @@ export const mockResources = [
 
   {
     id: 'endorse-1',
-    category: 'endorsements',
-    slug: 'global-ambassador-2023',
+    category: 'endorsement',
+
     role: '全球品牌代言人',
     year: 2023,
     type: '商务',
@@ -188,8 +187,8 @@ export const mockResources = [
 
   {
     id: 'endorse-2',
-    category: 'endorsements',
-    slug: 'loreal-global-ambassador-2025',
+    category: 'endorsement',
+
     role: '全球品牌代言人',
     year: 2025,
     type: '商务',
@@ -213,8 +212,8 @@ export const mockResources = [
 
   {
     id: 'endorse-3',
-    category: 'endorsements',
-    slug: 'elle-men-sep-2023',
+    category: 'endorsement',
+
     role: 'ELLE MEN 秋季刊',
     year: 2023,
     type: '杂志',
@@ -237,8 +236,8 @@ export const mockResources = [
 
   {
     id: 'endorse-4',
-    category: 'endorsements',
-    slug: 'tiffany-brand-friend-2023',
+    category: 'endorsement',
+
     role: 'TIFFANY & CO.',
     year: 2023,
     type: '商务',
@@ -247,7 +246,7 @@ export const mockResources = [
     title: 'BKT',
     alt: 'BKT',
     status: '已到期',
-    isFeatured: false,
+    isFeatured: true,
     desc: '以“日常高光”为主题的品牌挚友推广，包含短片、平面物料与线下快闪联动，呈现经典系列的现代佩戴方式。',
     createdAt: '2025-12-23T16:40:00.000Z',
     createdBy: 'admin_001',
@@ -262,9 +261,9 @@ export const mockResources = [
   // ===== events =====
   {
     id: 'evt-1',
-    category: 'events',
+    category: 'event',
     relatedId: ['drama-1', 'endorse-1', 'evt-2'],
-    slug: 'shanghai-fan-meeting-2025',
+
     posterUrl:
       'https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2864&auto=format&fit=crop',
 
@@ -290,9 +289,9 @@ export const mockResources = [
 
   {
     id: 'evt-2',
-    category: 'events',
+    category: 'event',
     relatedId: ['drama-1'],
-    slug: 'annual-fashion-gala-red-carpet-2025',
+
     posterUrl:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
     day: '15',
@@ -317,8 +316,8 @@ export const mockResources = [
 
   {
     id: 'evt-3',
-    category: 'events',
-    slug: 'annual-fashion-gala-live-2025',
+    category: 'event',
+
     posterUrl:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
     day: '10',

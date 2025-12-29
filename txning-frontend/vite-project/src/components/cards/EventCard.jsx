@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 export default function EventCard({ item }) {
-  const href = `/detail/${item.category}/${item.slug}`
+  const href = `/detail/${item.category}/${item.id}`
 
   return (
     <Link to={href} className="card-link">

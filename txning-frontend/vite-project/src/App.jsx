@@ -14,10 +14,10 @@ export default function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/dramas" element={<DramasPage />} />
-        <Route path="/endorsements" element={<EndorsementsPage />} />
-        <Route path="/events" element={<EventsPage />} />
-        <Route path="/detail/:category/:slug" element={<DetailPage />} />
+        <Route path="/drama" element={<DramasPage />} />
+        <Route path="/endorsement" element={<EndorsementsPage />} />
+        <Route path="/event" element={<EventsPage />} />
+        <Route path="/detail/:category/:id" element={<DetailPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/aboutme" element={<AboutPage />} />
       </Routes>

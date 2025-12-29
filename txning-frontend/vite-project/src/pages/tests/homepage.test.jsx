@@ -15,35 +15,34 @@ import HomePage from '../HomePage'
 vi.mock('@/services/resources', () => ({
   getResources: vi.fn(async () => {
     const dramas = Array.from({ length: 8 }).map((_, i) => ({
-      id: `drama ${i + 1}`,
-      category: 'dramas',
+      id: `drama-${i + 1}`,
+      category: 'drama',
       title: `Drama ${i + 1}`,
-      slug: `drama-${i + 1}`,
       isFeatured: true,
     }))
 
     const endorsements = Array.from({ length: 6 }).map((_, i) => ({
-      id: `endorse ${i + 1}`,
-      category: 'endorsements',
+      id: `endorse-${i + 1}`,
+      category: 'endorsement',
       title: `Endorse ${i + 1}`,
-      slug: `endorse-${i + 1}`,
+
       isFeatured: true,
     }))
 
     const events = Array.from({ length: 7 }).map((_, i) => ({
-      id: `event ${i + 1}`,
-      category: 'events',
+      id: `event-${i + 1}`,
+      category: 'event',
       title: `Event ${i + 1}`,
-      slug: `event-${i + 1}`,
+
       isFeatured: true,
     }))
 
     // 图频（UGC）示例：外链
     const ugc = Array.from({ length: 6 }).map((_, i) => ({
-      id: `ugc ${i + 1}`,
+      id: `ugc-${i + 1}`,
       category: 'ugc',
       title: `UGC ${i + 1}`,
-      slug: `ugc-${i + 1}`,
+
       isFeatured: true,
       linkUrl: `https://example.com/ugc-${i + 1}`,
     }))
@@ -52,18 +51,17 @@ vi.mock('@/services/resources', () => ({
         id: 'banner-internal',
         category: 'banners',
         isFeatured: true,
-        title: '跳转到影视剧综',
-        alt: '跳转到影视剧综',
+
+        posterAlt: '跳转到影视剧综',
         posterUrl: 'https://example.com/banner-internal.jpg',
-        href: '/dramas',
+        href: '/drama',
         platform: '本站',
       },
       {
         id: 'banner-external',
         category: 'banners',
         isFeatured: true,
-        title: '打开 Google',
-        alt: '打开 Google',
+        posterAlt: '打开 Google',
         posterUrl: 'https://example.com/banner-external.jpg',
         href: 'https://google.com',
         platform: 'Google',
@@ -102,7 +100,7 @@ async function expectMaxVisible(prefix, max) {
 }
 
 describe('HomePage - basic structure', () => {
-  it('contains ５ section titles', async () => {
+  it('contains 5 section titles', async () => {
     renderHome()
 
     await screen.findByText('影视剧综')
@@ -134,9 +132,9 @@ describe('HomePage - basic structure', () => {
     renderHome()
 
     const moreLinks = [
-      { label: '更多 影视剧综', href: '/dramas' },
-      { label: '更多 商务杂志', href: '/endorsements' },
-      { label: '更多 官方活动', href: '/events' },
+      { label: '更多 影视剧综', href: '/drama' },
+      { label: '更多 商务杂志', href: '/endorsement' },
+      { label: '更多 官方活动', href: '/event' },
       { label: '更多 图频', href: '/gallery' },
     ]
 
@@ -147,7 +145,7 @@ describe('HomePage - basic structure', () => {
   })
 
   describe('HomePage - Banner ', () => {
-    it('banner ≥ 1）', async () => {
+    it('banner ≥ 1)', async () => {
       renderHome()
 
       const links = await screen.findAllByRole('link')
@@ -222,7 +220,7 @@ describe('HomePage - basic structure', () => {
   })
 
   describe('HomePage - Click on the card to jump', () => {
-    it('cards should redirect to /detail/:category/:slug', async () => {
+    it('cards should redirect to /detail/:category/:id', async () => {
       renderHome()
 
       await screen.findByText('Drama 1')
@@ -237,18 +235,18 @@ describe('HomePage - basic structure', () => {
       expect(detailLinks.length).toBeGreaterThan(0)
 
       // 允许的 category
-      const allowedCategories = ['dramas', 'endorsements', 'events']
+      const allowedCategories = ['drama', 'endorsement', 'event']
 
       detailLinks.forEach((href) => {
-        // /detail/:category/:slug
+        // /detail/:category/:id
         const parts = href.split('/').filter(Boolean)
         expect(parts.length).toBe(3)
 
-        const [, category, slug] = parts
+        const [, category, id] = parts
 
         expect(allowedCategories).toContain(category)
-        expect(slug).toBeTruthy()
-        expect(slug).not.toContain(' ')
+        expect(id).toBeTruthy()
+        expect(id).not.toContain(' ')
       })
     })
 

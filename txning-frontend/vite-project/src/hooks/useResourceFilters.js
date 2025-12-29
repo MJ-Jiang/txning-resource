@@ -20,26 +20,6 @@ function normalizeQuery(q) {
     .toLowerCase()
 }
 
-/**
- * schema 结构（）：
- * {
- *   name: 'platform' | 'genre' | 'year' | ...
- *   label: '平台' | '类型' | ...
- *   defaultValue?: 'all'
- *   // 从 item 取值：返回 string/number 或 array（用于多值字段）
- *   getValue: (item) => any
- *
- *   // options 生成（可选，不提供就用 getValue 自动推）
- *   buildOptions?: (items, helpers) => any[]
- *
- *   // 命中逻辑（可选，不提供就用默认逻辑：all / equals / includes）
- *   match?: (itemValue, selectedValue, item) => boolean
- *
- *   // 可选：把 options 显示值映射成 string（用于下拉选项展示）
- *   toOptionValue?: (x) => string
- * }
- */
-
 export default function useResourceFilters({
   items,
   schema,

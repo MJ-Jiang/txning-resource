@@ -10,9 +10,9 @@ import GalleryGrid from '../components/lists/GalleryGrid.jsx'
 import { getResources } from '@/services/resources'
 
 const HOME_LIMITS = {
-  dramas: 6,
-  endorsements: 4,
-  events: 5,
+  drama: 6,
+  endorsement: 4,
+  event: 5,
   ugc: 4,
   banners: 3,
 }
@@ -45,7 +45,7 @@ export default function HomePage() {
       .map((x) => ({
         posterUrl: x.posterUrl,
         href: x.href,
-        alt: x.alt || x.title || 'Banner',
+        alt: x.posterAlt || 'Banner',
         platform: x.platform,
       }))
   }, [featured])
@@ -53,20 +53,20 @@ export default function HomePage() {
   // ✅ 主页四个 section 的推荐数据（带上限）
   const dramaItems = useMemo(() => {
     return featured
-      .filter((x) => x.category === 'dramas')
-      .slice(0, HOME_LIMITS.dramas)
+      .filter((x) => x.category === 'drama')
+      .slice(0, HOME_LIMITS.drama)
   }, [featured])
 
   const endorsementItems = useMemo(() => {
     return featured
-      .filter((x) => x.category === 'endorsements')
-      .slice(0, HOME_LIMITS.endorsements)
+      .filter((x) => x.category === 'endorsement')
+      .slice(0, HOME_LIMITS.endorsement)
   }, [featured])
 
   const eventItems = useMemo(() => {
     return featured
-      .filter((x) => x.category === 'events')
-      .slice(0, HOME_LIMITS.events)
+      .filter((x) => x.category === 'event')
+      .slice(0, HOME_LIMITS.event)
   }, [featured])
 
   const galleryItems = useMemo(() => {
@@ -85,21 +85,21 @@ export default function HomePage() {
         <HomeSection
           className="section section-movie"
           title="影视剧综"
-          subtitle="DRAMAS"
-          to="/dramas"
+          subtitle="DRAMA"
+          to="/drama"
         >
           <DramaScroller items={dramaItems} />
         </HomeSection>
 
-        <HomeSection title="商务杂志" subtitle="MAGAZINE" to="/endorsements">
+        <HomeSection title="商务杂志" subtitle="MAGAZINE" to="/endorsement">
           <EndorsementGrid items={endorsementItems} />
         </HomeSection>
 
         <HomeSection
           className="section section-event"
           title="官方活动"
-          subtitle="EVENTS"
-          to="/events"
+          subtitle="EVENT"
+          to="/event"
         >
           <EventsTimeline items={eventItems} />
         </HomeSection>

@@ -10,7 +10,7 @@ const STICKER_STYLE_BY_TYPE = {
 }
 
 export default function EndorsementCard({ item }) {
-  const href = `/detail/${item.category}/${item.slug}`
+  const href = `/detail/${item.category}/${item.id}`
 
   const stickerStyle =
     STICKER_STYLE_BY_TYPE[item.type] ?? STICKER_STYLE_BY_TYPE['商务']

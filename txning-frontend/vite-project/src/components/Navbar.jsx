@@ -62,7 +62,7 @@ export default function Navbar() {
 
         <li>
           <NavLink
-            to="/dramas"
+            to="/drama"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             onClick={() => setOpen(false)}
           >
@@ -72,7 +72,7 @@ export default function Navbar() {
 
         <li>
           <NavLink
-            to="/endorsements"
+            to="/endorsement"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             onClick={() => setOpen(false)}
           >
@@ -82,7 +82,7 @@ export default function Navbar() {
 
         <li>
           <NavLink
-            to="/events"
+            to="/event"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             onClick={() => setOpen(false)}
           >

@@ -12,9 +12,9 @@ describe('Navbar navigation', () => {
     )
 
     const links = [
-      { name: '影视剧综', href: '/dramas' },
-      { name: '商务杂志', href: '/endorsements' },
-      { name: '官方活动', href: '/events' },
+      { name: '影视剧综', href: '/drama' },
+      { name: '商务杂志', href: '/endorsement' },
+      { name: '官方活动', href: '/event' },
       { name: '图频', href: '/gallery' },
       { name: '关于我', href: '/aboutme' },
     ]
