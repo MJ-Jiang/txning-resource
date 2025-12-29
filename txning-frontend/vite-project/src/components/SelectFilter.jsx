@@ -10,8 +10,8 @@ export default function SelectFilter({
   const opts = [
     { value: 'all', label: '全部' },
     ...options.map((opt) => ({
-      value: String(opt), // ✅ value 仍然用 code，别改
-      label: optionsLabel ? optionsLabel(opt) : String(opt), // ✅ 显示用中文
+      value: String(opt),
+      label: optionsLabel ? optionsLabel(opt) : String(opt),
     })),
   ]
 

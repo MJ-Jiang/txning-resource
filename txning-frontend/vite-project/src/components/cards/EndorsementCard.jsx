@@ -1,19 +1,11 @@
 import { Link } from 'react-router-dom'
-const STICKER_STYLE_BY_TYPE = {
-  商务: {
-    background: '#FFD64F',
-  },
-  杂志: {
-    background: '#FFFFFF',
-    color: '#111111',
-  },
-}
+import { TYPE_STICKER_STYLE, TYPE_LABEL } from '@/dictionary/type'
 
 export default function EndorsementCard({ item }) {
   const href = `/detail/${item.category}/${item.id}`
 
-  const stickerStyle =
-    STICKER_STYLE_BY_TYPE[item.type] ?? STICKER_STYLE_BY_TYPE['商务']
+  const stickerStyle = TYPE_STICKER_STYLE[item.type]
+
   return (
     <Link to={href} className="card-link">
       <div className="mag-card">
@@ -22,11 +14,7 @@ export default function EndorsementCard({ item }) {
             {item.title}
           </div>
 
-          <img
-            src={item.posterUrl ?? item.coverUrl}
-            className="mag-img"
-            alt={item.alt}
-          />
+          <img src={item.posterUrl} className="mag-img" alt={item.alt} />
         </div>
         <div className="mag-info">
           <p className="mag-title">{item.role}</p>

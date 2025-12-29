@@ -1,9 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
+import { PLATFORM_LABEL } from '@/dictionary/platform'
 
 function isExternalHref(href) {
   if (!href) return false
   if (href.startsWith('/') || href.startsWith('#')) return false
   return /^https?:\/\//i.test(href)
+}
+
+function isInternalByPlatforms(platforms) {
+  return (
+    Array.isArray(platforms) && platforms.some((p) => p?.code === 'this_web')
+  )
+}
+
+function getPlatformText(platforms) {
+  if (!Array.isArray(platforms) || platforms.length === 0) return ''
+  const labels = platforms
+    .map((p) => PLATFORM_LABEL[p?.code] ?? p?.code)
+    .filter(Boolean)
+  return labels.join(' / ')
 }
 
 export default function Banner({
@@ -21,7 +36,7 @@ export default function Banner({
   // 外链确认弹窗
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [externalHref, setExternalHref] = useState('')
-  const [platform, setPlatform] = useState('')
+  const [platformText, setPlatformText] = useState('')
 
   // autoplay
   useEffect(() => {
@@ -39,9 +54,9 @@ export default function Banner({
 
   if (validBanners.length === 0) return null
 
-  function openExternalConfirm(href, plat) {
+  function openExternalConfirm(href, platforms) {
     setExternalHref(href)
-    setPlatform(plat || '')
+    setPlatformText(getPlatformText(platforms))
     setConfirmOpen(true)
   }
 
@@ -61,7 +76,12 @@ export default function Banner({
         >
           {validBanners.map((b, i) => {
             const href = b.href || '#'
-            const external = isExternalHref(href)
+
+            // ✅ 新规则：只要标记了 this_web 就当站内
+            const internal = isInternalByPlatforms(b.platforms)
+
+            // ✅ 外链判定：站外 + href 是 http(s)
+            const external = !internal && isExternalHref(href)
 
             return (
               <a
@@ -69,11 +89,11 @@ export default function Banner({
                 className="hero"
                 href={href}
                 data-role="banner"
-                aria-label={b.poster_Alt || `首页Banner`}
+                aria-label={b.posterAlt || `首页Banner`}
                 onClick={(e) => {
                   if (!external) return
                   e.preventDefault()
-                  openExternalConfirm(href, b.platform)
+                  openExternalConfirm(href, b.platforms)
                 }}
               >
                 <img
@@ -123,7 +143,7 @@ export default function Banner({
             </button>
 
             <div className="ext-modal-title" id="ext-modal-title">
-              即将前往{platform ? `「${platform}」` : '第三方网站'}
+              即将前往{platformText ? `「${platformText}」` : '第三方网站'}
             </div>
 
             <div className="ext-modal-body">

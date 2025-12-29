@@ -12,6 +12,7 @@ function mapResource(raw) {
   return {
     id: raw.id,
     category: raw.category,
+    role: raw.role,
     title: raw.title_zh,
     year: raw.release_year,
     genres: genreCodes,

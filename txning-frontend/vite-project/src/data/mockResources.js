@@ -53,7 +53,7 @@ export const mockResources = [
     relatedId: ['evt-1', 'evt-2'],
     title_zh: '深海救援',
     release_year: 2023,
-    genres: ['动作', '冒险'],
+    genres: ['action', 'adventure'],
     type: 'film',
     poster_url:
       'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
@@ -82,7 +82,7 @@ export const mockResources = [
     category: 'drama',
     title_zh: '霓虹街区',
     release_year: 2024,
-    genres: ['科幻', '赛博朋克'],
+    genres: ['sci_fi'],
     type: 'tv_series',
     poster_url:
       'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2825&auto=format&fit=crop',
@@ -130,7 +130,7 @@ export const mockResources = [
 
     title_zh: '青春派对',
     release_year: 2021,
-    genres: ['综艺'],
+    genres: ['romance'],
     type: 'short_series',
     poster_url:
       'https://images.unsplash.com/photo-1594909122845-861c4f9c16cb?q=80&w=2940&auto=format&fit=crop',
@@ -159,14 +159,14 @@ export const mockResources = [
 
     title_zh: '极速狂飙',
     release_year: 2020,
-    genres: ['动作'],
+    genres: ['action'],
     type: 'film',
     poster_url:
       'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
     status: 'upcoming',
     platforms: [{ code: 'cinema', url: null }],
     bookingPlatform: [{ code: 'maoyan', url: 'https://www.maoyan.com/xxx' }],
-    poster_alt_alt: 'Movie',
+    poster_alt_zh: 'Movie',
     is_featured: true,
     description_zh:
       '退役车手被迫回到赛道：不是为了冠军，而是为了救人。一次“合法的非法比赛”让他重新点燃引擎，也点燃了更大的阴谋。',
@@ -183,25 +183,21 @@ export const mockResources = [
     category: 'endorsement',
 
     role: '全球品牌代言人',
-    year: 2023,
-    type: '商务',
-    posterUrl:
+    release_year: 2023,
+    type: 'endorsement',
+    poster_url:
       'https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2864&auto=format&fit=crop',
 
-    title: '巴黎欧莱雅',
-    alt: '巴黎欧莱雅',
+    title_zh: '巴黎欧莱雅',
+    poster_alt_zh: '巴黎欧莱雅',
 
     status: 'active',
-    isFeatured: true,
-    desc: '品牌宣布其为年度全球代言人，参与主视觉拍摄与线下活动推广，并同步上线限定礼盒与联名物料。',
+    is_featured: true,
+    description_zh:
+      '品牌宣布其为年度全球代言人，参与主视觉拍摄与线下活动推广，并同步上线限定礼盒与联名物料。',
     createdAt: '2025-12-20T10:12:00.000Z',
     createdBy: 'admin_001',
-    shopLinks: [
-      {
-        platform: '微店',
-        url: 'https://www.example.com/shop/tiffany-2023',
-      },
-    ],
+    bookingPlatform: [{ code: 'weidian', url: 'https://www.maoyan.com/xxx' }],
   },
 
   {
@@ -209,24 +205,20 @@ export const mockResources = [
     category: 'endorsement',
 
     role: '全球品牌代言人',
-    year: 2025,
-    type: '商务',
-    posterUrl:
+    release_year: 2025,
+    type: 'endorsement',
+    poster_url:
       'https://images.unsplash.com/photo-1611048267451-e6ed903d4a38?q=80&w=2944&auto=format&fit=crop',
-    title: '韩束',
-    alt: '韩束',
+    title_zh: '韩束',
+    poster_alt_zh: '韩束',
     status: 'soldout',
-    isFeatured: true,
-    desc: '以“自信与能量”为主题的全球广告企划，覆盖电视、户外、社媒与直播间联动，并推出年度限定周边。',
+    is_featured: true,
+    description_zh:
+      '以“自信与能量”为主题的全球广告企划，覆盖电视、户外、社媒与直播间联动，并推出年度限定周边。',
 
     createdAt: '2025-12-21T09:30:00.000Z',
     createdBy: 'admin_002',
-    shopLinks: [
-      {
-        platform: '官方商城',
-        url: 'https://www.example.com/shop/tiffany-2023',
-      },
-    ],
+    bookingPlatform: [{ code: 'taobao', url: 'https://www.maoyan.com/xxx' }],
   },
 
   {
@@ -234,46 +226,44 @@ export const mockResources = [
     category: 'endorsement',
 
     role: 'ELLE MEN 秋季刊',
-    year: 2023,
-    type: '杂志',
-    posterUrl:
+    release_year: 2023,
+    type: 'magazine',
+    poster_url:
       'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2940&auto=format&fit=crop',
-    title: '费家罗',
-    alt: '费家罗',
-    status: '待发售',
-    isFeatured: true,
-    desc: '以“秋季质感”为主线，呈现三组造型大片与时尚解析专访，聚焦衣橱经典单品与城市通勤风格。',
+    title_zh: '费家罗',
+    poster_alt_zh: '费家罗',
+    status: 'to_be_released',
+    is_featured: true,
+    description_zh:
+      '以“秋季质感”为主线，呈现三组造型大片与时尚解析专访，聚焦衣橱经典单品与城市通勤风格。',
     createdAt: '2025-12-22T12:05:00.000Z',
     createdBy: 'admin_003',
-    shopLinks: [
-      {
-        platform: '官方商城',
-        url: 'https://www.example.com/shop/tiffany-2023',
-      },
+    bookingPlatform: [
+      { code: 'xiaohongshu', url: 'https://www.maoyan.com/xxx' },
+      { code: 'taobao', url: 'https://www.taobao.com/xxx' },
     ],
   },
 
   {
     id: 'endorse-4',
-    category: 'endorsement',
-
+    category: 'magazine',
+    relatedId: 'evt-2',
     role: 'TIFFANY & CO.',
-    year: 2023,
+    release_ear: 2023,
     type: '商务',
-    posterUrl:
+    poster_url:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
-    title: 'BKT',
-    alt: 'BKT',
-    status: '已到期',
-    isFeatured: true,
-    desc: '以“日常高光”为主题的品牌挚友推广，包含短片、平面物料与线下快闪联动，呈现经典系列的现代佩戴方式。',
+    title_zh: 'BKT',
+    poster_alt_zh: 'BKT',
+    status: 'expired',
+    is_featured: true,
+    description_zh:
+      '以“日常高光”为主题的品牌挚友推广，包含短片、平面物料与线下快闪联动，呈现经典系列的现代佩戴方式。',
     createdAt: '2025-12-23T16:40:00.000Z',
     createdBy: 'admin_001',
-    shopLinks: [
-      {
-        platform: '官方商城',
-        url: 'https://www.example.com/shop/tiffany-2023',
-      },
+    bookingPlatform: [
+      { code: 'xiaohongshu', url: 'https://www.maoyan.com/xxx' },
+      { code: 'taobao', url: 'https://www.taobao.com/xxx' },
     ],
   },
 

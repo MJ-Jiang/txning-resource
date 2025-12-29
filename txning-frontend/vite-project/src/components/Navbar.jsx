@@ -1,12 +1,23 @@
 import { NavLink } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+// Navbar.jsx 顶部
+import { CATEGORY_LABEL, CATEGORY_CODES } from '@/dictionary/category'
+
+const NAV_ITEMS = [
+  { to: '/', label: '主页', end: true },
+  { to: '/drama', category: CATEGORY_CODES.DRAMA },
+  { to: '/endorsement', category: CATEGORY_CODES.ENDORSEMENT },
+  { to: '/event', category: CATEGORY_CODES.EVENT },
+  { to: '/gallery', label: '图频' },
+  { to: '/aboutme', label: '关于我' },
+]
 
 const MOBILE_BP = 768
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
 
-  // 1) 浏览器前进/后退时关菜单（你原来就有）
+  // 1) 浏览器前进/后退时关菜单（
   useEffect(() => {
     const close = () => setOpen(false)
     window.addEventListener('popstate', close)
@@ -49,65 +60,25 @@ export default function Navbar() {
       <ul className={`nav-links ${open ? 'open' : ''}`}>
         <i className="fa-solid fa-lemon nav-lemon-big" aria-hidden="true"></i>
 
-        <li>
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-            onClick={() => setOpen(false)}
-          >
-            主页
-          </NavLink>
-        </li>
+        {NAV_ITEMS.map((item) => {
+          const label =
+            item.label ?? CATEGORY_LABEL[item.category] ?? item.category
 
-        <li>
-          <NavLink
-            to="/drama"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-            onClick={() => setOpen(false)}
-          >
-            影视剧综
-          </NavLink>
-        </li>
-
-        <li>
-          <NavLink
-            to="/endorsement"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-            onClick={() => setOpen(false)}
-          >
-            商务杂志
-          </NavLink>
-        </li>
-
-        <li>
-          <NavLink
-            to="/event"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-            onClick={() => setOpen(false)}
-          >
-            官方活动
-          </NavLink>
-        </li>
-
-        <li>
-          <NavLink
-            to="/gallery"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-            onClick={() => setOpen(false)}
-          >
-            图频
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/aboutme"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-            onClick={() => setOpen(false)}
-          >
-            关于我
-          </NavLink>
-        </li>
+          return (
+            <li key={item.to}>
+              <NavLink
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  `nav-item ${isActive ? 'active' : ''}`
+                }
+                onClick={() => setOpen(false)}
+              >
+                {label}
+              </NavLink>
+            </li>
+          )
+        })}
       </ul>
     </nav>
   )

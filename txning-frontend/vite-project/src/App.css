@@ -1113,7 +1113,7 @@ img {
   margin: 0 0 12px;
   color: #111;
   line-height: 1.1;
-  font-size: var(--fz-title);
+  font-size: 1.4rem;
   font-weight: 800;
 }
 
@@ -1126,7 +1126,7 @@ img {
 .kv-row {
   display: grid;
   grid-template-columns: 3.5em 1fr;
-
+  font-size: var(--fz-small);
   align-items: start;
 }
 
@@ -1173,6 +1173,7 @@ img {
   padding: 16px 18px 18px;
   background: transparent;
   border-top: 1px solid rgba(20, 20, 20, 0.1);
+  font-size: var(--fz-title);
 }
 
 .detail-desc-hd {
@@ -1186,6 +1187,7 @@ img {
   line-height: 1.7;
   color: rgba(0, 0, 0, 0.84);
   font-weight: 400;
+  font-size: var(--fz-body);
 }
 .library-section.detail-design {
   padding-top: 12px;
@@ -1193,7 +1195,7 @@ img {
 }
 .library-section.related-header {
   padding-top: 0px;
-  padding-bottom: 10px;
+  padding-bottom: 0px;
 }
 
 .related-head {
@@ -1808,7 +1810,6 @@ img {
   .filters-grid label,
   .filter-item label {
     line-height: 1.1;
-    margin-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* 太窄时不要把布局撑坏 */

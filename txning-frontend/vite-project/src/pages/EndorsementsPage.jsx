@@ -3,6 +3,8 @@ import EndorsementCard from '../components/cards/EndorsementCard'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import { TYPE_LABEL } from '../dictionary/type'
+import { STATUS_FILTER_LABEL } from '../dictionary/status'
 
 export default function EndorsementsPage() {
   const schema = useMemo(
@@ -17,13 +19,15 @@ export default function EndorsementsPage() {
         name: 'type',
         label: '类型',
         defaultValue: 'all',
-        getValue: (m) => m.type,
+        getValue: (d) => d.type,
+        optionsLabel: (v) => TYPE_LABEL[v] ?? v,
       },
       {
         name: 'status',
         label: '状态',
         defaultValue: 'all',
-        getValue: (m) => m.status,
+        getValue: (d) => d.status, // code
+        optionsLabel: (v) => STATUS_FILTER_LABEL[v] ?? v,
       },
     ],
     []

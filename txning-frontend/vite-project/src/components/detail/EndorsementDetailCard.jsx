@@ -1,69 +1,37 @@
-function toArray(v) {
-  if (!v) return []
-  return Array.isArray(v) ? v : [v]
-}
+import { TYPE_LABEL } from '../../dictionary/type'
+import { STATUS_FILTER_LABEL, canShowPurchase } from '../../dictionary/status'
+import {
+  BOOKING_PLATFORM_LABEL,
+  BOOKING_PLATFORM_ICON,
+} from '../../dictionary/bookingPlatform'
 
-function joinText(v, sep = ' / ') {
-  return toArray(v).filter(Boolean).join(sep)
-}
-
-function getShopLinks(d) {
-  if (!Array.isArray(d?.shopLinks)) return []
-  return d.shopLinks
-    .map((s) => ({ platform: s?.platform ?? '', url: s?.url ?? '' }))
-    .filter((s) => s.platform && s.url)
-}
-
-const SHOP_ICON_MAP = {
-  天猫: '/icons/tmall.svg',
-  淘宝: '/icons/taobao.svg',
-  京东: '/icons/jd.svg',
-  小红书: '/icons/xhs.svg',
-  抖音: '/icons/douyin.svg',
-  微店: '/icons/wechat-shop.svg',
+function getBookingLinks(d) {
+  if (!Array.isArray(d?.bookingPlatform)) return []
+  return d.bookingPlatform
+    .map((x) => ({
+      code: x?.code ?? '',
+      url: x?.url ?? null,
+    }))
+    .filter((x) => x.code)
 }
 
 function IconImg({ src, alt, className }) {
   if (!src) return null
-  return (
-    <img
-      className={className}
-      src={src}
-      alt={alt}
-      onError={() => {
-        console.error('Icon load failed:', src)
-      }}
-    />
-  )
-}
-
-/**
- * 方案 B：只保留一份（status 英文 -> label 等元信息）
- * 数据中 status 推荐：active | expired | upcoming | soldout
- */
-const ENDORSEMENT_STATUS_META = {
-  active: { label: '代言中' },
-  expired: { label: '已到期' },
-  upcoming: { label: '待发售' },
-  soldout: { label: '已售罄' },
-}
-
-// 购买显示规则：已到期/已售罄 不显示
-function canShowPurchase(status) {
-  return status !== 'expired' && status !== 'soldout'
+  return <img className={className} src={src} alt={alt} />
 }
 
 export default function EndorsementDetailCard({ endorsement }) {
   if (!endorsement) return null
 
-  const { posterUrl, title, alt, type, year, status, role, desc } = endorsement
+  const { posterUrl, title, alt, type, year, status, role, description } =
+    endorsement
 
-  const shopLinks = getShopLinks(endorsement)
-  const showPurchase = canShowPurchase(status)
+  const bookingLinks = getBookingLinks(endorsement)
+  const buyableLinks = bookingLinks.filter((x) => Boolean(x.url))
+  const showPurchase = canShowPurchase(status) && buyableLinks.length > 0
 
-  const statusLabel =
-    ENDORSEMENT_STATUS_META[status]?.label ||
-    (typeof status === 'string' ? status : '')
+  const typeLabel = TYPE_LABEL[type] ?? type
+  const statusLabel = STATUS_FILTER_LABEL[status] ?? status
 
   return (
     <div className="detail-card">
@@ -80,7 +48,7 @@ export default function EndorsementDetailCard({ endorsement }) {
             <div className="detail-cover-placeholder" />
           )}
 
-          {role && <div className="detail-sticker">{role}</div>}
+          {role ? <div className="detail-sticker">{role}</div> : null}
         </div>
 
         {/* 信息区 */}
@@ -88,52 +56,53 @@ export default function EndorsementDetailCard({ endorsement }) {
           <h1 className="detail-title">{title}</h1>
 
           <div className="detail-kv">
-            {type && (
+            {typeLabel ? (
               <div className="kv-row">
                 <div className="kv-k">分类</div>
-                <div className="kv-v">{joinText(type)}</div>
+                <div className="kv-v">{typeLabel}</div>
               </div>
-            )}
+            ) : null}
 
-            {year && (
+            {year ? (
               <div className="kv-row">
                 <div className="kv-k">年份</div>
                 <div className="kv-v">{year}</div>
               </div>
-            )}
+            ) : null}
 
-            {statusLabel && (
+            {statusLabel ? (
               <div className="kv-row">
                 <div className="kv-k">状态</div>
                 <div className="kv-v">
-                  {/* 你的 CSS 如果不区分状态，就只用一个 class */}
                   <span className="status-badge">{statusLabel}</span>
                 </div>
               </div>
-            )}
+            ) : null}
 
-            {showPurchase && shopLinks.length > 0 && (
+            {/* 购买：仅当状态允许 + 有 url 才显示 */}
+            {showPurchase ? (
               <div className="kv-row">
                 <div className="kv-k">购买</div>
                 <div className="kv-v">
                   <div className="platform-row">
-                    {shopLinks.map((s) => {
-                      const iconSrc = SHOP_ICON_MAP[s.platform]
-                      const finalIcon = iconSrc || '/icons/link.svg'
+                    {buyableLinks.map((x) => {
+                      const label = BOOKING_PLATFORM_LABEL[x.code] ?? x.code
+                      const icon =
+                        BOOKING_PLATFORM_ICON[x.code] ?? '/icons/link.svg'
 
                       return (
                         <a
-                          key={`${s.platform}-${s.url}`}
+                          key={`${x.code}-${x.url}`}
                           className="platform-link"
-                          href={s.url}
+                          href={x.url}
                           target="_blank"
                           rel="noreferrer"
-                          title={s.platform}
+                          title={label}
                         >
                           <IconImg
                             className="platform-logo"
-                            src={finalIcon}
-                            alt={s.platform}
+                            src={icon}
+                            alt={label}
                           />
                         </a>
                       )
@@ -141,18 +110,18 @@ export default function EndorsementDetailCard({ endorsement }) {
                   </div>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
 
       {/* 简介 */}
-      {desc && (
+      {description ? (
         <div className="detail-desc">
           <div className="detail-desc-hd">简介</div>
-          <p className="detail-desc-text">{desc}</p>
+          <p className="detail-desc-text">{description}</p>
         </div>
-      )}
+      ) : null}
     </div>
   )
 }

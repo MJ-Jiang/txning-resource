@@ -47,7 +47,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="小红书"
           >
-            <img src="/icons/xhs.svg" alt="小红书" />
+            <img src="/icons/xhs2.svg" alt="小红书" />
           </a>
         </div>
       </div>

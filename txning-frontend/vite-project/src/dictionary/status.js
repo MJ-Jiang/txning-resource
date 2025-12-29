@@ -12,6 +12,10 @@ export const STATUS_CODES = {
   UPCOMING: 'upcoming',
   NOW_SHOWING: 'now_showing',
   ENDED: 'ended',
+  ACTIVE: 'active',
+  EXPIRED: 'expired',
+  TO_BE_RELEASED: 'to_be_released',
+  SOLDOUT: 'soldout',
 }
 
 // 卡片/Tag 展示：细粒度（会受 type 影响）
@@ -52,9 +56,18 @@ export const STATUS_FILTER_LABEL = {
   [STATUS_CODES.UPCOMING]: '即将上线/上映',
   [STATUS_CODES.NOW_SHOWING]: '热播中/热映中',
   [STATUS_CODES.ENDED]: '完结/上线',
+  [STATUS_CODES.ACTIVE]: '代言中',
+  [STATUS_CODES.EXPIRED]: '已到期',
+  [STATUS_CODES.TO_BE_RELEASED]: '待发售',
+  [STATUS_CODES.SOLDOUT]: '已售罄',
 }
 
 // 统一函数：给定 (statusCode, typeCode) 得到卡片展示文案
 export function getStatusDisplayLabel(statusCode, typeCode) {
   return STATUS_DISPLAY_LABEL?.[statusCode]?.[typeCode] ?? ''
+}
+export function canShowPurchase(status) {
+  return (
+    status === STATUS_CODES.ACTIVE || status === STATUS_CODES.TO_BE_RELEASED
+  )
 }
