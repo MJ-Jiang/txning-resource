@@ -8,7 +8,7 @@ import DramaDetailCard from '../components/detail/DramaDetailCard'
 import EndorsementDetailCard from '../components/detail/EndorsementDetailCard'
 import EventDetailCard from '../components/detail/EventDetailCard'
 import { getResources } from '@/services/resources'
-
+import { CATEGORY_CODES } from '../dictionary/category'
 import useResponsivePageSize from '../hooks/useResponsivePageSize'
 
 function toArray(v) {
@@ -60,18 +60,19 @@ export default function DetailPage() {
   }, [category, id, resources])
 
   const emptyText =
-    category === 'endorsement'
+    category === CATEGORY_CODES.ENDORSEMENT
       ? '找不到该商务／杂志'
-      : category === 'event'
+      : category === CATEGORY_CODES.EVENT
         ? '找不到该活动'
         : '找不到该影视'
 
   /** 大卡片 */
   const detailCard = useMemo(() => {
     if (!item) return null
-    if (category === 'endorsement')
+    if (category === CATEGORY_CODES.ENDORSEMENT)
       return <EndorsementDetailCard endorsement={item} />
-    if (category === 'event') return <EventDetailCard event={item} />
+    if (category === CATEGORY_CODES.EVENT)
+      return <EventDetailCard event={item} />
     return <DramaDetailCard drama={item} />
   }, [item, category])
 
@@ -81,7 +82,7 @@ export default function DetailPage() {
     const selfId = String(item.id)
 
     return resources.filter((x) => {
-      if (x.category !== 'ugc') return false
+      if (x.category !== CATEGORY_CODES.UGC) return false
       const p = x.parentId
       if (Array.isArray(p)) return p.map(String).includes(selfId)
       if (typeof p === 'string' || typeof p === 'number')
@@ -96,7 +97,7 @@ export default function DetailPage() {
     const selfId = String(item.id)
 
     return resources
-      .filter((x) => x.category !== 'ugc')
+      .filter((x) => x.category !== CATEGORY_CODES.UGC)
       .filter((x) => toArray(x.relatedId).map(String).includes(selfId))
       .filter((x) => String(x.id) !== selfId)
       .map(toGeneralEntityCard)
@@ -118,7 +119,7 @@ export default function DetailPage() {
   }, [relatedEntities, relatedUGC])
 
   /** ✅ 关键判断：是否存在 UGC */
-  const hasUGC = relatedItems.some((x) => x.category === 'ugc')
+  const hasUGC = relatedItems.some((x) => x.category === CATEGORY_CODES.UGC)
 
   /** ✅ 关键：动态构造筛选 schema */
   const schema = [

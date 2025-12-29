@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import { TYPE_LABEL } from '../dictionary/type'
 import { STATUS_FILTER_LABEL } from '../dictionary/status'
 import { PLATFORM_LABEL } from '../dictionary/platform'
+import { CATEGORY_CODES } from '../dictionary/category'
 
 export default function DramasPage() {
   const schema = useMemo(
@@ -45,7 +46,7 @@ export default function DramasPage() {
     <div className="page">
       <Navbar />
       <ResourceListContainer
-        category="drama"
+        category={CATEGORY_CODES.DRAMA}
         schema={schema}
         renderCard={(item) => <DramaCard key={item.id} item={item} />}
         gridClassName="card-grid"

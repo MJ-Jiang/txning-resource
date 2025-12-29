@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { TYPE_LABEL } from '../dictionary/type'
 import { STATUS_FILTER_LABEL } from '../dictionary/status'
+import { CATEGORY_CODES } from '../dictionary/category'
 
 export default function EndorsementsPage() {
   const schema = useMemo(
@@ -37,7 +38,7 @@ export default function EndorsementsPage() {
     <div className="page">
       <Navbar />
       <ResourceListContainer
-        category="endorsement"
+        category={CATEGORY_CODES.ENDORSEMENT}
         schema={schema}
         renderCard={(item) => <EndorsementCard key={item.id} item={item} />}
         gridClassName="card-grid"

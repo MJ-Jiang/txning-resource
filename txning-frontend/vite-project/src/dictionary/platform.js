@@ -11,6 +11,7 @@ export const PLATFORM_LABEL = {
   this_web: '本站',
   youtube: 'YouTube',
   cinema: '院线',
+  weibo: '微博',
 }
 
 export const PLATFORM_ICON = {
@@ -24,4 +25,5 @@ export const PLATFORM_ICON = {
   this_web: '/icons/link.svg',
   youtube: '/icons/youtube.svg',
   cinema: '/icons/cinema.svg',
+  weibo: '/icons/weibo.svg',
 }

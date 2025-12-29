@@ -66,7 +66,7 @@ export const mockResources = [
     rating_value: 8.5,
     poster_alt_zh: 'Movie',
     is_featured: true,
-    bookingPlatform: [
+    booking_platform: [
       { code: 'damai', url: 'https://www.damai.cn/xxx' },
       { code: 'maoyan', url: 'https://www.maoyan.com/xxx' },
     ],
@@ -165,7 +165,7 @@ export const mockResources = [
       'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
     status: 'upcoming',
     platforms: [{ code: 'cinema', url: null }],
-    bookingPlatform: [{ code: 'maoyan', url: 'https://www.maoyan.com/xxx' }],
+    booking_platform: [{ code: 'maoyan', url: 'https://www.maoyan.com/xxx' }],
     poster_alt_zh: 'Movie',
     is_featured: true,
     description_zh:
@@ -197,7 +197,7 @@ export const mockResources = [
       '品牌宣布其为年度全球代言人，参与主视觉拍摄与线下活动推广，并同步上线限定礼盒与联名物料。',
     createdAt: '2025-12-20T10:12:00.000Z',
     createdBy: 'admin_001',
-    bookingPlatform: [{ code: 'weidian', url: 'https://www.maoyan.com/xxx' }],
+    booking_platform: [{ code: 'weidian', url: 'https://www.maoyan.com/xxx' }],
   },
 
   {
@@ -218,7 +218,7 @@ export const mockResources = [
 
     createdAt: '2025-12-21T09:30:00.000Z',
     createdBy: 'admin_002',
-    bookingPlatform: [{ code: 'taobao', url: 'https://www.maoyan.com/xxx' }],
+    booking_platform: [{ code: 'taobao', url: 'https://www.maoyan.com/xxx' }],
   },
 
   {
@@ -238,7 +238,7 @@ export const mockResources = [
       '以“秋季质感”为主线，呈现三组造型大片与时尚解析专访，聚焦衣橱经典单品与城市通勤风格。',
     createdAt: '2025-12-22T12:05:00.000Z',
     createdBy: 'admin_003',
-    bookingPlatform: [
+    booking_platform: [
       { code: 'xiaohongshu', url: 'https://www.maoyan.com/xxx' },
       { code: 'taobao', url: 'https://www.taobao.com/xxx' },
     ],
@@ -249,7 +249,7 @@ export const mockResources = [
     category: 'magazine',
     relatedId: 'evt-2',
     role: 'TIFFANY & CO.',
-    release_ear: 2023,
+    release_year: 2023,
     type: '商务',
     poster_url:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
@@ -261,7 +261,7 @@ export const mockResources = [
       '以“日常高光”为主题的品牌挚友推广，包含短片、平面物料与线下快闪联动，呈现经典系列的现代佩戴方式。',
     createdAt: '2025-12-23T16:40:00.000Z',
     createdBy: 'admin_001',
-    bookingPlatform: [
+    booking_platform: [
       { code: 'xiaohongshu', url: 'https://www.maoyan.com/xxx' },
       { code: 'taobao', url: 'https://www.taobao.com/xxx' },
     ],
@@ -272,25 +272,22 @@ export const mockResources = [
     id: 'evt-1',
     category: 'event',
     relatedId: ['drama-1', 'endorse-1', 'evt-2'],
-
-    posterUrl:
+    poster_url:
       'https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2864&auto=format&fit=crop',
-
-    day: '24',
-    month: 'NOV',
-    year: 2025,
-    time: '19:30',
-
-    title: '上海粉丝见面会',
+    event_date: '2025-12-05',
+    date_granularity: 'day',
+    release_year: 2025,
+    time_text: '19:30',
+    title_zh: '上海粉丝见面会',
     city: '上海',
     location: '上海梅赛德斯奔驰文化中心',
-
-    type: '剧宣',
-    status: 'upcoming', // 建议英文
-    alt: '上海粉丝见面会',
-    desc: '主演将与观众近距离互动，分享幕后故事与拍摄趣事，并现场回应粉丝提问。',
-    isFeatured: true,
-    ticketLinks: [{ platform: '大麦', url: '...' }],
+    type: 'promo',
+    status: 'planned',
+    poster_alt_zh: '上海粉丝见面会',
+    description_zh:
+      '主演将与观众近距离互动，分享幕后故事与拍摄趣事，并现场回应粉丝提问。',
+    is_featured: true,
+    booking_platform: [{ code: 'damai', url: null }],
 
     createdAt: '2025-12-18T09:20:00.000Z',
     createdBy: 'admin_001',
@@ -300,24 +297,24 @@ export const mockResources = [
     id: 'evt-2',
     category: 'event',
     relatedId: ['drama-1'],
-
-    posterUrl:
+    poster_url:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
-    day: '15',
-    month: 'DEC',
-    year: 2025,
+    event_date: '2025-12-06',
+    date_granularity: 'day',
+    release_year: 2025,
 
-    title: '年度时尚盛典红毯',
-    time: null, // 时间未知就用 null，不要字符串
-    location: '北京',
+    title_zh: '年度时尚盛典红毯',
+    time: null,
+    location: null,
     city: ['北京', '上海'],
-    type: '红毯',
-    status: 'upcoming',
-    stickerText: '北京国家体育馆',
-    alt: '年度时尚盛典红毯',
-    desc: '年度时尚盛典红毯环节，众多品牌与艺人亮相，展示当季设计与造型趋势。',
+    type: 'fashion',
+    status: 'finished',
 
-    isFeatured: true,
+    poster_alt_zh: '年度时尚盛典红毯',
+    description_zh:
+      '年度时尚盛典红毯环节，众多品牌与艺人亮相，展示当季设计与造型趋势。',
+
+    is_featured: true,
 
     createdAt: '2025-12-19T11:05:00.000Z',
     createdBy: 'admin_002',
@@ -326,25 +323,21 @@ export const mockResources = [
   {
     id: 'evt-3',
     category: 'event',
-
-    posterUrl:
+    poster_url:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
-    day: '10',
-    month: 'DEC',
-    year: 2025,
-    stickerText: '北京国家体育馆',
-    title: '年度时尚盛典官方直播',
+    event_date: '2025-11-01',
+    date_granularity: 'month',
+    release_year: 2025,
+    title_zh: '年度时尚盛典官方直播',
     time: null,
-    location: '北京',
-    city: '北京',
-    type: '商务直播',
-    status: 'upcoming',
-
-    alt: '年度时尚盛典直播',
-    desc: '官方线上直播通道，同步呈现红毯与颁奖环节，并提供多机位观看体验。',
-
-    isFeatured: true,
-
+    location: '抖音直播间',
+    city: 'online',
+    type: 'business',
+    status: 'ongoing',
+    poster_alt_zh: '年度时尚盛典直播',
+    description_zh:
+      '官方线上直播通道，同步呈现红毯与颁奖环节，并提供多机位观看体验。',
+    is_featured: true,
     createdAt: '2025-12-19T11:12:00.000Z',
     createdBy: 'admin_002',
   },
@@ -352,86 +345,89 @@ export const mockResources = [
   {
     id: 'ugc-1',
     category: 'ugc',
-    title: '上海粉丝见面会', // 活动标题
+    title_zh: '上海粉丝见面会', // 活动标题
     parentId: ['drama-1', 'evt-1', 'endorse-1'],
-    year: 2025,
-    linkUrl: 'https://www.bilibili.com/video/BV1xxxxxx1',
-    mediaType: '视频', // image | video
-    platform: 'Bilibili', // Bilibili | Xiaohongshu | Weibo | Douyin
-    posterUrl:
+    release_year: 2025,
+    ugc_url: 'https://www.bilibili.com/video/BV1xxxxxx1',
+    ugc_type: 'video',
+    ugc_platform: 'bilibili',
+    poster_url:
       'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=2787&auto=format&fit=crop',
-    desc: '节奏向混剪，含名场面与高燃转场，适合新观众快速入坑。',
-    isFeatured: true,
+    description_zh: '节奏向混剪，含名场面与高燃转场，适合新观众快速入坑。',
+    poster_alt_zh: '上海粉丝见面会',
+    is_featured: true,
   },
 
   {
     id: 'ugc-2',
     category: 'ugc',
-    title: '微博营业', // 活动标题
-    year: 2025,
+    title_zh: '微博营业', // 活动标题
+    release_year: 2025,
     parentId: ['drama-1'],
-    linkUrl: 'https://www.bilibili.com/video/BV2yyyyyy2',
-    mediaType: '视频',
-    platform: 'Bilibili',
-    posterUrl:
+    ugc_url: 'https://www.bilibili.com/video/BV2yyyyyy2',
+    ugc_type: 'video',
+    ugc_platform: 'bilibili',
+    poster_url:
       'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2788&auto=format&fit=crop',
-    desc: '剧情梳理+彩蛋盘点：把关键线索按时间线捋清楚，结尾有反转提示（轻剧透）。',
-    isFeatured: false,
+    description_zh:
+      '剧情梳理+彩蛋盘点：把关键线索按时间线捋清楚，结尾有反转提示（轻剧透）。',
+    is_featured: false,
   },
 
   {
     id: 'ugc-3',
     category: 'ugc',
-    title: '微博营业',
-    year: 2025,
+    title_zh: '微博营业',
+    release_year: 2025,
     parentId: ['evt-1', 'endorse-1'],
-    linkUrl: 'https://www.xiaohongshu.com/explore/ugc3xxxx',
-    mediaType: '图片',
-    platform: '小红书',
-    posterUrl:
+    ugc_url: 'https://www.xiaohongshu.com/explore/ugc3xxxx',
+    ugc_type: 'picture',
+    ugc_platform: 'xiaohongshu',
+    poster_url:
       'https://images.unsplash.com/photo-1496345647009-l6d9506e23b9?q=80&w=2836&auto=format&fit=crop',
-    desc: '现场返图合集：舞台灯光很绝，近景表情管理满分（9宫格）。',
-    isFeatured: true,
+    description_zh: '现场返图合集：舞台灯光很绝，近景表情管理满分（9宫格）。',
+    is_eatured: true,
   },
 
   {
     id: 'ugc-4',
     category: 'ugc',
-    title: '微博营业',
+    title_zh: '微博营业',
+    release_year: 2026,
     parentId: ['drama-1', 'evt-1'],
-    linkUrl: 'https://weibo.com/xxxxxx/ugc4xxxx',
-    mediaType: '图片',
-    platform: '微博',
-    posterUrl:
+    ugc_url: 'https://weibo.com/xxxxxx/ugc4xxxx',
+    ugc_type: 'picture',
+    ugc_platform: 'weibo',
+    poster_url:
       'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2788&auto=format&fit=crop',
-    desc: '微博饭拍：签名环节+互动瞬间，附简短repo（无剧透）。',
-    isFeatured: false,
+    description_zh: '微博饭拍：签名环节+互动瞬间，附简短repo（无剧透）。',
+    is_featured: false,
   },
 
   {
     id: 'ugc-5',
     category: 'ugc',
-    title: '微博营业',
+    release_year: 2027,
+    title_zh: '微博营业',
     parentId: ['drama-1'],
-    linkUrl: 'https://www.douyin.com/video/ugc5xxxx',
-    mediaType: '视频',
-    platform: '抖音',
-    posterUrl:
+    ugc_url: 'https://www.douyin.com/video/ugc5xxxx',
+    ugc_type: 'video',
+    ugc_platform: 'douyin',
+    poster_url:
       'https://images.unsplash.com/photo-1516726817505-f5ed825624d8?q=80&w=2787&auto=format&fit=crop',
-    desc: '30秒高能剪辑：救援名场面+爆点BGM，适合短视频传播。',
-    isFeatured: true,
+    description_zh: '30秒高能剪辑：救援名场面+爆点BGM，适合短视频传播。',
+    is_featured: true,
   },
   {
-    id: 'ugc-６',
+    id: 'ugc-6',
     category: 'ugc',
-    title: '微博营业',
+    title_zh: '微博营业',
     parentId: ['drama-1', 'personal'],
-    linkUrl: 'https://www.douyin.com/video/ugc5xxxx',
-    mediaType: '视频',
-    platform: '抖音',
-    posterUrl:
+    ugc_url: 'https://www.douyin.com/video/ugc5xxxx',
+    ugc_type: 'video',
+    ugc_platform: 'douyin',
+    poster_url:
       'https://images.unsplash.com/photo-1516726817505-f5ed825624d8?q=80&w=2787&auto=format&fit=crop',
-    desc: '30秒高能剪辑：救援名场面+爆点BGM，适合短视频传播。',
-    isFeatured: true,
+    is_featured: true,
   },
 ]

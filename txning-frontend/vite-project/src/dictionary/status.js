@@ -1,10 +1,16 @@
 // src/domain/status.js
+
+import { PLATFORM_LABEL } from './platform'
+
 // 领域层：只放“状态语义”和“展示文案”，不处理 raw 数据
 export const STATUS_STYLE = {
   not_yet_released: { background: '#888' },
   upcoming: { background: '#2F6BFF' },
   now_showing: { background: '#E53935' },
   ended: { background: '#f3641b' },
+  planned: { background: '#2F6BFF' },
+  ongoing: { background: '#E53935' },
+  finished: { background: '#f3641b' },
 }
 
 export const STATUS_CODES = {
@@ -16,6 +22,9 @@ export const STATUS_CODES = {
   EXPIRED: 'expired',
   TO_BE_RELEASED: 'to_be_released',
   SOLDOUT: 'soldout',
+  PLANNED: 'planned',
+  ONGOING: 'ongoing',
+  FINISHED: 'finished',
 }
 
 // 卡片/Tag 展示：细粒度（会受 type 影响）
@@ -60,6 +69,9 @@ export const STATUS_FILTER_LABEL = {
   [STATUS_CODES.EXPIRED]: '已到期',
   [STATUS_CODES.TO_BE_RELEASED]: '待发售',
   [STATUS_CODES.SOLDOUT]: '已售罄',
+  [STATUS_CODES.PLANNED]: '已官宣',
+  [STATUS_CODES.ONGOING]: '开展中',
+  [STATUS_CODES.FINISHED]: '已结束',
 }
 
 // 统一函数：给定 (statusCode, typeCode) 得到卡片展示文案

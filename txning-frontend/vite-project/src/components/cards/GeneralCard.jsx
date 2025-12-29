@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { PLATFORM_LABEL } from '../../dictionary/ugcPlatform' // 路径按项目实际
 
 function isHttpUrl(v) {
   return typeof v === 'string' && /^https?:\/\//i.test(v)
@@ -9,26 +10,29 @@ export default function GeneralCard({ item }) {
   if (!item) return null
 
   const cover = item.posterUrl
-  const platform = item.platform
-  const mediaType = item.mediaType
-  const desc = item.desc ?? ''
-  const alt = item.alt ?? item.title ?? desc ?? ''
 
-  // 站内详情页（按你项目约定）
+  // ✅ 全量字段替换
+  const ugcType = item.ugcType // 'video' | 'picture'
+  const ugcUrl = item.ugcUrl || '' // 外链
+  const ugcPlatform = item.ugcPlatform // 平台 code
+  const platformLabel = PLATFORM_LABEL?.[ugcPlatform] ?? ugcPlatform
+
+  const desc = item.description ?? ''
+  const alt = item.posterAlt ?? item.title ?? desc ?? ''
+  const UGC_TYPE_LABEL = {
+    video: '视频',
+    picture: '图片',
+  }
+  // 站内详情页
   const internalHref = useMemo(() => {
     if (!item.category || !item.id) return ''
     return `/detail/${item.category}/${item.id}`
   }, [item.category, item.id])
 
-  // 外链（如有）
-  const externalHref = item.linkUrl || ''
-
-  const isExternal = isHttpUrl(externalHref)
+  const isExternal = isHttpUrl(ugcUrl)
   const isInternal = !isExternal && Boolean(internalHref)
 
-  // 是否可点击：外链 or 站内链接任意一个成立
   const clickable = isExternal || isInternal
-
   const [confirmOpen, setConfirmOpen] = useState(false)
 
   const CardInner = (
@@ -42,13 +46,20 @@ export default function GeneralCard({ item }) {
           <div className="general-thumb general-thumb--placeholder" />
         )}
 
-        {platform && <div className="general-badge">{platform}</div>}
-        {mediaType && <div className="general-type">{mediaType}</div>}
+        {/* ✅ 平台角标 */}
+        {ugcPlatform && <div className="general-badge">{platformLabel}</div>}
+
+        {/* ✅ 媒体类型角标 */}
+        {ugcType && (
+          <div className="general-type">
+            {UGC_TYPE_LABEL[ugcType] ?? ugcType}
+          </div>
+        )}
       </div>
     </div>
   )
 
-  // 外链：拦截点击 -> 弹确认
+  // 外链点击：弹确认
   const onClickExternal = (e) => {
     if (!isExternal) return
     e.preventDefault()
@@ -56,11 +67,12 @@ export default function GeneralCard({ item }) {
   }
 
   const onGoExternal = () => {
-    window.open(externalHref, '_blank', 'noopener,noreferrer')
+    if (!ugcUrl) return
+    window.open(ugcUrl, '_blank', 'noopener,noreferrer')
     setConfirmOpen(false)
   }
 
-  // 1) 站内：直接 Link 跳转
+  // 1️⃣ 站内跳转
   if (isInternal) {
     return (
       <Link to={internalHref} className="card-link">
@@ -69,14 +81,14 @@ export default function GeneralCard({ item }) {
     )
   }
 
-  // 2) 外链：弹窗确认后再打开
+  // 2️⃣ 外链（确认弹窗）
   if (isExternal) {
     return (
       <>
         <a
           className="card-link"
           data-role="external-card"
-          href={externalHref}
+          href={ugcUrl}
           target="_blank"
           rel="noopener noreferrer"
           onClick={onClickExternal}
@@ -106,12 +118,13 @@ export default function GeneralCard({ item }) {
               </button>
 
               <div className="ext-modal-title" id="ext-modal-title">
-                即将前往{platform ? `「${platform}」` : '第三方网站'}
+                即将前往
+                {platformLabel ? `「${platformLabel}」` : '第三方网站'}
               </div>
 
               <div className="ext-modal-body">
                 <div className="ext-modal-desc">你即将打开以下链接：</div>
-                <div className="ext-modal-url">{externalHref}</div>
+                <div className="ext-modal-url">{ugcUrl}</div>
               </div>
 
               <div className="ext-modal-actions">
@@ -137,6 +150,6 @@ export default function GeneralCard({ item }) {
     )
   }
 
-  // 3) 都没有：不可点击
+  // 3️⃣ 不可点击
   return <div className="card-link">{CardInner}</div>
 }

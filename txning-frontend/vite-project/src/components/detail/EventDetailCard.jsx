@@ -1,5 +1,12 @@
+// EventDetailCard.jsx
+import {
+  BOOKING_PLATFORM_LABEL,
+  BOOKING_PLATFORM_ICON,
+} from '../../dictionary/bookingPlatform'
+import { STATUS_FILTER_LABEL } from '../../dictionary/status'
+
 function toArray(v) {
-  if (!v) return []
+  if (v == null) return []
   return Array.isArray(v) ? v : [v]
 }
 
@@ -7,73 +14,21 @@ function joinText(v, sep = ' / ') {
   return toArray(v).filter(Boolean).join(sep)
 }
 
-function getTicketLinks(d) {
-  if (!Array.isArray(d?.ticketLinks)) return []
-  return d.ticketLinks
-    .map((t) => ({ platform: t?.platform ?? '', url: t?.url ?? '' }))
-    .filter((t) => t.platform && t.url)
+function getBookingLinks(d) {
+  // ✅ 只认 bookingPlatform: [{ code, url }]
+  if (!Array.isArray(d?.bookingPlatform)) return []
+  return d.bookingPlatform
+    .map((t) => ({
+      code: t?.code ?? '',
+      url: t?.url ?? null, // 保留 null
+    }))
+    .filter((t) => t.code) // ✅ 只要求 code，url 允许为空（用于展示“有平台但未放链接”）
 }
 
-// 你可以按实际平台继续补全
-const TICKET_ICON_MAP = {
-  大麦: '/icons/damai.svg',
-  猫眼: '/icons/maoyan.svg',
-  票星球: '/icons/piaoxingqiu.svg',
-  纷玩岛: '/icons/fenwandao.svg',
-  秀动: '/icons/xiudong.svg',
-  抖音: '/icons/douyin.svg',
-  小红书: '/icons/xhs.svg',
-  官方: '/icons/link.svg',
-}
-
-function IconImg({ src, alt, className }) {
-  if (!src) return null
-  return (
-    <img
-      className={className}
-      src={src}
-      alt={alt}
-      onError={() => {
-        console.error('Icon load failed:', src)
-      }}
-    />
-  )
-}
-
-/**
- * 推荐：数据里 status 用英文（upcoming/ongoing/ended/canceled/postponed）
- * 如果你现在还是中文 status，也能显示：下面做了兼容
- */
-const EVENT_STATUS_META = {
-  upcoming: { label: '即将进行' },
-  ongoing: { label: '进行中' },
-  ended: { label: '已结束' },
-  canceled: { label: '已取消' },
-  postponed: { label: '已延期' },
-}
-
-// 兼容中文直接传进来的情况（可删）
-const EVENT_STATUS_ALIAS = {
-  即将进行: 'upcoming',
-  进行中: 'ongoing',
-  已结束: 'ended',
-  已取消: 'canceled',
-  已延期: 'postponed',
-}
-
-function normalizeEventStatus(status) {
-  if (!status) return ''
-  return EVENT_STATUS_ALIAS[status] || status
-}
-
-function formatEventDateTime({ year, month, day, time }) {
-  // 你现在 month 是 'NOV' 这种展示型，直接拼就好
-  const y = year ? String(year) : ''
-  const m = month ? String(month).toUpperCase() : ''
-  const d = day ? String(day).padStart(2, '0') : ''
-  const t = time ? String(time) : ''
-  // 输出：2025 NOV 24 19:30
-  return [y, m, d, t].filter(Boolean).join(' ')
+function formatEventDateTime({ eventDate, timeText }) {
+  const d = typeof eventDate === 'string' ? eventDate : ''
+  const t = typeof timeText === 'string' ? timeText : ''
+  return [d, t].filter(Boolean).join(' ')
 }
 
 export default function EventDetailCard({ event }) {
@@ -81,31 +36,45 @@ export default function EventDetailCard({ event }) {
 
   const {
     posterUrl,
+    posterAlt,
     title,
-    alt,
-    city,
+
+    cityCodes,
+    cityLabels,
     location,
-    year,
-    month,
-    day,
-    time,
+
+    eventDate,
+    timeText,
+
     type,
+    typeLabel,
+
     status,
+    statusLabel,
+
+    description,
     stickerText,
-    desc,
+
+    // ✅ 保留 bookingPlatform 字段
+    bookingPlatform,
   } = event
 
-  const ticketLinks = getTicketLinks(event)
+  const bookingLinks = getBookingLinks({ bookingPlatform })
+  const showTickets = bookingLinks.length > 0
 
-  const normalizedStatus = normalizeEventStatus(status)
-  const statusLabel =
-    EVENT_STATUS_META[normalizedStatus]?.label ||
-    (typeof status === 'string' ? status : '')
+  const cityText =
+    (Array.isArray(cityLabels) && cityLabels.filter(Boolean).join(' / ')) ||
+    (Array.isArray(cityCodes) && cityCodes.filter(Boolean).join(' / ')) ||
+    ''
 
-  const dateTimeText = formatEventDateTime({ year, month, day, time })
+  const dateTimeText = formatEventDateTime({ eventDate, timeText })
+  const altText = posterAlt || title
 
-  // 购票：有就显示，没有就不显示（你要求的行为）
-  const showTickets = ticketLinks.length > 0
+  // ✅ 状态：优先 mapper 的 statusLabel，其次 domain/status 的 filter label，再其次英文
+  const finalStatusLabel =
+    statusLabel ||
+    STATUS_FILTER_LABEL?.[status] ||
+    (status ? String(status) : '')
 
   return (
     <div className="detail-card">
@@ -113,16 +82,11 @@ export default function EventDetailCard({ event }) {
         {/* 封面 */}
         <div className="detail-cover">
           {posterUrl ? (
-            <img
-              className="detail-cover-img"
-              src={posterUrl}
-              alt={alt || title}
-            />
+            <img className="detail-cover-img" src={posterUrl} alt={altText} />
           ) : (
             <div className="detail-cover-placeholder" />
           )}
 
-          {/* 角标：你给的 stickerText 可直接显示（比如场馆名/活动亮点） */}
           {stickerText && <div className="detail-sticker">{stickerText}</div>}
         </div>
 
@@ -131,10 +95,10 @@ export default function EventDetailCard({ event }) {
           <h1 className="detail-title">{title}</h1>
 
           <div className="detail-kv">
-            {city && (
+            {cityText && (
               <div className="kv-row">
                 <div className="kv-k">城市</div>
-                <div className="kv-v">{city}</div>
+                <div className="kv-v">{cityText}</div>
               </div>
             )}
 
@@ -152,47 +116,84 @@ export default function EventDetailCard({ event }) {
               </div>
             )}
 
-            {type && (
+            {(typeLabel || type) && (
               <div className="kv-row">
                 <div className="kv-k">类型</div>
-                <div className="kv-v">{joinText(type)}</div>
+                <div className="kv-v">{typeLabel || joinText(type)}</div>
               </div>
             )}
 
-            {statusLabel && (
+            {finalStatusLabel && (
               <div className="kv-row">
                 <div className="kv-k">状态</div>
                 <div className="kv-v">
-                  {/* 如果你不做不同状态不同颜色，就保持一个 class */}
-                  <span className="status-badge">{statusLabel}</span>
+                  <span className="status-badge">{finalStatusLabel}</span>
                 </div>
               </div>
             )}
 
+            {/* ✅ 购票：平台可显示，但 url 为空则不可点击且不冒泡 */}
             {showTickets && (
               <div className="kv-row">
                 <div className="kv-k">购票</div>
                 <div className="kv-v">
                   <div className="platform-row">
-                    {ticketLinks.map((t) => {
-                      const iconSrc = TICKET_ICON_MAP[t.platform]
-                      const finalIcon = iconSrc || '/icons/link.svg'
+                    {bookingLinks.map((t) => {
+                      const icon =
+                        BOOKING_PLATFORM_ICON?.[t.code] || '/icons/link.svg'
+                      const label = BOOKING_PLATFORM_LABEL?.[t.code] || t.code
 
+                      const isClickable = Boolean(t.url)
+
+                      const content = (
+                        <img
+                          className="platform-logo"
+                          src={icon}
+                          alt={label}
+                          onClick={(e) => {
+                            // ✅ 防止父级 Link/卡片点击被触发
+                            if (!isClickable) {
+                              e.preventDefault()
+                              e.stopPropagation()
+                            }
+                          }}
+                        />
+                      )
+
+                      // 有 url：正常外链
+                      if (isClickable) {
+                        return (
+                          <a
+                            key={`${t.code}-${t.url}`}
+                            className="platform-link"
+                            href={t.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            title={label}
+                            onClick={(e) => {
+                              // ✅ 也建议阻止冒泡，避免父级 Link 抢点击
+                              e.stopPropagation()
+                            }}
+                          >
+                            {content}
+                          </a>
+                        )
+                      }
+
+                      // 无 url：只展示，不跳转
                       return (
-                        <a
-                          key={`${t.platform}-${t.url}`}
-                          className="platform-link"
-                          href={t.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          title={t.platform}
+                        <span
+                          key={`${t.code}-no-url`}
+                          className="platform-link is-disabled"
+                          title={`${label}（暂无链接）`}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                          }}
+                          style={{ cursor: 'not-allowed', opacity: 0.6 }}
                         >
-                          <IconImg
-                            className="platform-logo"
-                            src={finalIcon}
-                            alt={t.platform}
-                          />
-                        </a>
+                          {content}
+                        </span>
                       )
                     })}
                   </div>
@@ -204,10 +205,10 @@ export default function EventDetailCard({ event }) {
       </div>
 
       {/* 简介 */}
-      {desc && (
+      {description && (
         <div className="detail-desc">
           <div className="detail-desc-hd">简介</div>
-          <p className="detail-desc-text">{desc}</p>
+          <p className="detail-desc-text">{description}</p>
         </div>
       )}
     </div>

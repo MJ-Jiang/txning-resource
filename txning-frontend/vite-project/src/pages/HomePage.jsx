@@ -47,7 +47,7 @@ export default function HomePage() {
       .map((x) => ({
         posterUrl: x.posterUrl,
         href: x.href,
-        alt: x.posterAlt || 'Banner',
+        posterAlt: x.posterAlt || 'Banner',
         platforms: x.platforms ?? [], // ✅ 关键：传 platforms
       }))
   }, [featured])
