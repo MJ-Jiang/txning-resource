@@ -7,7 +7,12 @@ export const mockResources = [
     category: 'banners',
     poster_alt_zh: '进入影视剧综频道',
     description_zh: '查看最新影视剧综条目',
-    platform: '本站',
+    platforms: [
+      {
+        code: 'this_web',
+        url: '/',
+      },
+    ],
     is_featured: true,
   },
   {
@@ -18,7 +23,12 @@ export const mockResources = [
     category: 'banners',
     poster_alt_zh: '微博之夜的任务',
     description_zh: '打开第三方网站（示例）',
-    platform: '第三方网站',
+    platforms: [
+      {
+        code: 'iqiyi',
+        url: '/',
+      },
+    ],
     is_featured: true,
   },
   {
@@ -29,7 +39,12 @@ export const mockResources = [
     href: 'https://www.instagram.com/',
     poster_alt_zh: '前往 Instagram',
     description_zh: '打开 Instagram',
-    platform: 'Instagram',
+    platforms: [
+      {
+        code: 'tencent_video',
+        url: '/',
+      },
+    ],
     is_featured: true,
   },
   {
@@ -44,14 +59,17 @@ export const mockResources = [
       'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2940&auto=format&fit=crop',
     status: 'now_showing',
     platforms: [
-      { key: '腾讯视频', url: 'https://v.qq.com/xxx' },
-      { key: 'Bilibili', url: 'https://www.bilibili.com/xxx' },
+      { code: 'tencent_video', url: 'https://v.qq.com/xxx' },
+      { code: 'bilibili', url: 'https://www.bilibili.com/xxx' },
     ],
     rating_url: 'https://movie.douban.com/subject/35600001/',
     rating_value: 8.5,
     poster_alt_zh: 'Movie',
     is_featured: true,
-    ticketLinks: [{ platform: '大麦', url: 'https://www.damai.cn/xxx' }],
+    bookingPlatform: [
+      { code: 'damai', url: 'https://www.damai.cn/xxx' },
+      { code: 'maoyan', url: 'https://www.maoyan.com/xxx' },
+    ],
     description_zh:
       '一次深海事故让救援队被迫下潜到未知海沟，氧气、时间与人性同时见底。队长必须在救人与保命之间做出选择。',
     episode_count: 116,
@@ -69,7 +87,7 @@ export const mockResources = [
     poster_url:
       'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2825&auto=format&fit=crop',
     status: 'not_yet_released',
-    platforms: [{ key: '腾讯视频', url: 'https://v.qq.com/xxx' }],
+    platforms: [{ code: 'tencent_video', url: 'https://v.qq.com/xxx' }],
     poster_alt_zh: 'Movie',
     is_featured: true,
     description_zh:
@@ -87,12 +105,12 @@ export const mockResources = [
 
     title_zh: '沉默的证人',
     release_year: 2022,
-    genres: ['悬疑', '犯罪'],
+    genres: ['mystery', 'crime'],
     type: 'tv_series',
     poster_url:
       'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2940&auto=format&fit=crop',
     status: 'now_showing',
-    platforms: [{ key: '腾讯视频', url: 'https://v.qq.com/xxx' }],
+    platforms: [{ code: 'tencent_video', url: 'https://v.qq.com/xxx' }],
     poster_alt_zh: 'Movie',
     is_featured: true,
 
@@ -119,7 +137,7 @@ export const mockResources = [
     status: 'ended',
     platforms: [
       {
-        key: 'Youtube',
+        code: 'youtube',
         url: 'https://www.youtube.com/playlist?list=youth-party-full',
       },
     ],
@@ -146,12 +164,13 @@ export const mockResources = [
     poster_url:
       'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=2940&auto=format&fit=crop',
     status: 'upcoming',
-    platforms: [{ key: '院线', url: null }],
+    platforms: [{ code: 'cinema', url: null }],
+    bookingPlatform: [{ code: 'maoyan', url: 'https://www.maoyan.com/xxx' }],
     poster_alt_alt: 'Movie',
     is_featured: true,
     description_zh:
       '退役车手被迫回到赛道：不是为了冠军，而是为了救人。一次“合法的非法比赛”让他重新点燃引擎，也点燃了更大的阴谋。',
-    episode_count: '电影 · 102分钟',
+    episode_count: 1,
     rating_value: 6.9,
     rating_url: 'https://movie.douban.com/subject/35190012/',
 

@@ -3,13 +3,9 @@ import DramaCard from '../components/cards/DramaCard'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-
-const STATUS_FILTER_LABEL = {
-  not_yet_released: '未上线',
-  upcoming: '即将上线/上映',
-  now_showing: '热播/热映',
-  ended: '完结/上线',
-}
+import { TYPE_LABEL } from '../dictionary/type'
+import { STATUS_FILTER_LABEL } from '../dictionary/status'
+import { PLATFORM_LABEL } from '../dictionary/platform'
 
 export default function DramasPage() {
   const schema = useMemo(
@@ -18,8 +14,10 @@ export default function DramasPage() {
         name: 'platform',
         label: '平台',
         defaultValue: 'all',
-        getValue: (d) => d.platforms.map((item) => item.key),
+        getValue: (d) => d.platforms.map((p) => p.code),
+        optionsLabel: (v) => PLATFORM_LABEL[v] ?? v,
       },
+
       {
         name: 'type',
         label: '类型',
@@ -37,7 +35,8 @@ export default function DramasPage() {
         name: 'status',
         label: '状态',
         defaultValue: 'all',
-        getValue: (d) => d.status,
+        getValue: (d) => d.status, // code
+        optionsLabel: (v) => STATUS_FILTER_LABEL[v] ?? v,
       },
     ],
     []

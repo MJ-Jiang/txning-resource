@@ -1,62 +1,45 @@
 import { mockResources } from '../data/mockResources'
-
-const TYPE_LABEL = {
-  film: '电影',
-  tv_series: '电视剧',
-  short_series: '短剧',
-  show: '综艺',
-  stage_play: '话剧',
-}
-const STATUS_LABEL = {
-  not_yet_released: {
-    film: '待映',
-    tv_series: '待播',
-    short_series: '待播',
-    show: '待播',
-    stage_play: '待映',
-  },
-  upcoming: {
-    film: '即将上映',
-    tv_series: '即将上线',
-    short_series: '即将上线',
-    show: '即将上线',
-    stage_play: '即将上映',
-  },
-  now_showing: {
-    film: '热映中',
-    tv_series: '热播中',
-    short_series: '热播中',
-    show: '热播中',
-    stage_play: '演出中',
-  },
-  ended: {
-    film: '网络上线',
-    tv_series: '已完结',
-    short_series: '已完结',
-    show: '已完结',
-    stage_play: '已完结',
-  },
-}
+import { TYPE_LABEL } from '../dictionary/type'
+import { getStatusDisplayLabel } from '../dictionary/status'
+import { GENRE_LABEL } from '../dictionary/genre'
 
 function mapResource(raw) {
   const type = raw.type
   const status = raw.status
-  const statusLabel = STATUS_LABEL[status]?.[type] ?? ''
+
+  const genreCodes = Array.isArray(raw.genres) ? raw.genres : []
+  const genreLabels = genreCodes.map((c) => GENRE_LABEL[c] ?? c)
   return {
     id: raw.id,
     category: raw.category,
     title: raw.title_zh,
     year: raw.release_year,
-    genres: raw.genres,
-    type,
+    genres: genreCodes,
+    genreLabels,
+    type: type ?? '',
+    status: status ?? '',
     typeLabel: TYPE_LABEL[type] ?? '',
+    statusLabel: getStatusDisplayLabel(status, type),
     posterUrl: raw.poster_url,
     posterAlt: raw.poster_alt_zh,
     isFeatured: raw.is_featured,
-    status,
-    statusLabel,
     href: raw.href,
-    platforms: raw.platforms,
+    platforms: Array.isArray(raw.platforms)
+      ? raw.platforms
+          .map((p) => ({
+            code: p?.code ?? '',
+            url: p?.url ?? null, // url 可以为 null
+          }))
+          .filter((p) => p.code) // ✅ 只要求 code
+      : [],
+    bookingPlatform: Array.isArray(raw.bookingPlatform)
+      ? raw.bookingPlatform
+          .map((t) => ({
+            code: t?.code ?? '',
+            url: t?.url ?? null,
+          }))
+          .filter((t) => t.code)
+      : [],
     description: raw.description_zh,
     episodes: raw.episode_count,
     ratingValue: raw.rating_value,

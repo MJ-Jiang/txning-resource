@@ -1,15 +1,9 @@
 import { Link } from 'react-router-dom'
-
-const STATUS_STYLE = {
-  not_yet_released: { background: '#888' },
-  upcoming: { background: '#2F6BFF' },
-  now_showing: { background: '#E53935' },
-  ended: { background: '#f3641b' },
-}
+import { STATUS_STYLE } from '../../dictionary/status'
+import { GENRE_LABEL } from '../../dictionary/genre'
 
 function StatusTag({ status, label }) {
   const style = STATUS_STYLE[status] ?? { background: '#888' }
-
   return (
     <span className="movie-tag" style={style}>
       {label}
@@ -19,7 +13,9 @@ function StatusTag({ status, label }) {
 
 export default function DramaCard({ item }) {
   const href = `/detail/${item.category}/${item.id}`
-  const meta = [item.year, item.genres?.join(' / ')].filter(Boolean).join(' | ')
+  const meta = [item.year, item.genreLabels?.join(' / ')]
+    .filter(Boolean)
+    .join(' | ')
 
   return (
     <Link to={href} className="card-link">

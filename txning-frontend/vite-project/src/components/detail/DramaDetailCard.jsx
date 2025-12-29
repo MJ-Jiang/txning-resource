@@ -1,3 +1,9 @@
+import { PLATFORM_ICON, PLATFORM_LABEL } from '../../dictionary/platform'
+import {
+  BOOKING_PLATFORM_LABEL,
+  BOOKING_PLATFORM_ICON,
+} from '../../dictionary/bookingPlatform'
+
 function toArray(v) {
   if (!v) return []
   return Array.isArray(v) ? v : [v]
@@ -10,34 +16,23 @@ function joinText(v, sep = ' / ') {
 function getPlatforms(d) {
   if (!Array.isArray(d?.platforms)) return []
   return d.platforms
-    .map((p) => ({ key: p?.key ?? '', url: p?.url ?? '' }))
-    .filter((p) => p.key && p.url)
+    .map((p) => ({
+      code: p?.code ?? '',
+      url: p?.url ?? null,
+    }))
+    .filter((p) => p.code)
 }
 
-const PLATFORM_ICON_MAP = {
-  腾讯视频: '/icons/tc.svg',
-  Bilibili: '/icons/bilibili.svg',
-  YouTube: '/icons/youtube.svg',
-  爱奇艺: '/icons/iqiyi.svg',
-  芒果TV: '/icons/mgtv.svg',
-  优酷视频: '/icons/youku.svg',
-}
-const TICKET_ICON_MAP = {
-  大麦: '/icons/damai.svg',
-  猫眼: '/icons/maoyan.svg',
-  票星球: '/icons/piaoxingqiu.svg',
-  纷玩岛: '/icons/fenwandao.svg',
-  秀动: '/icons/xiudong.svg',
-  抖音: '/icons/douyin.svg',
-  小红书: '/icons/xhs.svg',
-  官方: '/icons/link.svg',
-}
 function getTicketLinks(d) {
-  if (!Array.isArray(d?.ticketLinks)) return []
-  return d.ticketLinks
-    .map((t) => ({ platform: t?.platform ?? '', url: t?.url ?? '' }))
-    .filter((t) => t.platform && t.url)
+  if (!Array.isArray(d?.bookingPlatform)) return []
+  return d.bookingPlatform
+    .map((t) => ({
+      code: t?.code ?? '',
+      url: t?.url ?? null,
+    }))
+    .filter((t) => t.code)
 }
+
 function IconImg({ src, alt, className }) {
   if (!src) return null
   return (
@@ -45,9 +40,7 @@ function IconImg({ src, alt, className }) {
       className={className}
       src={src}
       alt={alt}
-      onError={() => {
-        console.error('Icon load failed:', src)
-      }}
+      onError={() => console.error('Icon load failed:', src)}
     />
   )
 }
@@ -58,21 +51,28 @@ export default function DramaDetailCard({ drama }) {
   const {
     posterUrl,
     title,
-    type,
-    genres,
+    typeLabel,
+    genreLabels,
     year,
     episodes,
     ratingValue,
     ratingUrl,
     description,
   } = drama
-  const ticketLinks = getTicketLinks(drama)
+
   const platforms = getPlatforms(drama)
-  const showTickets = ticketLinks.length > 0
+  const bookingPlatform = getTicketLinks(drama)
+
+  // ✅ 只有数据库里有 url 才显示对应区块
+  const playablePlatforms = platforms.filter((p) => Boolean(p.url))
+  const buyableTickets = bookingPlatform.filter((t) => Boolean(t.url))
+
+  const showPlay = playablePlatforms.length > 0
+  const showTickets = buyableTickets.length > 0
+
   return (
     <div className="detail-card">
       <div className="detail-grid">
-        {/* 封面 */}
         <div className="detail-cover">
           {posterUrl ? (
             <img className="detail-cover-img" src={posterUrl} alt={title} />
@@ -81,40 +81,39 @@ export default function DramaDetailCard({ drama }) {
           )}
         </div>
 
-        {/* 信息区 */}
         <div className="detail-info">
           <h1 className="detail-title">{title}</h1>
 
           <div className="detail-kv">
-            {type?.length > 0 && (
+            {typeLabel ? (
               <div className="kv-row">
                 <div className="kv-k">分类</div>
-                <div className="kv-v">{joinText(type)}</div>
+                <div className="kv-v">{typeLabel}</div>
               </div>
-            )}
+            ) : null}
 
-            {genres?.length > 0 && (
+            {genreLabels?.length > 0 ? (
               <div className="kv-row">
                 <div className="kv-k">类型</div>
-                <div className="kv-v">{joinText(genres)}</div>
+                <div className="kv-v">{joinText(genreLabels)}</div>
               </div>
-            )}
+            ) : null}
 
-            {year && (
+            {year ? (
               <div className="kv-row">
                 <div className="kv-k">年份</div>
                 <div className="kv-v">{year}</div>
               </div>
-            )}
+            ) : null}
 
-            {episodes && (
+            {episodes ? (
               <div className="kv-row">
                 <div className="kv-k">集数</div>
                 <div className="kv-v">{episodes}</div>
               </div>
-            )}
+            ) : null}
 
-            {(ratingValue || ratingUrl) && (
+            {ratingValue || ratingUrl ? (
               <div className="kv-row">
                 <div className="kv-k kv-k--icon">
                   <a
@@ -136,31 +135,30 @@ export default function DramaDetailCard({ drama }) {
                 </div>
                 <div className="kv-v">{ratingValue}</div>
               </div>
-            )}
+            ) : null}
 
-            {/* 播放：只显示平台 logo，无文字废话 */}
-            {platforms.length > 0 && (
+            {/* 播放：仅当有 url */}
+            {showPlay ? (
               <div className="kv-row">
                 <div className="kv-k">播放</div>
                 <div className="kv-v">
                   <div className="platform-row">
-                    {platforms.map((p) => {
-                      const iconSrc = PLATFORM_ICON_MAP[p.key]
-                      if (!iconSrc) return null
-
+                    {playablePlatforms.map((p) => {
+                      const label = PLATFORM_LABEL[p.code] ?? p.code
+                      const iconSrc = PLATFORM_ICON[p.code] ?? '/icons/link.svg'
                       return (
                         <a
-                          key={p.key}
+                          key={`${p.code}-${p.url}`}
                           className="platform-link"
                           href={p.url}
                           target="_blank"
                           rel="noreferrer"
-                          title={p.key}
+                          title={label}
                         >
                           <IconImg
                             className="platform-logo"
                             src={iconSrc}
-                            alt={p.key}
+                            alt={label}
                           />
                         </a>
                       )
@@ -168,29 +166,31 @@ export default function DramaDetailCard({ drama }) {
                   </div>
                 </div>
               </div>
-            )}
-            {showTickets && (
+            ) : null}
+
+            {/* 购票：仅当有 url */}
+            {showTickets ? (
               <div className="kv-row">
                 <div className="kv-k">购票</div>
                 <div className="kv-v">
                   <div className="platform-row">
-                    {ticketLinks.map((t) => {
-                      const iconSrc = TICKET_ICON_MAP[t.platform]
-                      const finalIcon = iconSrc || '/icons/link.svg'
-
+                    {buyableTickets.map((t) => {
+                      const label = BOOKING_PLATFORM_LABEL[t.code] ?? t.code
+                      const iconSrc =
+                        BOOKING_PLATFORM_ICON[t.code] ?? '/icons/link.svg'
                       return (
                         <a
-                          key={`${t.platform}-${t.url}`}
+                          key={`${t.code}-${t.url}`}
                           className="platform-link"
                           href={t.url}
                           target="_blank"
                           rel="noreferrer"
-                          title={t.platform}
+                          title={label}
                         >
                           <IconImg
                             className="platform-logo"
-                            src={finalIcon}
-                            alt={t.platform}
+                            src={iconSrc}
+                            alt={label}
                           />
                         </a>
                       )
@@ -198,18 +198,17 @@ export default function DramaDetailCard({ drama }) {
                   </div>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
 
-      {/* 简介 */}
-      {description && (
+      {description ? (
         <div className="detail-desc">
           <div className="detail-desc-hd">简介</div>
           <p className="detail-desc-text">{description}</p>
         </div>
-      )}
+      ) : null}
     </div>
   )
 }

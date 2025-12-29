@@ -21,6 +21,7 @@ export default function FilterFields({
           value={filters[f.name]}
           onChange={(v) => setFilter(f.name, v)}
           options={optionsMap[f.name] ?? []}
+          optionsLabel={f.optionsLabel}
         />
       ))}
     </>
