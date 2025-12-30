@@ -1,4 +1,4 @@
-// src/domain/platform.js
+// src/dictionary/ugcPlatform.js
 
 export const PLATFORM_LABEL = {
   bilibili: 'Bilibili',

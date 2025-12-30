@@ -24,10 +24,7 @@ export default function ResourceListContainer({
   showReset = true,
   stickyFilters = true,
 }) {
-  // ✅ hook 放在组件内部
   const responsivePageSize = useResponsivePageSize(12, 25, 768)
-
-  // ✅ 最终 pageSize：props 优先，否则用响应式的
   const finalPageSize = pageSize ?? responsivePageSize
   const [fetchedResources, setFetchedResources] = useState([])
 
@@ -50,15 +47,21 @@ export default function ResourceListContainer({
     return match ? Number(match[1]) : -1
   }
 
+  // ✅ category 支持 string / array / empty
+  const categoryList = useMemo(() => {
+    if (!category) return []
+    return Array.isArray(category) ? category.filter(Boolean) : [category]
+  }, [category])
+
   const sourceItems = useMemo(() => {
     const list = Array.isArray(items)
       ? items
-      : category
-        ? fetchedResources.filter((x) => x.category === category)
-        : []
+      : categoryList.length
+        ? fetchedResources.filter((x) => categoryList.includes(x.category))
+        : fetchedResources
 
     return [...list].sort((a, b) => getIdNum(b) - getIdNum(a))
-  }, [items, category, fetchedResources])
+  }, [items, categoryList, fetchedResources])
 
   const schemaWithDefaults = useMemo(() => {
     return schema.map((f) => {
@@ -89,7 +92,7 @@ export default function ResourceListContainer({
   const { page, totalPages, pageItems, goPrev, goNext, goPage } = usePagedList({
     items: filteredItems,
     pageSize: finalPageSize,
-    resetKey: [...resetKey, finalPageSize], // ✅ 关键：pageSize变化也回到第一页
+    resetKey: [...resetKey, finalPageSize],
   })
 
   const qProp = showSearch ? q : ''

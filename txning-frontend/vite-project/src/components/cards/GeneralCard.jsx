@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PLATFORM_LABEL } from '../../dictionary/ugcPlatform' // 路径按项目实际
+import { PLATFORM_LABEL } from '../../dictionary/ugcPlatform'
 
 function isHttpUrl(v) {
   return typeof v === 'string' && /^https?:\/\//i.test(v)
@@ -11,21 +11,30 @@ export default function GeneralCard({ item }) {
 
   const cover = item.posterUrl
 
-  // ✅ 全量字段替换
-  const ugcType = item.ugcType // 'video' | 'picture'
-  const ugcUrl = item.ugcUrl || '' // 外链
-  const ugcPlatform = item.ugcPlatform // 平台 code
-  const platformLabel = PLATFORM_LABEL?.[ugcPlatform] ?? ugcPlatform
+  const ugcType = item.ugcType
+  const ugcUrl = item.ugcUrl || ''
+  const ugcPlatform = item.ugcPlatform
 
   const desc = item.description ?? ''
   const alt = item.posterAlt ?? item.title ?? desc ?? ''
+
   const UGC_TYPE_LABEL = {
     video: '视频',
     picture: '图片',
   }
-  // 站内详情页
+
+  // ✅ 外站来源：ugc + personal
+  const isExternalSource =
+    item.category === 'ugc' || item.category === 'personal'
+
+  // ✅ 平台角标文案：
+  // - 外站：显示平台名（PLATFORM_LABEL 映射）
+  // - 站内：显示“本站”
+  const platformLabel = PLATFORM_LABEL?.[ugcPlatform] ?? ugcPlatform ?? ''
+  const badgeText = isExternalSource ? platformLabel : '本站'
+
   const internalHref = useMemo(() => {
-    if (!item.category || !item.id) return ''
+    if (!item.category || item.id == null) return ''
     return `/detail/${item.category}/${item.id}`
   }, [item.category, item.id])
 
@@ -46,10 +55,11 @@ export default function GeneralCard({ item }) {
           <div className="general-thumb general-thumb--placeholder" />
         )}
 
-        {/* ✅ 平台角标 */}
-        {ugcPlatform && <div className="general-badge">{platformLabel}</div>}
+        {/* ✅ 平台角标：外站显示平台；站内显示“本站”
+            注意：外站若 platform 为空，不显示角标（避免空黄块） */}
+        {badgeText && <div className="general-badge">{badgeText}</div>}
 
-        {/* ✅ 媒体类型角标 */}
+        {/* ✅ 媒体类型角标：只有 ugc 才通常会有（personal 也可有就会显示） */}
         {ugcType && (
           <div className="general-type">
             {UGC_TYPE_LABEL[ugcType] ?? ugcType}
@@ -59,7 +69,6 @@ export default function GeneralCard({ item }) {
     </div>
   )
 
-  // 外链点击：弹确认
   const onClickExternal = (e) => {
     if (!isExternal) return
     e.preventDefault()
@@ -72,7 +81,7 @@ export default function GeneralCard({ item }) {
     setConfirmOpen(false)
   }
 
-  // 1️⃣ 站内跳转
+  // 站内跳转
   if (isInternal) {
     return (
       <Link to={internalHref} className="card-link">
@@ -81,7 +90,7 @@ export default function GeneralCard({ item }) {
     )
   }
 
-  // 2️⃣ 外链（确认弹窗）
+  // 外链（确认弹窗）
   if (isExternal) {
     return (
       <>
@@ -118,8 +127,7 @@ export default function GeneralCard({ item }) {
               </button>
 
               <div className="ext-modal-title" id="ext-modal-title">
-                即将前往
-                {platformLabel ? `「${platformLabel}」` : '第三方网站'}
+                即将前往{badgeText ? `「${badgeText}」` : '第三方网站'}
               </div>
 
               <div className="ext-modal-body">
@@ -150,6 +158,5 @@ export default function GeneralCard({ item }) {
     )
   }
 
-  // 3️⃣ 不可点击
   return <div className="card-link">{CardInner}</div>
 }

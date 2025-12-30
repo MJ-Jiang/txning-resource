@@ -691,6 +691,19 @@ img {
   border-radius: 12px;
   overflow: hidden;
 }
+/* 仅在支持 hover 的设备上生效（桌面端） */
+@media (hover: hover) {
+  .evt-page-card {
+    transition:
+      transform 140ms ease,
+      box-shadow 140ms ease;
+  }
+
+  .evt-page-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  }
+}
 
 .evt-page-media {
   position: relative;

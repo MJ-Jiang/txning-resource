@@ -5,6 +5,7 @@ export const CATEGORY_CODES = {
   UGC: 'ugc',
   PERSONAL: 'personal',
   BANNERS: 'banners',
+  ABOUTME: 'aboutme',
 }
 
 export const CATEGORY_LABEL = {
@@ -14,4 +15,5 @@ export const CATEGORY_LABEL = {
   [CATEGORY_CODES.UGC]: '图频',
   [CATEGORY_CODES.PERSONAL]: '个人营业',
   [CATEGORY_CODES.BANNERS]: '轮播',
+  [CATEGORY_CODES.ABOUTME]: '个人简介',
 }

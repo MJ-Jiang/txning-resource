@@ -61,9 +61,6 @@ export default function EventCard({ item }) {
         <div className="evt-page-info">
           <h3 className="evt-page-title">{item.title}</h3>
 
-          {/* 可选：显示活动类型（mapper 已经给了 typeLabel） */}
-          {item.typeLabel && <p className="evt-page-type">{item.typeLabel}</p>}
-
           <p className="evt-page-location">
             {cityText}
             {item.location && (

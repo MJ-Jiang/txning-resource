@@ -10,32 +10,28 @@ import EventDetailCard from '../components/detail/EventDetailCard'
 import { getResources } from '@/services/resources'
 import { CATEGORY_CODES } from '../dictionary/category'
 import useResponsivePageSize from '../hooks/useResponsivePageSize'
+import { PLATFORM_LABEL } from '../dictionary/ugcPlatform'
 
 function toArray(v) {
   if (!v) return []
   return Array.isArray(v) ? v : [v]
 }
 
-/** 实体 → GeneralCard 可用结构 */
+/** 实体 → GeneralCard 可用结构（站内实体：drama/event/endorsement 等） */
 function toGeneralEntityCard(entity) {
   return {
     ...entity,
-
-    // 封面统一
     posterUrl: entity.posterUrl,
 
     // 站内跳转
     url: `/detail/${entity.category}/${entity.id}`,
     isExternal: false,
 
-    // 给「来源」筛选用
     sourceType: entity.category,
 
-    // ⚠️ 关键：实体卡【不提供 mediaType】
-    mediaType: undefined,
+    // 站内实体卡不提供媒体类型（避免出现在“类型”筛选中）
+    ugcType: undefined,
 
-    // 其他字段给筛选兜底
-    platform: entity.platform ?? '本站',
     year: entity.year ?? 'all',
   }
 }
@@ -44,6 +40,7 @@ export default function DetailPage() {
   const { category, id } = useParams()
   const pageSize = useResponsivePageSize(12, 25, 768)
   const [resources, setResources] = useState([])
+
   useEffect(() => {
     let alive = true
     ;(async () => {
@@ -54,9 +51,12 @@ export default function DetailPage() {
       alive = false
     }
   }, [])
-  /** 当前详情页对象 */
+
+  /** 当前详情对象（id 统一 string 比较） */
   const item = useMemo(() => {
-    return resources.find((x) => x.category === category && x.id === id)
+    return resources.find(
+      (x) => x.category === category && String(x.id) === String(id)
+    )
   }, [category, id, resources])
 
   const emptyText =
@@ -76,68 +76,101 @@ export default function DetailPage() {
     return <DramaDetailCard drama={item} />
   }, [item, category])
 
-  /** 相关 UGC（老逻辑，不动） */
-  const relatedUGC = useMemo(() => {
+  /**
+   * ✅ 相关媒体内容：UGC + PERSONAL
+   * 规则：x.relatedIds 包含当前 item.id
+   */
+  const relatedMedia = useMemo(() => {
     if (!item) return []
     const selfId = String(item.id)
 
     return resources.filter((x) => {
-      if (x.category !== CATEGORY_CODES.UGC) return false
-      const p = x.parentId
-      if (Array.isArray(p)) return p.map(String).includes(selfId)
-      if (typeof p === 'string' || typeof p === 'number')
-        return String(p) === selfId
-      return false
+      const isMedia =
+        x.category === CATEGORY_CODES.UGC ||
+        x.category === CATEGORY_CODES.PERSONAL
+      if (!isMedia) return false
+      return toArray(x.relatedIds).map(String).includes(selfId)
     })
-  }, [item])
+  }, [item, resources])
 
-  /** 相关实体（incoming：谁把自己挂到我下面） */
+  /**
+   * ✅ 相关站内实体（incoming）：排除 UGC + PERSONAL
+   * 规则：其它实体.relatedIds 包含当前 item.id
+   */
   const relatedEntities = useMemo(() => {
     if (!item) return []
     const selfId = String(item.id)
 
     return resources
-      .filter((x) => x.category !== CATEGORY_CODES.UGC)
-      .filter((x) => toArray(x.relatedId).map(String).includes(selfId))
+      .filter(
+        (x) =>
+          x.category !== CATEGORY_CODES.UGC &&
+          x.category !== CATEGORY_CODES.PERSONAL
+      )
+      .filter((x) => toArray(x.relatedIds).map(String).includes(selfId))
       .filter((x) => String(x.id) !== selfId)
       .map(toGeneralEntityCard)
-  }, [item])
+  }, [item, resources])
 
   /** 合并 + 去重 */
   const relatedItems = useMemo(() => {
-    const all = [...relatedEntities, ...relatedUGC]
+    const all = [...relatedEntities, ...relatedMedia]
     const seen = new Set()
     const out = []
 
     for (const x of all) {
-      const id = String(x.id ?? '')
-      if (!id || seen.has(id)) continue
-      seen.add(id)
+      const k = `${x.category}:${String(x.id)}`
+      if (seen.has(k)) continue
+      seen.add(k)
       out.push(x)
     }
     return out
-  }, [relatedEntities, relatedUGC])
+  }, [relatedEntities, relatedMedia])
 
-  /** ✅ 关键判断：是否存在 UGC */
-  const hasUGC = relatedItems.some((x) => x.category === CATEGORY_CODES.UGC)
+  /** 是否存在媒体（UGC 或 PERSONAL） */
+  const hasMedia = relatedItems.some(
+    (x) =>
+      x.category === CATEGORY_CODES.UGC ||
+      x.category === CATEGORY_CODES.PERSONAL
+  )
 
-  /** ✅ 关键：动态构造筛选 schema */
+  /**
+   * ✅ 筛选 schema
+   * - 平台：UGC+PERSONAL 用 ugcPlatform；其它为 site
+   * - 类型：UGC+PERSONAL 用 ugcType；其它不参与
+   */
   const schema = [
     {
       name: 'platform',
       label: '平台',
       defaultValue: 'all',
-      getValue: (x) => x.platform ?? 'all',
+      getValue: (m) => {
+        const isMedia =
+          m.category === CATEGORY_CODES.UGC ||
+          m.category === CATEGORY_CODES.PERSONAL
+        return isMedia ? m.ugcPlatform : 'site'
+      },
+      optionsLabel: (code) =>
+        code === 'site' ? '本站' : (PLATFORM_LABEL?.[code] ?? code),
     },
 
-    // ⭐ 只有在【存在 UGC】时，才提供「类型」筛选
-    ...(hasUGC
+    ...(hasMedia
       ? [
           {
-            name: 'mediaType',
+            name: 'ugcType',
             label: '类型',
             defaultValue: 'all',
-            getValue: (x) => x.mediaType,
+            getValue: (m) => {
+              const isMedia =
+                m.category === CATEGORY_CODES.UGC ||
+                m.category === CATEGORY_CODES.PERSONAL
+              return isMedia ? m.ugcType : undefined
+            },
+            optionsLabel: (v) => {
+              if (v === 'video') return '视频'
+              if (v === 'picture') return '图片'
+              return v
+            },
           },
         ]
       : []),
@@ -185,7 +218,9 @@ export default function DetailPage() {
         gridClassName="card-grid"
         searchKey={(x) => x.title}
         schema={schema}
-        renderCard={(it) => <GeneralCard key={it.id} item={it} />}
+        renderCard={(it) => (
+          <GeneralCard key={`${it.category}-${it.id}`} item={it} />
+        )}
       />
 
       <Footer />

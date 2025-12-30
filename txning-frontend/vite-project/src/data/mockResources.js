@@ -48,9 +48,9 @@ export const mockResources = [
     is_featured: true,
   },
   {
-    id: 'drama-1',
+    id: 1,
     category: 'drama',
-    relatedId: ['evt-1', 'evt-2'],
+    relatedId: ['10', '11'],
     title_zh: '深海救援',
     release_year: 2023,
     genres: ['action', 'adventure'],
@@ -78,7 +78,7 @@ export const mockResources = [
   },
 
   {
-    id: 'drama-2',
+    id: 2,
     category: 'drama',
     title_zh: '霓虹街区',
     release_year: 2024,
@@ -100,7 +100,7 @@ export const mockResources = [
   },
 
   {
-    id: 'drama-3',
+    id: 3,
     category: 'drama',
 
     title_zh: '沉默的证人',
@@ -125,7 +125,7 @@ export const mockResources = [
   },
 
   {
-    id: 'drama-4',
+    id: 4,
     category: 'drama',
 
     title_zh: '青春派对',
@@ -154,7 +154,7 @@ export const mockResources = [
   },
 
   {
-    id: 'drama-5',
+    id: 5,
     category: 'drama',
 
     title_zh: '极速狂飙',
@@ -179,7 +179,7 @@ export const mockResources = [
   },
 
   {
-    id: 'endorse-1',
+    id: 6,
     category: 'endorsement',
 
     role: '全球品牌代言人',
@@ -201,7 +201,7 @@ export const mockResources = [
   },
 
   {
-    id: 'endorse-2',
+    id: 7,
     category: 'endorsement',
 
     role: '全球品牌代言人',
@@ -222,7 +222,7 @@ export const mockResources = [
   },
 
   {
-    id: 'endorse-3',
+    id: 8,
     category: 'endorsement',
 
     role: 'ELLE MEN 秋季刊',
@@ -245,9 +245,9 @@ export const mockResources = [
   },
 
   {
-    id: 'endorse-4',
-    category: 'magazine',
-    relatedId: 'evt-2',
+    id: 9,
+    category: 'endorsement',
+    relatedId: ['11'],
     role: 'TIFFANY & CO.',
     release_year: 2023,
     type: '商务',
@@ -269,9 +269,9 @@ export const mockResources = [
 
   // ===== events =====
   {
-    id: 'evt-1',
+    id: 10,
     category: 'event',
-    relatedId: ['drama-1', 'endorse-1', 'evt-2'],
+    relatedId: ['4', '6', '11'],
     poster_url:
       'https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2864&auto=format&fit=crop',
     event_date: '2025-12-05',
@@ -294,9 +294,9 @@ export const mockResources = [
   },
 
   {
-    id: 'evt-2',
+    id: 11,
     category: 'event',
-    relatedId: ['drama-1'],
+    relatedId: ['4'],
     poster_url:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
     event_date: '2025-12-06',
@@ -321,7 +321,7 @@ export const mockResources = [
   },
 
   {
-    id: 'evt-3',
+    id: 12,
     category: 'event',
     poster_url:
       'https://images.unsplash.com/photo-1550614000-4b9519e020d9?q=80&w=2836&auto=format&fit=crop',
@@ -343,10 +343,10 @@ export const mockResources = [
   },
 
   {
-    id: 'ugc-1',
+    id: 13,
     category: 'ugc',
-    title_zh: '上海粉丝见面会', // 活动标题
-    parentId: ['drama-1', 'evt-1', 'endorse-1'],
+    title_zh: '上海粉丝见面会',
+    relatedId: ['4', '10', '6'],
     release_year: 2025,
     ugc_url: 'https://www.bilibili.com/video/BV1xxxxxx1',
     ugc_type: 'video',
@@ -359,11 +359,11 @@ export const mockResources = [
   },
 
   {
-    id: 'ugc-2',
+    id: 14,
     category: 'ugc',
     title_zh: '微博营业', // 活动标题
     release_year: 2025,
-    parentId: ['drama-1'],
+    relatedIdId: ['4'],
     ugc_url: 'https://www.bilibili.com/video/BV2yyyyyy2',
     ugc_type: 'video',
     ugc_platform: 'bilibili',
@@ -375,11 +375,11 @@ export const mockResources = [
   },
 
   {
-    id: 'ugc-3',
+    id: 15,
     category: 'ugc',
     title_zh: '微博营业',
     release_year: 2025,
-    parentId: ['evt-1', 'endorse-1'],
+    relatedId: ['10'],
     ugc_url: 'https://www.xiaohongshu.com/explore/ugc3xxxx',
     ugc_type: 'picture',
     ugc_platform: 'xiaohongshu',
@@ -390,11 +390,11 @@ export const mockResources = [
   },
 
   {
-    id: 'ugc-4',
+    id: 16,
     category: 'ugc',
     title_zh: '微博营业',
     release_year: 2026,
-    parentId: ['drama-1', 'evt-1'],
+    relatedId: ['1', '10'],
     ugc_url: 'https://weibo.com/xxxxxx/ugc4xxxx',
     ugc_type: 'picture',
     ugc_platform: 'weibo',
@@ -405,11 +405,11 @@ export const mockResources = [
   },
 
   {
-    id: 'ugc-5',
+    id: 17,
     category: 'ugc',
     release_year: 2027,
     title_zh: '微博营业',
-    parentId: ['drama-1'],
+    relatedId: ['1'],
     ugc_url: 'https://www.douyin.com/video/ugc5xxxx',
     ugc_type: 'video',
     ugc_platform: 'douyin',
@@ -419,15 +419,28 @@ export const mockResources = [
     is_featured: true,
   },
   {
-    id: 'ugc-6',
-    category: 'ugc',
+    id: 18,
+    category: 'personal',
     title_zh: '微博营业',
-    parentId: ['drama-1', 'personal'],
-    ugc_url: 'https://www.douyin.com/video/ugc5xxxx',
+    relatedId: ['1', '2'],
+    ugc_url: 'https://www.weibo.com/video/ugc6xxxx',
     ugc_type: 'video',
-    ugc_platform: 'douyin',
+    ugc_platform: 'weibo',
     poster_url:
       'https://images.unsplash.com/photo-1516726817505-f5ed825624d8?q=80&w=2787&auto=format&fit=crop',
+    is_featured: true,
+  },
+
+  {
+    poster_url:
+      'https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=2787&auto=format&fit=crop',
+
+    category: 'aboutme',
+    title_zh:
+      '本站是关于「田栩宁」的资源站，整理作品、官方活动与商务/杂志合作信息，方便快速检索与浏览。',
+    poster_alt_zh:
+      '本站是关于「田栩宁」的资源站，整理作品、官方活动与商务/杂志合作信息，方便快速检索与浏览。',
+    description_zh: 'contact@example.com',
     is_featured: true,
   },
 ]

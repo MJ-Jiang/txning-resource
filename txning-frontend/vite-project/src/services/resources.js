@@ -14,9 +14,12 @@ function mapResource(raw) {
   // ✅ city 统一成数组：支持 'shanghai' / ['shanghai','beijing'] / undefined
   const cityCodes = [].concat(raw.city || [])
   const cityLabels = cityCodes.map((c) => CITY_LABEL[c] ?? c)
-
+  const relatedIds = Array.isArray(raw.relatedId)
+    ? raw.relatedId.map((v) => String(v))
+    : []
   return {
-    id: raw.id,
+    id: raw.id != null ? String(raw.id) : '',
+
     category: raw.category,
     role: raw.role,
     title: raw.title_zh,
@@ -69,6 +72,7 @@ function mapResource(raw) {
     ugcUrl: raw.ugc_url,
     ugcType: raw.ugc_type,
     ugcPlatform: raw.ugc_platform,
+    relatedIds,
   }
 }
 

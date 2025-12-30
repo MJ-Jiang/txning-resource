@@ -33,7 +33,7 @@ export default function EventsPage() {
         label: '类型',
         defaultValue: 'all',
         getValue: (m) => m.type ?? 'unknown',
-        // ✅ 这里就是把 business/promo... 转成 中文
+
         optionsLabel: (code) =>
           code === 'unknown' ? '未知' : (TYPE_LABEL?.[code] ?? String(code)),
       },
@@ -41,7 +41,7 @@ export default function EventsPage() {
         name: 'city',
         label: '地点',
         defaultValue: 'all',
-        // ✅ 多城市：返回数组，筛选项生成逻辑会 flatten（你那边应已做）
+
         getValue: (m) =>
           Array.isArray(m.cityCodes)
             ? m.cityCodes.filter(Boolean)
