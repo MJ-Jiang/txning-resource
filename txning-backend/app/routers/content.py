@@ -1,7 +1,11 @@
+from __future__ import annotations
+
+from collections import defaultdict
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from typing import List, Optional
 
 from app.crud import list_contents_by_category
 from app.db import get_db
@@ -12,7 +16,6 @@ from app.schemas import (
     PlatformLink,
     RatingInfo,
 )
-
 from models import (
     BookingPlatform,
     City,
@@ -29,6 +32,74 @@ from models import (
 router = APIRouter(prefix="/contents", tags=["contents"])
 
 
+def _bulk_card_fields(db: Session, content_ids: list[int]):
+    """
+    批量补齐 Card 的筛选字段（避免 N+1）：
+    - platform_ids: ContentPlatform
+    - city_ids: ContentCity
+    - genre_ids: ContentGenre
+    - related_ids: ContentRelation
+    """
+    platform_ids_map: dict[int, list[int]] = defaultdict(list)
+    city_ids_map: dict[int, list[int]] = defaultdict(list)
+    genre_ids_map: dict[int, list[int]] = defaultdict(list)
+    related_ids_map: dict[int, list[int]] = defaultdict(list)
+
+    if not content_ids:
+        return platform_ids_map, city_ids_map, genre_ids_map, related_ids_map
+
+    # --- platforms ---
+    cp_rows = db.execute(
+        select(ContentPlatform.content_id, ContentPlatform.platform_id).where(
+            ContentPlatform.content_id.in_(content_ids)
+        )
+    ).all()
+    for content_id, platform_id in cp_rows:
+        platform_ids_map[content_id].append(platform_id)
+
+    # --- cities ---
+    cc_rows = db.execute(
+        select(ContentCity.content_id, ContentCity.city_id).where(
+            ContentCity.content_id.in_(content_ids)
+        )
+    ).all()
+    for content_id, city_id in cc_rows:
+        city_ids_map[content_id].append(city_id)
+
+    # --- genres ---
+    cg_rows = db.execute(
+        select(ContentGenre.content_id, ContentGenre.genre_id).where(
+            ContentGenre.content_id.in_(content_ids)
+        )
+    ).all()
+    for content_id, genre_id in cg_rows:
+        genre_ids_map[content_id].append(genre_id)
+
+    # --- related ids ---
+    rel_rows = db.execute(
+        select(ContentRelation.source_content_id, ContentRelation.target_content_id).where(
+            ContentRelation.source_content_id.in_(content_ids)
+        )
+    ).all()
+    for source_id, target_id in rel_rows:
+        related_ids_map[source_id].append(target_id)
+
+    # 去重 + 稳定排序（保证前端缓存/对比更稳定）
+    def _uniq_sorted(xs: list[int]) -> list[int]:
+        return sorted(set(xs))
+
+    for cid in list(platform_ids_map.keys()):
+        platform_ids_map[cid] = _uniq_sorted(platform_ids_map[cid])
+    for cid in list(city_ids_map.keys()):
+        city_ids_map[cid] = _uniq_sorted(city_ids_map[cid])
+    for cid in list(genre_ids_map.keys()):
+        genre_ids_map[cid] = _uniq_sorted(genre_ids_map[cid])
+    for cid in list(related_ids_map.keys()):
+        related_ids_map[cid] = _uniq_sorted(related_ids_map[cid])
+
+    return platform_ids_map, city_ids_map, genre_ids_map, related_ids_map
+
+
 @router.get("", response_model=list[ContentCardOut])
 def list_contents(
     category: List[int] = Query(..., description="可重复传：?category=4&category=5"),
@@ -43,9 +114,17 @@ def list_contents(
         offset=offset,
     )
 
-    def to_card(r) -> ContentCardOut:
-        # ugc（你定义：图频 category=4/5 没有详情页 → 外跳）
+    content_ids = [r.id for r in rows]
+    platform_ids_map, city_ids_map, genre_ids_map, related_ids_map = _bulk_card_fields(
+        db, content_ids
+    )
+
+    def to_card(r: Content) -> ContentCardOut:
         is_ugc = (r.category_id in (4, 5)) or (r.ugc_url is not None)
+
+        platform_ids = platform_ids_map.get(r.id, [])
+        city_ids = city_ids_map.get(r.id, [])
+
         return ContentCardOut(
             id=r.id,
             category_id=r.category_id,
@@ -56,18 +135,21 @@ def list_contents(
             release_year=r.release_year,
             status_id=r.status_id,
             type_id=r.type_id,
-            # platform_id 未来外键：目前 Content 里没字段 → 先不填
-            platform_id=None,
-            genre_ids=[],  # 未来关系表
+            # 兼容旧前端：仍提供单值（无法表达“多个”）
+            platform_id=platform_ids[0] if platform_ids else None,
+            city_id=city_ids[0] if city_ids else None,
+            # 新字段：全量用于筛选
+            platform_ids=platform_ids,
+            city_ids=city_ids,
+            genre_ids=genre_ids_map.get(r.id, []),
             role=r.role,
-            city_id=None,  # 未来外键/关系
             location=r.location,
             time_text=r.time_text,
             event_date=r.event_date,
             ugc_platform_id=r.ugc_platform_id,
-            related_ids=[],  # 未来关系表
+            related_ids=related_ids_map.get(r.id, []),
             created_at=r.created_at,
-            href=r.href,  # 暂时保留兼容
+            href=r.href,
         )
 
     return [to_card(r) for r in rows]
@@ -215,8 +297,17 @@ def list_related_contents(
     total = q.count()
     rows = q.order_by(Content.id.desc()).offset(offset).limit(limit).all()
 
+    row_ids = [c.id for c in rows]
+    platform_ids_map, city_ids_map, genre_ids_map, related_ids_map = _bulk_card_fields(
+        db, row_ids
+    )
+
     def to_card(c: Content) -> ContentCardOut:
         is_ugc = (c.category_id in (4, 5)) or (c.ugc_url is not None)
+
+        platform_ids = platform_ids_map.get(c.id, [])
+        city_ids = city_ids_map.get(c.id, [])
+
         return ContentCardOut(
             id=c.id,
             category_id=c.category_id,
@@ -227,16 +318,21 @@ def list_related_contents(
             release_year=c.release_year,
             status_id=c.status_id,
             type_id=c.type_id,
+            # 兼容旧前端（单值）
+            platform_id=platform_ids[0] if platform_ids else None,
+            city_id=city_ids[0] if city_ids else None,
+            # 新字段（全量）
+            platform_ids=platform_ids,
+            city_ids=city_ids,
+            genre_ids=genre_ids_map.get(c.id, []),
             role=c.role,
-            city_id=None,
             location=c.location,
             time_text=c.time_text,
             event_date=c.event_date,
             ugc_platform_id=c.ugc_platform_id,
+            related_ids=related_ids_map.get(c.id, []),
             created_at=c.created_at,
             href=c.href,
-            genre_ids=[],
-            related_ids=[],
         )
 
     return {

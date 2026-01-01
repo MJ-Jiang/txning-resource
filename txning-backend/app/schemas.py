@@ -1,11 +1,12 @@
 from __future__ import annotations
+
 from datetime import date, datetime
 from typing import Optional, List, Literal
+
 from pydantic import BaseModel, Field, ConfigDict
 
 
 class ContentCardOut(BaseModel):
-    # Pydantic v2 推荐写法
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -19,12 +20,17 @@ class ContentCardOut(BaseModel):
     release_year: Optional[int] = None
     status_id: Optional[int] = None
     type_id: Optional[int] = None
-    platform_id: Optional[int] = None
 
+
+
+    # ---- 新字段：用于频道页筛选的“全量”多值字段（核心）----
+    platform_ids: List[int] = Field(default_factory=list)
+    city_ids: List[int] = Field(default_factory=list)
+
+    # genre 本来就是多值 id，直接用于筛选
     genre_ids: List[int] = Field(default_factory=list)
-    role: Optional[str] = None
 
-    city_id: Optional[int] = None
+    role: Optional[str] = None
     location: Optional[str] = None
     time_text: Optional[str] = None
     event_date: Optional[date] = None

@@ -1,12 +1,77 @@
-from fastapi import APIRouter, Depends, Query
-from sqlalchemy.orm import Session
+from collections import defaultdict
 from typing import Optional
+
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.schemas import ContentCardOut
-from models import Content
+from models import (
+    Content,
+    ContentCity,
+    ContentGenre,
+    ContentPlatform,
+    ContentRelation,
+)
 
 router = APIRouter(prefix="/channels", tags=["channels"])
+
+
+def _bulk_card_fields(db: Session, content_ids: list[int]):
+    platform_ids_map = defaultdict(list)
+    city_ids_map = defaultdict(list)
+    genre_ids_map = defaultdict(list)
+    related_ids_map = defaultdict(list)
+
+    if not content_ids:
+        return platform_ids_map, city_ids_map, genre_ids_map, related_ids_map
+
+    cp_rows = db.execute(
+        select(ContentPlatform.content_id, ContentPlatform.platform_id).where(
+            ContentPlatform.content_id.in_(content_ids)
+        )
+    ).all()
+    for content_id, platform_id in cp_rows:
+        platform_ids_map[content_id].append(platform_id)
+
+    cc_rows = db.execute(
+        select(ContentCity.content_id, ContentCity.city_id).where(
+            ContentCity.content_id.in_(content_ids)
+        )
+    ).all()
+    for content_id, city_id in cc_rows:
+        city_ids_map[content_id].append(city_id)
+
+    cg_rows = db.execute(
+        select(ContentGenre.content_id, ContentGenre.genre_id).where(
+            ContentGenre.content_id.in_(content_ids)
+        )
+    ).all()
+    for content_id, genre_id in cg_rows:
+        genre_ids_map[content_id].append(genre_id)
+
+    rel_rows = db.execute(
+        select(ContentRelation.source_content_id, ContentRelation.target_content_id).where(
+            ContentRelation.source_content_id.in_(content_ids)
+        )
+    ).all()
+    for source_id, target_id in rel_rows:
+        related_ids_map[source_id].append(target_id)
+
+    def _uniq_sorted(xs: list[int]) -> list[int]:
+        return sorted(set(xs))
+
+    for cid in list(platform_ids_map.keys()):
+        platform_ids_map[cid] = _uniq_sorted(platform_ids_map[cid])
+    for cid in list(city_ids_map.keys()):
+        city_ids_map[cid] = _uniq_sorted(city_ids_map[cid])
+    for cid in list(genre_ids_map.keys()):
+        genre_ids_map[cid] = _uniq_sorted(genre_ids_map[cid])
+    for cid in list(related_ids_map.keys()):
+        related_ids_map[cid] = _uniq_sorted(related_ids_map[cid])
+
+    return platform_ids_map, city_ids_map, genre_ids_map, related_ids_map
 
 
 @router.get("/{category_id}")
@@ -34,8 +99,17 @@ def get_channel(
     total = q.count()
     rows = q.order_by(Content.id.desc()).offset(offset).limit(limit).all()
 
+    content_ids = [r.id for r in rows]
+    platform_ids_map, city_ids_map, genre_ids_map, related_ids_map = _bulk_card_fields(
+        db, content_ids
+    )
+
     def to_card(r: Content) -> ContentCardOut:
         is_ugc = (r.category_id in (4, 5)) or (r.ugc_url is not None)
+
+        platform_ids = platform_ids_map.get(r.id, [])
+        city_ids = city_ids_map.get(r.id, [])
+
         return ContentCardOut(
             id=r.id,
             category_id=r.category_id,
@@ -46,6 +120,14 @@ def get_channel(
             release_year=r.release_year,
             status_id=r.status_id,
             type_id=r.type_id,
+            # 兼容旧字段（单值）
+            platform_id=platform_ids[0] if platform_ids else None,
+            city_id=city_ids[0] if city_ids else None,
+            # 新字段（全量，用于筛选）
+            platform_ids=platform_ids,
+            city_ids=city_ids,
+            genre_ids=genre_ids_map.get(r.id, []),
+            related_ids=related_ids_map.get(r.id, []),
             role=r.role,
             location=r.location,
             time_text=r.time_text,
@@ -53,8 +135,6 @@ def get_channel(
             ugc_platform_id=r.ugc_platform_id,
             created_at=r.created_at,
             href=r.href,
-            genre_ids=[],
-            related_ids=[],
         )
 
     return {
