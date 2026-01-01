@@ -7,6 +7,11 @@ from pydantic import BaseModel, Field, ConfigDict
 
 
 class ContentCardOut(BaseModel):
+    """
+    频道页/列表页用的卡片结构：
+    - 删除 platform_id / city_id（你要求）
+    - 保留全量多值字段 platform_ids / city_ids / genre_ids / related_ids 供筛选
+    """
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -21,14 +26,11 @@ class ContentCardOut(BaseModel):
     status_id: Optional[int] = None
     type_id: Optional[int] = None
 
-
-
-    # ---- 新字段：用于频道页筛选的“全量”多值字段（核心）----
+    # ---- 用于频道页筛选的“全量”多值字段（核心）----
     platform_ids: List[int] = Field(default_factory=list)
     city_ids: List[int] = Field(default_factory=list)
-
-    # genre 本来就是多值 id，直接用于筛选
     genre_ids: List[int] = Field(default_factory=list)
+    related_ids: List[int] = Field(default_factory=list)
 
     role: Optional[str] = None
     location: Optional[str] = None
@@ -36,10 +38,19 @@ class ContentCardOut(BaseModel):
     event_date: Optional[date] = None
 
     ugc_platform_id: Optional[int] = None
-    related_ids: List[int] = Field(default_factory=list)
 
     created_at: Optional[datetime] = None
     href: Optional[str] = None
+
+
+class ContentCardPageOut(BaseModel):
+    """
+    统一分页对象：channels 和 contents/related 都返回这种形态
+    """
+    total: int
+    limit: int
+    offset: int
+    items: List[ContentCardOut] = Field(default_factory=list)
 
 
 class DictItem(BaseModel):
