@@ -1,7 +1,7 @@
-# 写一个 list_contents(db, categories, limit, offset) 的查询
+# │ 业务 / CRUD  层生成 SQL
 from sqlalchemy.orm import Session
 from typing import List
-from models import Content  # 如果 models.py 在根目录，改成 import models 再用 models.Content
+from models import Content  
 
 def list_contents_by_category(
     db: Session,
@@ -11,7 +11,7 @@ def list_contents_by_category(
 ):
     return (
         db.query(Content)
-        .filter(Content.category_id.in_(category_ids))
+        .filter(Content.category_id.in_(category_ids)) #WHERE category_id IN (4, 5, 8)
         .order_by(Content.created_at.desc())
         .offset(offset)
         .limit(limit)
