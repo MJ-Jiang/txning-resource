@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from typing import Optional
 
 from app.db import get_db
-from models import Content
 from app.schemas import ContentCardOut
+from models import Content
 
 router = APIRouter(prefix="/channels", tags=["channels"])
 
@@ -24,13 +24,10 @@ def get_channel(
 
     if title:
         q = q.filter(Content.title_zh.ilike(f"%{title}%"))
-
     if release_year is not None:
         q = q.filter(Content.release_year == release_year)
-
     if status_id is not None:
         q = q.filter(Content.status_id == status_id)
-
     if type_id is not None:
         q = q.filter(Content.type_id == type_id)
 
