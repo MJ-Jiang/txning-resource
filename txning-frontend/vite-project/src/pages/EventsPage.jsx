@@ -12,30 +12,27 @@ export default function EventsPage() {
   const schema = useMemo(
     () => [
       {
-        name: 'year',
+        name: 'release_year',
         label: '年份',
         defaultValue: 'all',
-        getValue: (m) => m.year ?? 'unknown',
-        optionsLabel: (v) => (v === 'unknown' ? '未知' : String(v)),
+        // ✅ 新字段：release_year: number | null
+        getValue: (d) => d.release_year,
       },
       {
-        name: 'status',
+        name: 'status_id',
         label: '状态',
         defaultValue: 'all',
-        getValue: (m) => m.status ?? 'unknown',
-        optionsLabel: (code) =>
-          code === 'unknown'
-            ? '未知'
-            : (STATUS_FILTER_LABEL?.[code] ?? String(code)),
+        // ✅ 新字段：status_id: number | null
+        getValue: (d) => d.status_id,
+        optionsLabel: (v) => STATUS_FILTER_LABEL[v] ?? String(v),
       },
       {
-        name: 'type',
+        name: 'type_id',
         label: '类型',
         defaultValue: 'all',
-        getValue: (m) => m.type ?? 'unknown',
-
-        optionsLabel: (code) =>
-          code === 'unknown' ? '未知' : (TYPE_LABEL?.[code] ?? String(code)),
+        // ✅ 新字段：type_id: number | null
+        getValue: (d) => d.type_id,
+        optionsLabel: (v) => TYPE_LABEL[v] ?? String(v),
       },
       {
         name: 'city',
@@ -58,7 +55,7 @@ export default function EventsPage() {
     <div className="page">
       <Navbar />
       <ResourceListContainer
-        category={CATEGORY_CODES.EVENT}
+        category={3}
         schema={schema}
         renderCard={(item) => <EventpageCard key={item.id} item={item} />}
         gridClassName="card-grid"

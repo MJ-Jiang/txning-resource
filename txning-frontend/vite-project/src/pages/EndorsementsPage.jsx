@@ -11,24 +11,27 @@ export default function EndorsementsPage() {
   const schema = useMemo(
     () => [
       {
-        name: 'year',
+        name: 'release_year',
         label: '年份',
         defaultValue: 'all',
-        getValue: (m) => m.year,
+        // ✅ 新字段：release_year: number | null
+        getValue: (d) => d.release_year,
       },
       {
-        name: 'type',
+        name: 'type_id',
         label: '类型',
         defaultValue: 'all',
-        getValue: (d) => d.type,
-        optionsLabel: (v) => TYPE_LABEL[v] ?? v,
+        // ✅ 新字段：type_id: number | null
+        getValue: (d) => d.type_id,
+        optionsLabel: (v) => TYPE_LABEL[v] ?? String(v),
       },
       {
-        name: 'status',
+        name: 'status_id',
         label: '状态',
         defaultValue: 'all',
-        getValue: (d) => d.status, // code
-        optionsLabel: (v) => STATUS_FILTER_LABEL[v] ?? v,
+        // ✅ 新字段：status_id: number | null
+        getValue: (d) => d.status_id,
+        optionsLabel: (v) => STATUS_FILTER_LABEL[v] ?? String(v),
       },
     ],
     []
@@ -38,7 +41,7 @@ export default function EndorsementsPage() {
     <div className="page">
       <Navbar />
       <ResourceListContainer
-        category={CATEGORY_CODES.ENDORSEMENT}
+        category={2}
         schema={schema}
         renderCard={(item) => <EndorsementCard key={item.id} item={item} />}
         gridClassName="card-grid"

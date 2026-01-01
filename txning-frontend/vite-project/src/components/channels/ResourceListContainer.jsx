@@ -4,16 +4,14 @@ import useResourceFilters from '../../hooks/useResourceFilters'
 import ResourceLibraryPage from './ResourceLibraryPage'
 import FilterFields from './FilterFields'
 import useResponsivePageSize from '../../hooks/useResponsivePageSize'
-import { getResources } from '@/services/resources'
 
 export default function ResourceListContainer({
-  category,
-  items,
+  category, // ✅ 后端 category_id（number）
   schema,
   renderCard,
 
   pageSize,
-  searchKey = (item) => item?.title ?? '',
+  searchKey = (item) => item.title,
 
   gridClassName = 'card-grid',
 
@@ -26,42 +24,40 @@ export default function ResourceListContainer({
 }) {
   const responsivePageSize = useResponsivePageSize(12, 25, 768)
   const finalPageSize = pageSize ?? responsivePageSize
+
   const [fetchedResources, setFetchedResources] = useState([])
+  const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     let alive = true
-
+    setLoading(true)
     ;(async () => {
-      const data = await getResources()
-      if (alive) setFetchedResources(data)
-    })()
+      const res = await fetch(`/channels/${category}?limit=100&offset=0`)
+      const data = await res.json()
+
+      if (!alive) return
+
+      setFetchedResources(data.items)
+      setTotal(data.total)
+      setLoading(false)
+
+      console.log('channel data:', data)
+    })().catch((e) => {
+      if (!alive) return
+      setLoading(false)
+      throw e
+    })
 
     return () => {
       alive = false
     }
-  }, [])
-
-  function getIdNum(item) {
-    if (!item || !item.id) return -1
-    const match = String(item.id).match(/(\d+)\s*$/)
-    return match ? Number(match[1]) : -1
-  }
-
-  // ✅ category 支持 string / array / empty
-  const categoryList = useMemo(() => {
-    if (!category) return []
-    return Array.isArray(category) ? category.filter(Boolean) : [category]
   }, [category])
 
   const sourceItems = useMemo(() => {
-    const list = Array.isArray(items)
-      ? items
-      : categoryList.length
-        ? fetchedResources.filter((x) => categoryList.includes(x.category))
-        : fetchedResources
-
-    return [...list].sort((a, b) => getIdNum(b) - getIdNum(a))
-  }, [items, categoryList, fetchedResources])
+    // ✅ 只走接口返回，无任何 category 字段过滤，无排序兼容
+    return fetchedResources
+  }, [fetchedResources])
 
   const schemaWithDefaults = useMemo(() => {
     return schema.map((f) => {
@@ -122,6 +118,8 @@ export default function ResourceListContainer({
       onGo={goPage}
       renderCard={renderCard}
       gridClassName={gridClassName}
+      loading={loading}
+      total={total}
     />
   )
 }

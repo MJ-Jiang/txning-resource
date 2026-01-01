@@ -14,4 +14,20 @@ export default defineConfig({
     setupFiles: './src/tests/setup.js',
     globals: true,
   },
+  server: {
+    proxy: {
+      '/channels': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+      },
+      '/contents': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+      },
+      '/dict': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+      },
+    },
+  },
 })
