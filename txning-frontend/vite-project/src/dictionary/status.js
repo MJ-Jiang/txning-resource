@@ -1,8 +1,5 @@
 // src/domain/status.js
 
-import { PLATFORM_LABEL } from './platform'
-
-// 领域层：只放“状态语义”和“展示文案”，不处理 raw 数据
 export const STATUS_STYLE = {
   1: { background: '#888' },
   2: { background: '#2F6BFF' },
@@ -13,22 +10,10 @@ export const STATUS_STYLE = {
   11: { background: '#f3641b' },
 }
 
-export const STATUS_CODES = {
-  NOT_YET_RELEASED: 'not_yet_released',
-  UPCOMING: 'upcoming',
-  NOW_SHOWING: 'now_showing',
-  ENDED: 'ended',
-  ACTIVE: 'active',
-  EXPIRED: 'expired',
-  TO_BE_RELEASED: 'to_be_released',
-  SOLDOUT: 'soldout',
-  PLANNED: 'planned',
-  ONGOING: 'ongoing',
-  FINISHED: 'finished',
-}
+export const DEFAULT_STATUS_STYLE = { background: '#888' }
 
-// 卡片/Tag 展示：细粒度（会受 type 影响）
-export const STATUS_DISPLAY_LABEL = {
+// ✅ 按 type 的展示文案（前端规则）
+export const STATUS_LABEL_BY_TYPE = {
   1: {
     film: '待映',
     tv_series: '待播',
@@ -59,25 +44,16 @@ export const STATUS_DISPLAY_LABEL = {
   },
 }
 
-export const STATUS_FILTER_LABEL = {
-  1: '待播/待映',
-  2: '即将上线/上映',
-  3: '热播中/热映中',
-  4: '完结/上线',
-  5: '代言中',
-  6: '已到期',
-  7: '待发售',
-  8: '已售罄',
-  9: '已官宣',
-  10: '开展中',
-  11: '已结束',
+// ✅ 统一取 label：优先用“按 type 映射”，没有就 fallback 后端 name_zh
+export function getStatusLabel(statusId, typeCode, statusNameById) {
+  const byType = STATUS_LABEL_BY_TYPE?.[statusId]?.[typeCode]
+  if (byType) return byType
+  return statusNameById?.[statusId] || ''
 }
 
-// 统一函数：给定 (statusCode, typeCode) 得到卡片展示文案
-export function getStatusDisplayLabel(statusId, typeCode) {
-  return STATUS_DISPLAY_LABEL[statusId]?.[typeCode] || ''
+export function getStatusStyle(statusId) {
+  return STATUS_STYLE[statusId] || DEFAULT_STATUS_STYLE
 }
-
-export function canShowPurchase(statusId) {
-  return statusId === 5 || statusId === 7
-}
+export function getStatusDisplayLabel() {} //临时用完删
+export function STATUS_FILTER_LABEL() {} //临时用完删
+export function canShowPurchase() {} //临时用完删

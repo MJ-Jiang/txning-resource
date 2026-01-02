@@ -30,6 +30,7 @@ def to_card(r: Content) -> ContentCardOut:
         href=r.href,
         genre_ids=[],
         related_ids=[],
+        is_featured=r.is_featured,  # ✅ 新增
     )
 
 

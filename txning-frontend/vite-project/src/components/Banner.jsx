@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { PLATFORM_LABEL } from '@/dictionary/platform'
+import { useDict } from '@/providers/useDict'
 
 function isExternalHref(href) {
   if (!href) return false
@@ -7,18 +7,9 @@ function isExternalHref(href) {
   return /^https?:\/\//i.test(href)
 }
 
-function isInternalByPlatforms(platforms) {
-  return (
-    Array.isArray(platforms) && platforms.some((p) => p?.code === 'this_web')
-  )
-}
-
-function getPlatformText(platforms) {
-  if (!Array.isArray(platforms) || platforms.length === 0) return ''
-  const labels = platforms
-    .map((p) => PLATFORM_LABEL[p?.code] ?? p?.code)
-    .filter(Boolean)
-  return labels.join(' / ')
+function isInternalByPlatformIds(platformIds, platformByCode) {
+  if (!Array.isArray(platformIds) || platformIds.length === 0) return false
+  return platformIds.some((id) => platformByCode?.this_web?.id === id)
 }
 
 export default function Banner({
@@ -26,8 +17,10 @@ export default function Banner({
   autoPlay = true,
   interval = 4500,
 }) {
+  const { platformNameById, platformByCode } = useDict()
+
   const validBanners = useMemo(
-    () => (Array.isArray(banners) ? banners : []).filter((b) => !!b?.posterUrl),
+    () => (Array.isArray(banners) ? banners : []).filter((b) => !!b?.cover_url),
     [banners]
   )
 
@@ -37,6 +30,14 @@ export default function Banner({
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [externalHref, setExternalHref] = useState('')
   const [platformText, setPlatformText] = useState('')
+
+  function getPlatformTextByIds(platformIds) {
+    if (!Array.isArray(platformIds) || platformIds.length === 0) return ''
+    return platformIds
+      .map((id) => platformNameById?.[id])
+      .filter(Boolean)
+      .join(' / ')
+  }
 
   // autoplay
   useEffect(() => {
@@ -54,9 +55,9 @@ export default function Banner({
 
   if (validBanners.length === 0) return null
 
-  function openExternalConfirm(href, platforms) {
+  function openExternalConfirm(href, platformIds) {
     setExternalHref(href)
-    setPlatformText(getPlatformText(platforms))
+    setPlatformText(getPlatformTextByIds(platformIds))
     setConfirmOpen(true)
   }
 
@@ -75,10 +76,14 @@ export default function Banner({
           style={{ transform: `translateX(${-index * 100}%)` }}
         >
           {validBanners.map((b, i) => {
-            const href = b.href || '#'
+            const href = b.href || b.link_url || '#'
+            const platformIds = b.platform_ids || []
 
-            // ✅ 新规则：只要标记了 this_web 就当站内
-            const internal = isInternalByPlatforms(b.platforms)
+            // ✅ 新规则：只要包含 this_web 平台 id 就当站内
+            const internal = isInternalByPlatformIds(
+              platformIds,
+              platformByCode
+            )
 
             // ✅ 外链判定：站外 + href 是 http(s)
             const external = !internal && isExternalHref(href)
@@ -89,17 +94,17 @@ export default function Banner({
                 className="hero"
                 href={href}
                 data-role="banner"
-                aria-label={b.posterAlt || `首页Banner`}
+                aria-label={b.posterAlt || b.title || `首页Banner`}
                 onClick={(e) => {
                   if (!external) return
                   e.preventDefault()
-                  openExternalConfirm(href, b.platforms)
+                  openExternalConfirm(href, platformIds)
                 }}
               >
                 <img
                   className="hero__img"
-                  src={b.posterUrl}
-                  alt={b.posterAlt || ''}
+                  src={b.cover_url}
+                  alt={b.posterAlt || b.title || ''}
                 />
               </a>
             )

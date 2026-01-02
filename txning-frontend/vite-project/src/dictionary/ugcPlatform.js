@@ -1,17 +1,17 @@
 // src/dictionary/ugcPlatform.js
 
 export const PLATFORM_LABEL = {
-  bilibili: 'Bilibili',
-  douyin: '抖音',
-  weibo: '微博',
-  xiaohongshu: '小红书',
-  ins: 'instagram',
+  1: 'Bilibili',
+  2: '抖音',
+  3: '微博',
+  4: '小红书',
+  5: 'instagram',
 }
 
 export const PLATFORM_ICON = {
-  bilibili: '/icons/bilibili.svg',
-  douyin: '/icons/douyin.svg',
-  weibo: '/icons/weibo.svg',
-  xiaohongshu: 'icons/xhs.svg',
-  ins: 'icons/instagram.svg',
+  1: '/icons/bilibili.svg',
+  2: '/icons/douyin.svg',
+  3: '/icons/weibo.svg',
+  4: 'icons/xhs.svg',
+  5: 'icons/instagram.svg',
 }

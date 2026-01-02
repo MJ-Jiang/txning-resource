@@ -1,10 +1,18 @@
 import { Link } from 'react-router-dom'
+import { useDict } from '../../providers/useDict'
 
 export default function EventCard({ item }) {
-  const href = `/detail/${item.category}/${item.id}`
+  const { categoryById } = useDict()
 
-  // eventDate: '2025-12-05'
-  const date = item.eventDate ? new Date(item.eventDate) : null
+  const categoryCode = categoryById?.[item.category_id]?.code
+  if (!categoryCode) {
+    return null
+  }
+
+  const href = `/detail/${categoryCode}/${item.id}`
+
+  // ✅ 后端字段：event_date: 'YYYY-MM-DD'
+  const date = item.event_date ? new Date(item.event_date) : null
   const day = date ? date.getDate() : ''
   const month = date ? date.toLocaleString('en-US', { month: 'short' }) : ''
 
@@ -22,7 +30,7 @@ export default function EventCard({ item }) {
             <i className="fa-solid fa-location-dot"></i>{' '}
             {item.location ?? '地点暂无'}
             {' | '}
-            {item.timeText ?? '时间暂无'}
+            {item.time_text ?? '时间暂无'}
           </p>
         </div>
 

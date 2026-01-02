@@ -4,35 +4,6 @@ import {
   BOOKING_PLATFORM_ICON,
 } from '../../dictionary/bookingPlatform'
 
-function toArray(v) {
-  if (!v) return []
-  return Array.isArray(v) ? v : [v]
-}
-
-function joinText(v, sep = ' / ') {
-  return toArray(v).filter(Boolean).join(sep)
-}
-
-function getPlatforms(d) {
-  if (!Array.isArray(d?.platforms)) return []
-  return d.platforms
-    .map((p) => ({
-      code: p?.code ?? '',
-      url: p?.url ?? null,
-    }))
-    .filter((p) => p.code)
-}
-
-function getTicketLinks(d) {
-  if (!Array.isArray(d?.bookingPlatform)) return []
-  return d.bookingPlatform
-    .map((t) => ({
-      code: t?.code ?? '',
-      url: t?.url ?? null,
-    }))
-    .filter((t) => t.code)
-}
-
 function IconImg({ src, alt, className }) {
   if (!src) return null
   return (
@@ -45,27 +16,36 @@ function IconImg({ src, alt, className }) {
   )
 }
 
-export default function DramaDetailCard({ drama }) {
-  if (!drama) return null
+export default function DramaDetailCard({ detail }) {
+  if (!detail) return null
 
-  const {
-    posterUrl,
-    title,
-    typeLabel,
-    genreLabels,
-    year,
-    episodes,
-    ratingValue,
-    ratingUrl,
-    description,
-  } = drama
+  const { content, rating, genres, platforms, booking_platforms } = detail
 
-  const platforms = getPlatforms(drama)
-  const bookingPlatform = getTicketLinks(drama)
+  const title = content.title
+  const coverUrl = content.cover_url
+  const year = content.release_year
+  const episodes = content.episode_count
+  const description = content.description
 
-  // ✅ 只有数据库里有 url 才显示对应区块
-  const playablePlatforms = platforms.filter((p) => Boolean(p.url))
-  const buyableTickets = bookingPlatform.filter((t) => Boolean(t.url))
+  const ratingValue = rating?.value
+  const ratingUrl = rating?.url
+
+  const genreText = Array.isArray(genres)
+    ? genres
+        .map((g) => g.name_zh)
+        .filter(Boolean)
+        .join(' / ')
+    : ''
+
+  // 后端返回 platforms: [{ platform: {id, code, name_zh}, url }]
+  const playablePlatforms = Array.isArray(platforms)
+    ? platforms.filter((p) => Boolean(p.url))
+    : []
+
+  // 后端返回 booking_platforms: [{ platform: {...}, url }]
+  const buyableTickets = Array.isArray(booking_platforms)
+    ? booking_platforms.filter((t) => Boolean(t.url))
+    : []
 
   const showPlay = playablePlatforms.length > 0
   const showTickets = buyableTickets.length > 0
@@ -74,28 +54,17 @@ export default function DramaDetailCard({ drama }) {
     <div className="detail-card">
       <div className="detail-grid">
         <div className="detail-cover">
-          {posterUrl ? (
-            <img className="detail-cover-img" src={posterUrl} alt={title} />
-          ) : (
-            <div className="detail-cover-placeholder" />
-          )}
+          <img className="detail-cover-img" src={coverUrl} alt={title} />
         </div>
 
         <div className="detail-info">
           <h1 className="detail-title">{title}</h1>
 
           <div className="detail-kv">
-            {typeLabel ? (
-              <div className="kv-row">
-                <div className="kv-k">分类</div>
-                <div className="kv-v">{typeLabel}</div>
-              </div>
-            ) : null}
-
-            {genreLabels?.length > 0 ? (
+            {genreText ? (
               <div className="kv-row">
                 <div className="kv-k">类型</div>
-                <div className="kv-v">{joinText(genreLabels)}</div>
+                <div className="kv-v">{genreText}</div>
               </div>
             ) : null}
 
@@ -118,12 +87,9 @@ export default function DramaDetailCard({ drama }) {
                 <div className="kv-k kv-k--icon">
                   <a
                     className="kv-ico-link"
-                    href={ratingUrl || '#'}
-                    target={ratingUrl ? '_blank' : undefined}
-                    rel={ratingUrl ? 'noreferrer' : undefined}
-                    onClick={(e) => {
-                      if (!ratingUrl) e.preventDefault()
-                    }}
+                    href={ratingUrl}
+                    target="_blank"
+                    rel="noreferrer"
                     title="豆瓣"
                   >
                     <IconImg
@@ -137,18 +103,26 @@ export default function DramaDetailCard({ drama }) {
               </div>
             ) : null}
 
-            {/* 播放：仅当有 url */}
             {showPlay ? (
               <div className="kv-row">
                 <div className="kv-k">播放</div>
                 <div className="kv-v">
                   <div className="platform-row">
                     {playablePlatforms.map((p) => {
-                      const label = PLATFORM_LABEL[p.code] ?? p.code
-                      const iconSrc = PLATFORM_ICON[p.code] ?? '/icons/link.svg'
+                      const platform = p.platform
+                      const key = `${platform.id}-${p.url}`
+
+                      // 如果你的 PLATFORM_LABEL/ICON 已改成 id key：用 platform.id
+                      // 如果你仍是 code key：用 platform.code
+                      const label =
+                        PLATFORM_LABEL[platform.id] ?? platform.name_zh
+
+                      const iconSrc =
+                        PLATFORM_ICON[platform.id] ?? '/icons/link.svg'
+
                       return (
                         <a
-                          key={`${p.code}-${p.url}`}
+                          key={key}
                           className="platform-link"
                           href={p.url}
                           target="_blank"
@@ -168,19 +142,28 @@ export default function DramaDetailCard({ drama }) {
               </div>
             ) : null}
 
-            {/* 购票：仅当有 url */}
             {showTickets ? (
               <div className="kv-row">
                 <div className="kv-k">购票</div>
                 <div className="kv-v">
                   <div className="platform-row">
                     {buyableTickets.map((t) => {
-                      const label = BOOKING_PLATFORM_LABEL[t.code] ?? t.code
+                      const platform = t.platform
+                      const key = `${platform.id}-${t.url}`
+
+                      const label =
+                        BOOKING_PLATFORM_LABEL[platform.id] ??
+                        BOOKING_PLATFORM_LABEL[platform.code] ??
+                        platform.name_zh
+
                       const iconSrc =
-                        BOOKING_PLATFORM_ICON[t.code] ?? '/icons/link.svg'
+                        BOOKING_PLATFORM_ICON[platform.id] ??
+                        BOOKING_PLATFORM_ICON[platform.code] ??
+                        '/icons/link.svg'
+
                       return (
                         <a
-                          key={`${t.code}-${t.url}`}
+                          key={key}
                           className="platform-link"
                           href={t.url}
                           target="_blank"

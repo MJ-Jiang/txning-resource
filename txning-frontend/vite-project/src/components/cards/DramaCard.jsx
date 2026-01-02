@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
-import { STATUS_STYLE, getStatusDisplayLabel } from '../../dictionary/status'
+import { getStatusLabel, getStatusStyle } from '../../dictionary/status'
 import { useDict } from '../../providers/useDict'
 
 function StatusTag({ statusId, label }) {
-  const style = STATUS_STYLE[statusId]
+  const style = getStatusStyle(statusId)
   return (
     <span className="movie-tag" style={style}>
       {label}
@@ -11,17 +11,22 @@ function StatusTag({ statusId, label }) {
   )
 }
 
-export default function DramaCard({ item, categoryCode }) {
-  const { typeCodeById, typeNameById, genreNameById } = useDict()
+export default function DramaCard({ item }) {
+  const { statusNameById, typeCodeById, genreNameById, categoryById } =
+    useDict()
 
-  const typeCode = typeCodeById[item.type_id]
-  const statusLabel = getStatusDisplayLabel(item.status_id, typeCode)
+  const typeCode = typeCodeById?.[item.type_id] || ''
+  const statusLabel = getStatusLabel(item.status_id, typeCode, statusNameById)
+  const categoryCode = categoryById[item.category_id]?.code
 
+  if (!categoryCode) {
+    return null
+  }
   const href = `/detail/${categoryCode}/${item.id}`
 
-  const genreText = item.genre_ids
-    .map((gid) => genreNameById[gid])
-    .filter((v) => v)
+  const genreText = (item.genre_ids || [])
+    .map((gid) => genreNameById?.[gid])
+    .filter(Boolean)
     .join(' / ')
 
   const metaParts = []
@@ -30,8 +35,6 @@ export default function DramaCard({ item, categoryCode }) {
   }
   if (genreText) metaParts.push(genreText)
   const meta = metaParts.join(' | ')
-
-  const typeLabel = typeNameById[item.type_id]
 
   return (
     <Link to={href} className="card-link">
@@ -44,7 +47,6 @@ export default function DramaCard({ item, categoryCode }) {
 
         <div className="movie-desc">
           <h4>{item.title}</h4>
-
           {meta ? (
             <p style={{ color: '#aaa', fontSize: '0.8rem' }}>{meta}</p>
           ) : null}

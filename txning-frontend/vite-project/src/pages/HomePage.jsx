@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Banner from '../components/Banner.jsx'
@@ -7,75 +7,52 @@ import EndorsementGrid from '../components/lists/EndorsementGrid.jsx'
 import DramaScroller from '../components/lists/DramaScroller.jsx'
 import EventsTimeline from '../components/lists/EventsTimeline.jsx'
 import GalleryGrid from '../components/lists/GalleryGrid.jsx'
-import { getResources } from '@/services/resources'
 
-import { CATEGORY_CODES, CATEGORY_LABEL } from '@/dictionary/category'
-
-const HOME_LIMITS = {
-  [CATEGORY_CODES.DRAMA]: 6,
-  [CATEGORY_CODES.ENDORSEMENT]: 4,
-  [CATEGORY_CODES.EVENT]: 5,
-  [CATEGORY_CODES.UGC]: 4,
-  [CATEGORY_CODES.BANNERS]: 3,
+function onlyFeatured(arr) {
+  return (Array.isArray(arr) ? arr : []).filter((x) => x?.is_featured === true)
 }
 
 export default function HomePage() {
-  const [resources, setResources] = useState([])
+  const [bannerItems, setBannerItems] = useState([])
+  const [dramaItems, setDramaItems] = useState([])
+  const [endorsementItems, setEndorsementItems] = useState([])
+  const [eventItems, setEventItems] = useState([])
+  const [galleryItems, setGalleryItems] = useState([])
+  const [categoryNameByKey, setCategoryNameByKey] = useState({})
 
   useEffect(() => {
     let alive = true
+
     ;(async () => {
-      const data = await getResources()
-      if (alive) setResources(Array.isArray(data) ? data : [])
-    })()
+      const [homeRes, dictRes] = await Promise.all([
+        fetch('/home'),
+        fetch('/dict/categories'),
+      ])
+
+      const homeData = await homeRes.json()
+      const categories = await dictRes.json()
+
+      if (!alive) return
+
+      const nameByCode = {}
+      ;(categories || []).forEach((c) => {
+        if (c?.code) nameByCode[c.code] = c.name_zh
+      })
+      setCategoryNameByKey(nameByCode)
+
+      setBannerItems(onlyFeatured(homeData?.banners))
+      setDramaItems(onlyFeatured(homeData?.featured_drama))
+      setEndorsementItems(onlyFeatured(homeData?.featured_endorsement))
+      setEventItems(onlyFeatured(homeData?.featured_event))
+      setGalleryItems(onlyFeatured(homeData?.featured_media))
+    })().catch((e) => {
+      console.error('HomePage failed to load /home', e)
+    })
+
     return () => {
       alive = false
     }
   }, [])
-
-  // ✅ featured 数据（只算一次）
-  const featured = useMemo(
-    () => resources.filter((x) => x?.isFeatured === true),
-    [resources]
-  )
-
-  // ✅ Banner 数据（从 resources 中筛选 category=banners）
-  const bannerItems = useMemo(() => {
-    return featured
-      .filter((x) => x.category === CATEGORY_CODES.BANNERS)
-      .slice(0, HOME_LIMITS.banners)
-      .map((x) => ({
-        posterUrl: x.posterUrl,
-        href: x.href,
-        posterAlt: x.posterAlt || 'Banner',
-        platforms: x.platforms ?? [], // ✅ 关键：传 platforms
-      }))
-  }, [featured])
-
-  // ✅ 主页四个 section 的推荐数据（带上限）
-  const dramaItems = useMemo(() => {
-    return featured
-      .filter((x) => x.category === CATEGORY_CODES.DRAMA)
-      .slice(0, HOME_LIMITS.drama)
-  }, [featured])
-
-  const endorsementItems = useMemo(() => {
-    return featured
-      .filter((x) => x.category === CATEGORY_CODES.ENDORSEMENT)
-      .slice(0, HOME_LIMITS.endorsement)
-  }, [featured])
-
-  const eventItems = useMemo(() => {
-    return featured
-      .filter((x) => x.category === CATEGORY_CODES.EVENT)
-      .slice(0, HOME_LIMITS.event)
-  }, [featured])
-
-  const galleryItems = useMemo(() => {
-    return featured
-      .filter((x) => x.category === CATEGORY_CODES.UGC)
-      .slice(0, HOME_LIMITS.ugc)
-  }, [featured])
 
   return (
     <div className="page">
@@ -86,7 +63,7 @@ export default function HomePage() {
 
         <HomeSection
           className="section section-movie"
-          title={CATEGORY_LABEL[CATEGORY_CODES.DRAMA]}
+          title={categoryNameByKey?.drama}
           subtitle="DRAMA"
           to="/drama"
         >
@@ -94,7 +71,7 @@ export default function HomePage() {
         </HomeSection>
 
         <HomeSection
-          title={CATEGORY_LABEL[CATEGORY_CODES.ENDORSEMENT]}
+          title={categoryNameByKey?.endorsement}
           subtitle="MAGAZINE"
           to="/endorsement"
         >
@@ -103,7 +80,7 @@ export default function HomePage() {
 
         <HomeSection
           className="section section-event"
-          title={CATEGORY_LABEL[CATEGORY_CODES.EVENT]}
+          title={categoryNameByKey?.event}
           subtitle="EVENT"
           to="/event"
         >
@@ -111,7 +88,7 @@ export default function HomePage() {
         </HomeSection>
 
         <HomeSection
-          title={CATEGORY_LABEL[CATEGORY_CODES.UGC]}
+          title={categoryNameByKey?.ugc}
           subtitle="GALLERY"
           to="/gallery"
         >

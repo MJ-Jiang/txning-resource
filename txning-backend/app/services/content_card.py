@@ -1,7 +1,8 @@
+# app/services/content_card.py
 from __future__ import annotations
 
 from collections import defaultdict
-from typing import DefaultDict, Iterable
+from typing import DefaultDict, Iterable, Optional
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -16,14 +17,14 @@ from models import (
 )
 
 
+def _is_http_url(v: Optional[str]) -> bool:
+    if not isinstance(v, str):
+        return False
+    s = v.strip()
+    return s.lower().startswith("http://") or s.lower().startswith("https://")
+
+
 def bulk_card_fields(db: Session, content_ids: Iterable[int]):
-    """
-    批量补齐 Card 的筛选字段（避免 N+1）：
-    - platform_ids: ContentPlatform
-    - city_ids: ContentCity
-    - genre_ids: ContentGenre
-    - related_ids: ContentRelation (source -> target)
-    """
     ids = list(content_ids)
 
     platform_ids_map: DefaultDict[int, list[int]] = defaultdict(list)
@@ -34,7 +35,6 @@ def bulk_card_fields(db: Session, content_ids: Iterable[int]):
     if not ids:
         return platform_ids_map, city_ids_map, genre_ids_map, related_ids_map
 
-    # --- platforms ---
     cp_rows = db.execute(
         select(ContentPlatform.content_id, ContentPlatform.platform_id).where(
             ContentPlatform.content_id.in_(ids)
@@ -43,7 +43,6 @@ def bulk_card_fields(db: Session, content_ids: Iterable[int]):
     for content_id, platform_id in cp_rows:
         platform_ids_map[content_id].append(platform_id)
 
-    # --- cities ---
     cc_rows = db.execute(
         select(ContentCity.content_id, ContentCity.city_id).where(
             ContentCity.content_id.in_(ids)
@@ -52,7 +51,6 @@ def bulk_card_fields(db: Session, content_ids: Iterable[int]):
     for content_id, city_id in cc_rows:
         city_ids_map[content_id].append(city_id)
 
-    # --- genres ---
     cg_rows = db.execute(
         select(ContentGenre.content_id, ContentGenre.genre_id).where(
             ContentGenre.content_id.in_(ids)
@@ -61,11 +59,11 @@ def bulk_card_fields(db: Session, content_ids: Iterable[int]):
     for content_id, genre_id in cg_rows:
         genre_ids_map[content_id].append(genre_id)
 
-    # --- related ids ---
     rel_rows = db.execute(
-        select(ContentRelation.source_content_id, ContentRelation.target_content_id).where(
-            ContentRelation.source_content_id.in_(ids)
-        )
+        select(
+            ContentRelation.source_content_id,
+            ContentRelation.target_content_id,
+        ).where(ContentRelation.source_content_id.in_(ids))
     ).all()
     for source_id, target_id in rel_rows:
         related_ids_map[source_id].append(target_id)
@@ -92,18 +90,16 @@ def content_to_card(
     genre_ids_map,
     related_ids_map,
 ) -> ContentCardOut:
-    """
-    统一卡片拼装（channels / contents / related 全复用）
-    """
-    is_ugc = (r.category_id in (4, 5)) or (r.ugc_url is not None)
+    ugc_url = (r.ugc_url or "").strip()
+    is_external = _is_http_url(ugc_url)
 
     return ContentCardOut(
         id=r.id,
         category_id=r.category_id,
         title=r.title_zh,
         cover_url=r.poster_url,
-        link_type="external" if is_ugc else "detail",
-        link_url=r.ugc_url if is_ugc else None,
+        link_type="external" if is_external else "detail",
+        link_url=ugc_url if is_external else None,
         release_year=r.release_year,
         status_id=r.status_id,
         type_id=r.type_id,
@@ -118,4 +114,5 @@ def content_to_card(
         ugc_platform_id=r.ugc_platform_id,
         created_at=r.created_at,
         href=r.href,
+        is_featured=r.is_featured, 
     )

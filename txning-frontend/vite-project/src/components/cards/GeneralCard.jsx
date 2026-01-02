@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PLATFORM_LABEL } from '../../dictionary/ugcPlatform'
+import { useDict } from '../../providers/useDict'
 
 function isHttpUrl(v) {
   return typeof v === 'string' && /^https?:\/\//i.test(v)
@@ -9,11 +9,14 @@ function isHttpUrl(v) {
 export default function GeneralCard({ item }) {
   if (!item) return null
 
-  const cover = item.posterUrl
+  const { ugcPlatformNameById } = useDict()
 
-  const ugcType = item.ugcType
-  const ugcUrl = item.ugcUrl || ''
-  const ugcPlatform = item.ugcPlatform
+  // ✅ 后端字段（与 GalleryCard 一致的取法）
+  const cover = item.cover_url
+
+  const ugcType = item.ugc_type
+  const ugcUrl = item.ugc_url || ''
+  const ugcPlatformId = item.ugc_platform_id
 
   const desc = item.description ?? ''
   const alt = item.posterAlt ?? item.title ?? desc ?? ''
@@ -23,20 +26,21 @@ export default function GeneralCard({ item }) {
     picture: '图片',
   }
 
-  // ✅ 外站来源：ugc + personal
-  const isExternalSource =
-    item.category === 'ugc' || item.category === 'personal'
+  // ✅ 外站来源：ugc + personal（后端以 category_code 返回更常见；兼容 category 兜底）
+  const categoryCode = item.category_code ?? item.category
+  const isExternalSource = categoryCode === 'ugc' || categoryCode === 'personal'
 
   // ✅ 平台角标文案：
-  // - 外站：显示平台名（PLATFORM_LABEL 映射）
+  // - 外站：显示平台名（来自 dict provider）
   // - 站内：显示“本站”
-  const platformLabel = PLATFORM_LABEL?.[ugcPlatform] ?? ugcPlatform ?? ''
+  const platformLabel =
+    ugcPlatformNameById?.[ugcPlatformId] ?? String(ugcPlatformId ?? '')
   const badgeText = isExternalSource ? platformLabel : '本站'
 
   const internalHref = useMemo(() => {
-    if (!item.category || item.id == null) return ''
-    return `/detail/${item.category}/${item.id}`
-  }, [item.category, item.id])
+    if (!categoryCode || item.id == null) return ''
+    return `/detail/${categoryCode}/${item.id}`
+  }, [categoryCode, item.id])
 
   const isExternal = isHttpUrl(ugcUrl)
   const isInternal = !isExternal && Boolean(internalHref)

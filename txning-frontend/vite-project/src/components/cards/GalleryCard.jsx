@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PLATFORM_LABEL } from '../../dictionary/ugcPlatform'
+import { useDict } from '../../providers/useDict'
 
 const ICON_CLASS_MAP = {
   picture: 'fa-heart',
@@ -9,13 +9,15 @@ const ICON_CLASS_MAP = {
 export default function GalleryCard({ item }) {
   if (!item) return null
 
-  const icon = ICON_CLASS_MAP[item.ugcType] ?? 'fa-heart'
+  const { ugcPlatformNameById } = useDict()
 
-  const href = item.ugcUrl
+  const icon = ICON_CLASS_MAP[item.ugc_type] ?? 'fa-heart'
+
+  const href = item.ugc_url
   const clickable = Boolean(href)
 
-  const platformCode = item.ugcPlatform
-  const platformLabel = PLATFORM_LABEL?.[platformCode] ?? platformCode
+  const platformId = item.ugc_platform_id
+  const platformLabel = ugcPlatformNameById?.[platformId] ?? String(platformId)
 
   const [confirmOpen, setConfirmOpen] = useState(false)
 
@@ -46,11 +48,7 @@ export default function GalleryCard({ item }) {
           }
         }}
       >
-        <img
-          src={item.posterUrl}
-          alt={item.posterAlt ?? item.title ?? 'Pic'}
-          loading="lazy"
-        />
+        <img src={item.cover_url} alt={item.title ?? 'Pic'} loading="lazy" />
         <div className="gallery-overlay">
           <i className={`fa-solid ${icon}`} style={{ fontSize: '2rem' }}></i>
         </div>

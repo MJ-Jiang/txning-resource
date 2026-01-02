@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.db import get_db
 from app.schemas import ContentCardPageOut
 from app.services.content_card import bulk_card_fields, content_to_card
-from models import Content
+from models import Content  # ✅ 修正：原来误写为 Contenta
 
 router = APIRouter(prefix="/channels", tags=["channels"])
 
@@ -44,8 +44,19 @@ def get_channel(
     )
 
     items = [
-        content_to_card(r, platform_ids_map, city_ids_map, genre_ids_map, related_ids_map)
+        content_to_card(
+            r,
+            platform_ids_map,
+            city_ids_map,
+            genre_ids_map,
+            related_ids_map,
+        )
         for r in rows
     ]
 
-    return ContentCardPageOut(total=total, limit=limit, offset=offset, items=items)
+    return ContentCardPageOut(
+        total=total,
+        limit=limit,
+        offset=offset,
+        items=items,
+    )

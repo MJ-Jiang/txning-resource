@@ -6,7 +6,8 @@ import FilterFields from './FilterFields'
 import useResponsivePageSize from '../../hooks/useResponsivePageSize'
 
 export default function ResourceListContainer({
-  category, // ✅ 后端 category_id（number）
+  category, // number
+  categories, // number[] ✅ 新增：支持多分类
   schema,
   renderCard,
 
@@ -29,20 +30,39 @@ export default function ResourceListContainer({
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
 
+  const categoryList = useMemo(() => {
+    if (Array.isArray(categories) && categories.length) return categories
+    if (typeof category === 'number') return [category]
+    return []
+  }, [category, categories])
+
   useEffect(() => {
     let alive = true
+
+    if (!categoryList.length) {
+      setFetchedResources([])
+      setTotal(0)
+      setLoading(false)
+      return () => {
+        alive = false
+      }
+    }
+
     setLoading(true)
     ;(async () => {
-      const res = await fetch(`/channels/${category}?limit=100&offset=0`)
+      const params = new URLSearchParams()
+      categoryList.forEach((c) => params.append('category', String(c)))
+      params.set('limit', '100')
+      params.set('offset', '0')
+
+      const res = await fetch(`/contents?${params.toString()}`)
       const data = await res.json()
 
       if (!alive) return
 
-      setFetchedResources(data.items)
-      setTotal(data.total)
+      setFetchedResources(Array.isArray(data.items) ? data.items : [])
+      setTotal(Number.isFinite(data.total) ? data.total : 0)
       setLoading(false)
-
-      console.log('channel data:', data)
     })().catch((e) => {
       if (!alive) return
       setLoading(false)
@@ -52,15 +72,14 @@ export default function ResourceListContainer({
     return () => {
       alive = false
     }
-  }, [category])
+  }, [categoryList])
 
   const sourceItems = useMemo(() => {
-    // ✅ 只走接口返回，无任何 category 字段过滤，无排序兼容
     return fetchedResources
   }, [fetchedResources])
 
   const schemaWithDefaults = useMemo(() => {
-    return schema.map((f) => {
+    return (schema ?? []).map((f) => {
       const hasInit = Object.prototype.hasOwnProperty.call(
         initialFilters,
         f.name
