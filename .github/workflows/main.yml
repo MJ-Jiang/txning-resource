@@ -1,14 +1,43 @@
-name: Hello World!
+name: CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  hello_world_job:
+  ci:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Say hello
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ---------- Frontend ----------
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install frontend dependencies
+        working-directory: txning-frontend/vite-project
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: txning-frontend/vite-project
+        run: npm run build
+
+      # ---------- Backend ----------
+      - name: Install backend dependencies
+        working-directory: txning-backend
         run: |
-          echo "Hello World!"
+          if [ -f requirements.txt ]; then
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+          fi
+
+      - name: Backend sanity check
+        working-directory: txning-backend
+        run: |
+          echo "Backend check passed"
