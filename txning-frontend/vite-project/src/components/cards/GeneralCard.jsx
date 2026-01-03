@@ -11,11 +11,9 @@ const UGC_TYPE_LABEL = {
 }
 
 export default function GeneralCard({ item }) {
-  
-
   const { ugcPlatformNameById, categoryById } = useDict()
-    const [confirmOpen, setConfirmOpen] = useState(false)
- if (!item) return null
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  if (!item) return null
   // ✅ 兼容 ContentCardOut / ContentDetailOut
   const content = item.content ?? item
 
@@ -49,8 +47,6 @@ export default function GeneralCard({ item }) {
   // 左下：图片/视频（只在有 ugc_type 时显示）
   const ugcType = content.ugc_type
   const typeText = ugcType ? (UGC_TYPE_LABEL[ugcType] ?? String(ugcType)) : null
-
-
 
   const onClickExternal = (e) => {
     if (!isExternal) return

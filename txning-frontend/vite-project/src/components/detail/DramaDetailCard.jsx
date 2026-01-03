@@ -17,8 +17,6 @@ function IconImg({ src, alt, className }) {
 }
 
 export default function DramaDetailCard({ detail }) {
-  
-
   const { genreNameById, platformNameById, bookingPlatformNameById } = useDict()
 
   const { content, rating, genres, platforms, booking_platforms } = detail
@@ -67,7 +65,7 @@ export default function DramaDetailCard({ detail }) {
       }))
       .filter((x) => x.id != null)
   }, [booking_platforms])
- if (!detail) return null
+  if (!detail) return null
   const showPlay = playPlatforms.length > 0
   const showBuy = statusId !== 4 && buyPlatforms.length > 0
 

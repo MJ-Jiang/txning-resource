@@ -10,7 +10,6 @@ export default function DramasPage() {
     useDict()
 
   const categoryId = categoryByCode?.drama?.id
-  
 
   const schema = useMemo(
     () => [
@@ -49,7 +48,7 @@ export default function DramasPage() {
     ],
     [platformNameById, typeNameById, statusNameById]
   )
- if (!categoryId) return null
+  if (!categoryId) return null
   return (
     <div className="page">
       <Navbar />

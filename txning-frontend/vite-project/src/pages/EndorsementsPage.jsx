@@ -9,7 +9,6 @@ export default function EndorsementsPage() {
   const { typeNameById, statusNameById, categoryByCode } = useDict()
 
   const categoryId = categoryByCode?.endorsement?.id
-  
 
   const schema = useMemo(
     () => [

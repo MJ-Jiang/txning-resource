@@ -7,10 +7,6 @@ function toArray(v) {
   return Array.isArray(v) ? v : [v]
 }
 
-function joinText(v, sep = ' / ') {
-  return toArray(v).filter(Boolean).join(sep)
-}
-
 function formatEventDateTime({ eventDate, timeText }) {
   const d = eventDate ? String(eventDate) : ''
   const t = timeText ? String(timeText) : ''
@@ -20,7 +16,6 @@ function formatEventDateTime({ eventDate, timeText }) {
 export default function EventDetailCard(props) {
   // ✅ 兼容：<EventDetailCard event={...}/> or <EventDetailCard detail={...}/>
   const detail = props?.event ?? props?.detail ?? props
-
 
   const {
     statusNameById,

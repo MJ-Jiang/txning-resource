@@ -10,7 +10,6 @@ export default function EndorsementDetailCard(props) {
   // ✅ 兼容两种传参：detail / endorsement
   const endorsement = props?.endorsement ?? props?.detail
 
-
   const { typeNameById, statusNameById, bookingPlatformNameById } = useDict()
 
   // ✅ 兼容两种结构：

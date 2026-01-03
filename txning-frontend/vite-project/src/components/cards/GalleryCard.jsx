@@ -7,8 +7,6 @@ const ICON_CLASS_MAP = {
 }
 
 export default function GalleryCard({ item }) {
-  
-
   const { ugcPlatformNameById } = useDict()
 
   const icon = ICON_CLASS_MAP[item.ugc_type] ?? 'fa-heart'

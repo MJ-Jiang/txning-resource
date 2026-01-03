@@ -11,7 +11,6 @@ export default function EventsPage() {
     useDict()
 
   const categoryId = categoryByCode?.event?.id
-  
 
   const schema = useMemo(
     () => [
