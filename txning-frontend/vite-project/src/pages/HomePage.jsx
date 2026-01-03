@@ -19,14 +19,15 @@ export default function HomePage() {
   const [eventItems, setEventItems] = useState([])
   const [galleryItems, setGalleryItems] = useState([])
   const [categoryNameByKey, setCategoryNameByKey] = useState({})
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     let alive = true
 
     ;(async () => {
       const [homeRes, dictRes] = await Promise.all([
-        fetch('/home'),
-        fetch('/dict/categories'),
+        fetch(`${API_BASE_URL}/home`),
+        fetch(`${API_BASE_URL}/dict/categories`),
       ])
 
       const homeData = await homeRes.json()

@@ -5,6 +5,8 @@ import ResourceLibraryPage from './ResourceLibraryPage'
 import FilterFields from './FilterFields'
 import useResponsivePageSize from '../../hooks/useResponsivePageSize'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 export default function ResourceListContainer({
   items, // ✅ NEW：允许外部直接传入 items（比如详情页 related）
   category, // number
@@ -71,7 +73,9 @@ export default function ResourceListContainer({
       params.set('limit', '100')
       params.set('offset', '0')
 
-      const res = await fetch(`/contents?${params.toString()}`)
+      const res = await fetch(`${API_BASE_URL}/contents?${params.toString()}`)
+console.log("API_BASE_URL =", API_BASE_URL);
+
       const data = await res.json()
 
       if (!alive) return

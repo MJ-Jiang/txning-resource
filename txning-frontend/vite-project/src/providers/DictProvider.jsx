@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
 const DictContext = createContext(null)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export function DictProvider({ children }) {
   const [statusNameById, setStatusNameById] = useState({})
@@ -37,14 +38,14 @@ export function DictProvider({ children }) {
         ugcPlatformsRes,
         bookingPlatformsRes,
       ] = await Promise.all([
-        fetch('/dict/statuses'),
-        fetch('/dict/types'),
-        fetch('/dict/genres'),
-        fetch('/dict/platforms'),
-        fetch('/dict/cities'),
-        fetch('/dict/categories'),
-        fetch('/dict/ugc-platforms'),
-        fetch('/dict/booking-platforms'),
+        fetch(`${API_BASE_URL}/dict/statuses`),
+        fetch(`${API_BASE_URL}/dict/types`),
+        fetch(`${API_BASE_URL}/dict/genres`),
+        fetch(`${API_BASE_URL}/dict/platforms`),
+        fetch(`${API_BASE_URL}/dict/cities`),
+        fetch(`${API_BASE_URL}/dict/categories`),
+        fetch(`${API_BASE_URL}/dict/ugc-platforms`),
+        fetch(`${API_BASE_URL}/dict/booking-platforms`),
       ])
 
       const [

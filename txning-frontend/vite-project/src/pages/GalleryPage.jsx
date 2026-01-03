@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import { useDict } from '../providers/useDict'
 import GeneralCard from '../components/cards/GeneralCard'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function GalleryPage() {
   const { ugcPlatformNameById, categoryByCode, categoryById } = useDict()
@@ -45,7 +46,8 @@ export default function GalleryPage() {
       params.append('source_category', String(id))
     )
 
-    fetch(`/contents/related-from-map?${params.toString()}`)
+   fetch(`${API_BASE_URL}/contents/related-from-map?${params.toString()}`)
+
       .then((r) => (r.ok ? r.json() : {}))
       .then((data) => {
         if (!alive) return
