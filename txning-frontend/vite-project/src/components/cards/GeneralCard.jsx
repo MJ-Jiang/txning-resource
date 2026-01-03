@@ -1,77 +1,55 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import { useDict } from '../../providers/useDict'
 
 function isHttpUrl(v) {
   return typeof v === 'string' && /^https?:\/\//i.test(v)
 }
 
+const UGC_TYPE_LABEL = {
+  picture: '图片',
+  video: '视频',
+}
+
 export default function GeneralCard({ item }) {
   if (!item) return null
 
-  const { ugcPlatformNameById } = useDict()
+  const { ugcPlatformNameById, categoryById } = useDict()
 
-  // ✅ 后端字段（与 GalleryCard 一致的取法）
-  const cover = item.cover_url
+  // ✅ 兼容 ContentCardOut / ContentDetailOut
+  const content = item.content ?? item
 
-  const ugcType = item.ugc_type
-  const ugcUrl = item.ugc_url || ''
-  const ugcPlatformId = item.ugc_platform_id
+  const id = content.id ?? item.id
+  const categoryId = content.category_id ?? item.category_id
 
-  const desc = item.description ?? ''
-  const alt = item.posterAlt ?? item.title ?? desc ?? ''
+  const cover = content.cover_url ?? null
+  const title = content.title ?? ''
+  const desc = content.description ?? ''
+  const alt = title || desc || ''
 
-  const UGC_TYPE_LABEL = {
-    video: '视频',
-    picture: '图片',
-  }
+  // 外链
+  const externalUrl = item.link_url ?? ''
+  const isExternal = isHttpUrl(externalUrl)
 
-  // ✅ 外站来源：ugc + personal（后端以 category_code 返回更常见；兼容 category 兜底）
-  const categoryCode = item.category_code ?? item.category
-  const isExternalSource = categoryCode === 'ugc' || categoryCode === 'personal'
+  // ✅ 内链：/detail/${categoryCode}/${id}
+  const categoryCode =
+    categoryId != null ? categoryById?.[categoryId]?.code : null
+  const internalHref =
+    !isExternal && categoryCode && id ? `/detail/${categoryCode}/${id}` : null
 
-  // ✅ 平台角标文案：
-  // - 外站：显示平台名（来自 dict provider）
-  // - 站内：显示“本站”
+  // 右上：平台（✅ 本站也显示）
+  const platformId = content.ugc_platform_id
   const platformLabel =
-    ugcPlatformNameById?.[ugcPlatformId] ?? String(ugcPlatformId ?? '')
-  const badgeText = isExternalSource ? platformLabel : '本站'
+    platformId == null
+      ? '本站'
+      : (ugcPlatformNameById?.[platformId] ?? String(platformId))
 
-  const internalHref = useMemo(() => {
-    if (!categoryCode || item.id == null) return ''
-    return `/detail/${categoryCode}/${item.id}`
-  }, [categoryCode, item.id])
+  const badgeText = platformLabel || null
 
-  const isExternal = isHttpUrl(ugcUrl)
-  const isInternal = !isExternal && Boolean(internalHref)
+  // 左下：图片/视频（只在有 ugc_type 时显示）
+  const ugcType = content.ugc_type
+  const typeText = ugcType ? (UGC_TYPE_LABEL[ugcType] ?? String(ugcType)) : null
 
-  const clickable = isExternal || isInternal
   const [confirmOpen, setConfirmOpen] = useState(false)
-
-  const CardInner = (
-    <div
-      className={`general-card ${clickable ? 'is-clickable' : 'is-disabled'}`}
-    >
-      <div className="general-media">
-        {cover ? (
-          <img className="general-thumb" src={cover} alt={alt} loading="lazy" />
-        ) : (
-          <div className="general-thumb general-thumb--placeholder" />
-        )}
-
-        {/* ✅ 平台角标：外站显示平台；站内显示“本站”
-            注意：外站若 platform 为空，不显示角标（避免空黄块） */}
-        {badgeText && <div className="general-badge">{badgeText}</div>}
-
-        {/* ✅ 媒体类型角标：只有 ugc 才通常会有（personal 也可有就会显示） */}
-        {ugcType && (
-          <div className="general-type">
-            {UGC_TYPE_LABEL[ugcType] ?? ugcType}
-          </div>
-        )}
-      </div>
-    </div>
-  )
 
   const onClickExternal = (e) => {
     if (!isExternal) return
@@ -80,28 +58,34 @@ export default function GeneralCard({ item }) {
   }
 
   const onGoExternal = () => {
-    if (!ugcUrl) return
-    window.open(ugcUrl, '_blank', 'noopener,noreferrer')
+    if (!externalUrl) return
+    window.open(externalUrl, '_blank', 'noopener,noreferrer')
     setConfirmOpen(false)
   }
 
-  // 站内跳转
-  if (isInternal) {
-    return (
-      <Link to={internalHref} className="card-link">
-        {CardInner}
-      </Link>
-    )
-  }
+  const CardInner = (
+    <div className="general-card is-clickable">
+      <div className="general-media" style={{ position: 'relative' }}>
+        {cover ? (
+          <img className="general-thumb" src={cover} alt={alt} loading="lazy" />
+        ) : (
+          <div className="general-thumb general-thumb--placeholder" />
+        )}
 
-  // 外链（确认弹窗）
+        {badgeText ? <div className="general-badge">{badgeText}</div> : null}
+        {typeText ? <div className="general-type">{typeText}</div> : null}
+      </div>
+    </div>
+  )
+
+  // 外链
   if (isExternal) {
     return (
       <>
         <a
           className="card-link"
           data-role="external-card"
-          href={ugcUrl}
+          href={externalUrl}
           target="_blank"
           rel="noopener noreferrer"
           onClick={onClickExternal}
@@ -131,12 +115,12 @@ export default function GeneralCard({ item }) {
               </button>
 
               <div className="ext-modal-title" id="ext-modal-title">
-                即将前往{badgeText ? `「${badgeText}」` : '第三方网站'}
+                即将前往「{platformLabel}」
               </div>
 
               <div className="ext-modal-body">
                 <div className="ext-modal-desc">你即将打开以下链接：</div>
-                <div className="ext-modal-url">{ugcUrl}</div>
+                <div className="ext-modal-url">{externalUrl}</div>
               </div>
 
               <div className="ext-modal-actions">
@@ -151,6 +135,7 @@ export default function GeneralCard({ item }) {
                   className="ext-btn ext-btn-primary"
                   type="button"
                   onClick={onGoExternal}
+                  disabled={!externalUrl}
                 >
                   确定
                 </button>
@@ -159,6 +144,14 @@ export default function GeneralCard({ item }) {
           </div>
         )}
       </>
+    )
+  }
+
+  if (internalHref) {
+    return (
+      <a className="card-link" href={internalHref}>
+        {CardInner}
+      </a>
     )
   }
 

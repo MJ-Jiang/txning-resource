@@ -1,19 +1,5 @@
-import { TYPE_LABEL } from '../../dictionary/type'
-import { STATUS_FILTER_LABEL, canShowPurchase } from '../../dictionary/status'
-import {
-  BOOKING_PLATFORM_LABEL,
-  BOOKING_PLATFORM_ICON,
-} from '../../dictionary/bookingPlatform'
-
-function getBookingLinks(d) {
-  if (!Array.isArray(d?.bookingPlatform)) return []
-  return d.bookingPlatform
-    .map((x) => ({
-      code: x?.code ?? '',
-      url: x?.url ?? null,
-    }))
-    .filter((x) => x.code)
-}
+import { useMemo } from 'react'
+import { useDict } from '../../providers/useDict'
 
 function IconImg({ src, alt, className }) {
   if (!src) return null
@@ -23,15 +9,32 @@ function IconImg({ src, alt, className }) {
 export default function EndorsementDetailCard({ endorsement }) {
   if (!endorsement) return null
 
-  const { posterUrl, title, alt, type, year, status, role, description } =
-    endorsement
+  const { typeNameById, statusNameById, bookingPlatformNameById } = useDict()
 
-  const bookingLinks = getBookingLinks(endorsement)
-  const buyableLinks = bookingLinks.filter((x) => Boolean(x.url))
-  const showPurchase = canShowPurchase(status) && buyableLinks.length > 0
+  // ✅ 最新结构：直接使用后端 detail.content
+  const { content, booking_platforms } = endorsement
 
-  const typeLabel = TYPE_LABEL[type] ?? type
-  const statusLabel = STATUS_FILTER_LABEL[status] ?? status
+  const posterUrl = content.cover_url
+  const title = content.title
+  const alt = title
+  const typeId = content.type_id
+  const year = content.release_year
+  const statusId = content.status_id
+  const role = content.role
+  const description = content.description
+
+  const typeLabel =
+    typeId != null ? (typeNameById?.[typeId] ?? String(typeId)) : ''
+  const statusLabel =
+    statusId != null ? (statusNameById?.[statusId] ?? String(statusId)) : ''
+
+  // ✅ 仅显示有 url 的购票平台
+  const buyableTickets = useMemo(() => {
+    if (!Array.isArray(booking_platforms)) return []
+    return booking_platforms.filter((t) => Boolean(t?.url))
+  }, [booking_platforms])
+
+  const showPurchase = buyableTickets.length > 0
 
   return (
     <div className="detail-card">
@@ -39,11 +42,7 @@ export default function EndorsementDetailCard({ endorsement }) {
         {/* 封面 */}
         <div className="detail-cover">
           {posterUrl ? (
-            <img
-              className="detail-cover-img"
-              src={posterUrl}
-              alt={alt || title}
-            />
+            <img className="detail-cover-img" src={posterUrl} alt={alt} />
           ) : (
             <div className="detail-cover-placeholder" />
           )}
@@ -79,29 +78,31 @@ export default function EndorsementDetailCard({ endorsement }) {
               </div>
             ) : null}
 
-            {/* 购买：仅当状态允许 + 有 url 才显示 */}
+            {/* 购买 */}
             {showPurchase ? (
               <div className="kv-row">
                 <div className="kv-k">购买</div>
                 <div className="kv-v">
                   <div className="platform-row">
-                    {buyableLinks.map((x) => {
-                      const label = BOOKING_PLATFORM_LABEL[x.code] ?? x.code
-                      const icon =
-                        BOOKING_PLATFORM_ICON[x.code] ?? '/icons/link.svg'
+                    {buyableTickets.map((t) => {
+                      const platform = t.platform
+                      const label =
+                        bookingPlatformNameById?.[platform.id] ??
+                        platform.name_zh ??
+                        String(platform.id)
 
                       return (
                         <a
-                          key={`${x.code}-${x.url}`}
+                          key={`${platform.id}-${t.url}`}
                           className="platform-link"
-                          href={x.url}
+                          href={t.url}
                           target="_blank"
                           rel="noreferrer"
                           title={label}
                         >
                           <IconImg
                             className="platform-logo"
-                            src={icon}
+                            src="/icons/link.svg"
                             alt={label}
                           />
                         </a>

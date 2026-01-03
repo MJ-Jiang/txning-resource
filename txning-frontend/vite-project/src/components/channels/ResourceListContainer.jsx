@@ -6,8 +6,9 @@ import FilterFields from './FilterFields'
 import useResponsivePageSize from '../../hooks/useResponsivePageSize'
 
 export default function ResourceListContainer({
+  items, // ✅ NEW：允许外部直接传入 items（比如详情页 related）
   category, // number
-  categories, // number[] ✅ 新增：支持多分类
+  categories, // number[]
   schema,
   renderCard,
 
@@ -36,8 +37,23 @@ export default function ResourceListContainer({
     return []
   }, [category, categories])
 
+  // ✅ 如果外部传了 items：不 fetch，直接用 items
+  useEffect(() => {
+    if (Array.isArray(items)) {
+      setFetchedResources(items)
+      setTotal(items.length)
+      setLoading(false)
+    }
+  }, [items])
+
+  // ✅ 只有在没传 items 时才走 fetch（保持原逻辑）
   useEffect(() => {
     let alive = true
+
+    if (Array.isArray(items))
+      return () => {
+        alive = false
+      }
 
     if (!categoryList.length) {
       setFetchedResources([])
@@ -72,7 +88,7 @@ export default function ResourceListContainer({
     return () => {
       alive = false
     }
-  }, [categoryList])
+  }, [categoryList, items])
 
   const sourceItems = useMemo(() => {
     return fetchedResources

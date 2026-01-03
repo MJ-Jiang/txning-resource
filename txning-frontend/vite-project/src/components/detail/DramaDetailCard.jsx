@@ -1,8 +1,5 @@
-import { PLATFORM_ICON, PLATFORM_LABEL } from '../../dictionary/platform'
-import {
-  BOOKING_PLATFORM_LABEL,
-  BOOKING_PLATFORM_ICON,
-} from '../../dictionary/bookingPlatform'
+import { useMemo } from 'react'
+import { useDict } from '../../providers/useDict'
 
 function IconImg({ src, alt, className }) {
   if (!src) return null
@@ -11,7 +8,10 @@ function IconImg({ src, alt, className }) {
       className={className}
       src={src}
       alt={alt}
-      onError={() => console.error('Icon load failed:', src)}
+      loading="lazy"
+      onError={(e) => {
+        e.currentTarget.style.display = 'none'
+      }}
     />
   )
 }
@@ -19,36 +19,57 @@ function IconImg({ src, alt, className }) {
 export default function DramaDetailCard({ detail }) {
   if (!detail) return null
 
+  const { genreNameById, platformNameById, bookingPlatformNameById } = useDict()
+
   const { content, rating, genres, platforms, booking_platforms } = detail
 
-  const title = content.title
-  const coverUrl = content.cover_url
-  const year = content.release_year
-  const episodes = content.episode_count
-  const description = content.description
+  const title = content?.title ?? ''
+  const coverUrl = content?.cover_url ?? ''
+  const year = content?.release_year
+  const episodes = content?.episode_count
+  const description = content?.description ?? ''
+  const statusId = content?.status_id ?? null
 
   const ratingValue = rating?.value
   const ratingUrl = rating?.url
 
-  const genreText = Array.isArray(genres)
-    ? genres
-        .map((g) => g.name_zh)
-        .filter(Boolean)
-        .join(' / ')
-    : ''
+  // ✅ genres 必须用 genreNameById
+  const genreText = useMemo(() => {
+    const gs = Array.isArray(genres) ? genres : []
+    return gs
+      .map((g) => genreNameById?.[g?.id])
+      .filter(Boolean)
+      .join(' / ')
+  }, [genres, genreNameById])
 
-  // 后端返回 platforms: [{ platform: {id, code, name_zh}, url }]
-  const playablePlatforms = Array.isArray(platforms)
-    ? platforms.filter((p) => Boolean(p.url))
-    : []
+  // ✅ 播放平台：用 detail.platforms（只要 platform.id 存在就显示，url 可空）
+  const playPlatforms = useMemo(() => {
+    const ps = Array.isArray(platforms) ? platforms : []
+    return ps
+      .map((p) => ({
+        id: p?.platform?.id ?? null,
+        code: p?.platform?.code ?? null,
+        name_zh: p?.platform?.name_zh ?? null,
+        url: p?.url ?? null,
+      }))
+      .filter((x) => x.id != null)
+  }, [platforms])
 
-  // 后端返回 booking_platforms: [{ platform: {...}, url }]
-  const buyableTickets = Array.isArray(booking_platforms)
-    ? booking_platforms.filter((t) => Boolean(t.url))
-    : []
+  // ✅ 购票：status !== 4 且 booking platform id 存在就显示（url 可空）
+  const buyPlatforms = useMemo(() => {
+    const bs = Array.isArray(booking_platforms) ? booking_platforms : []
+    return bs
+      .map((t) => ({
+        id: t?.platform?.id ?? null,
+        code: t?.platform?.code ?? null,
+        name_zh: t?.platform?.name_zh ?? null,
+        url: t?.url ?? null,
+      }))
+      .filter((x) => x.id != null)
+  }, [booking_platforms])
 
-  const showPlay = playablePlatforms.length > 0
-  const showTickets = buyableTickets.length > 0
+  const showPlay = playPlatforms.length > 0
+  const showBuy = statusId !== 4 && buyPlatforms.length > 0
 
   return (
     <div className="detail-card">
@@ -87,14 +108,17 @@ export default function DramaDetailCard({ detail }) {
                 <div className="kv-k kv-k--icon">
                   <a
                     className="kv-ico-link"
-                    href={ratingUrl}
+                    href={ratingUrl || undefined}
                     target="_blank"
                     rel="noreferrer"
                     title="豆瓣"
+                    onClick={(e) => {
+                      if (!ratingUrl) e.preventDefault()
+                    }}
                   >
                     <IconImg
                       className="kv-ico"
-                      src="/icons/db.svg"
+                      src="/icons/douban.svg"
                       alt="豆瓣"
                     />
                   </a>
@@ -108,33 +132,45 @@ export default function DramaDetailCard({ detail }) {
                 <div className="kv-k">播放</div>
                 <div className="kv-v">
                   <div className="platform-row">
-                    {playablePlatforms.map((p) => {
-                      const platform = p.platform
-                      const key = `${platform.id}-${p.url}`
-
-                      // 如果你的 PLATFORM_LABEL/ICON 已改成 id key：用 platform.id
-                      // 如果你仍是 code key：用 platform.code
+                    {playPlatforms.map((p) => {
                       const label =
-                        PLATFORM_LABEL[platform.id] ?? platform.name_zh
+                        platformNameById?.[p.id] ??
+                        p.name_zh ??
+                        p.code ??
+                        String(p.id)
+                      const iconSrc = p.code ? `/icons/${p.code}.svg` : null
 
-                      const iconSrc =
-                        PLATFORM_ICON[platform.id] ?? '/icons/link.svg'
+                      const inner = (
+                        <IconImg
+                          className="platform-logo"
+                          src={iconSrc}
+                          alt={label}
+                        />
+                      )
+
+                      if (p.url) {
+                        return (
+                          <a
+                            key={`${p.id}-${p.url}`}
+                            className="platform-link"
+                            href={p.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            title={label}
+                          >
+                            {inner}
+                          </a>
+                        )
+                      }
 
                       return (
-                        <a
-                          key={key}
+                        <span
+                          key={p.id}
                           className="platform-link"
-                          href={p.url}
-                          target="_blank"
-                          rel="noreferrer"
                           title={label}
                         >
-                          <IconImg
-                            className="platform-logo"
-                            src={iconSrc}
-                            alt={label}
-                          />
-                        </a>
+                          {inner}
+                        </span>
                       )
                     })}
                   </div>
@@ -142,40 +178,50 @@ export default function DramaDetailCard({ detail }) {
               </div>
             ) : null}
 
-            {showTickets ? (
+            {showBuy ? (
               <div className="kv-row">
-                <div className="kv-k">购票</div>
+                <div className="kv-k">购买</div>
                 <div className="kv-v">
                   <div className="platform-row">
-                    {buyableTickets.map((t) => {
-                      const platform = t.platform
-                      const key = `${platform.id}-${t.url}`
-
+                    {buyPlatforms.map((b) => {
                       const label =
-                        BOOKING_PLATFORM_LABEL[platform.id] ??
-                        BOOKING_PLATFORM_LABEL[platform.code] ??
-                        platform.name_zh
+                        bookingPlatformNameById?.[b.id] ??
+                        b.name_zh ??
+                        b.code ??
+                        String(b.id)
+                      const iconSrc = b.code ? `/icons/${b.code}.svg` : null
 
-                      const iconSrc =
-                        BOOKING_PLATFORM_ICON[platform.id] ??
-                        BOOKING_PLATFORM_ICON[platform.code] ??
-                        '/icons/link.svg'
+                      const inner = (
+                        <IconImg
+                          className="platform-logo"
+                          src={iconSrc}
+                          alt={label}
+                        />
+                      )
+
+                      if (b.url) {
+                        return (
+                          <a
+                            key={`${b.id}-${b.url}`}
+                            className="platform-link"
+                            href={b.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            title={label}
+                          >
+                            {inner}
+                          </a>
+                        )
+                      }
 
                       return (
-                        <a
-                          key={key}
+                        <span
+                          key={b.id}
                           className="platform-link"
-                          href={t.url}
-                          target="_blank"
-                          rel="noreferrer"
                           title={label}
                         >
-                          <IconImg
-                            className="platform-logo"
-                            src={iconSrc}
-                            alt={label}
-                          />
-                        </a>
+                          {inner}
+                        </span>
                       )
                     })}
                   </div>

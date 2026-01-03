@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useDict } from '../../providers/useDict'
 
 const ICON_CLASS_MAP = {
@@ -13,11 +13,16 @@ export default function GalleryCard({ item }) {
 
   const icon = ICON_CLASS_MAP[item.ugc_type] ?? 'fa-heart'
 
-  const href = item.ugc_url
+  // ✅ 统一外链字段：优先用后端 card 的 link_url，其次才兜底 ugc_url
+  const href = item.link_url ?? item.ugc_url ?? null
   const clickable = Boolean(href)
 
+  // ✅ 平台名：优先用 ugc_platform_id（你字典里就是这个），没有就不显示平台
   const platformId = item.ugc_platform_id
-  const platformLabel = ugcPlatformNameById?.[platformId] ?? String(platformId)
+  const platformLabel = useMemo(() => {
+    if (!platformId) return ''
+    return ugcPlatformNameById?.[platformId] ?? String(platformId)
+  }, [ugcPlatformNameById, platformId])
 
   const [confirmOpen, setConfirmOpen] = useState(false)
 

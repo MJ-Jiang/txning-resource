@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -7,15 +7,17 @@ import EndorsementDetailCard from '../components/detail/EndorsementDetailCard'
 import EventDetailCard from '../components/detail/EventDetailCard'
 import ResourceListContainer from '../components/channels/ResourceListContainer'
 import GeneralCard from '../components/cards/GeneralCard'
-import { CATEGORY_CODES } from '../dictionary/category'
 import useResponsivePageSize from '../hooks/useResponsivePageSize'
+import { useDict } from '../providers/useDict'
 
 export default function DetailPage() {
   const { category, id } = useParams()
   const pageSize = useResponsivePageSize(12, 25, 768)
 
+  const { categoryByCode, ugcPlatformNameById } = useDict()
+
   const [detail, setDetail] = useState(null)
-  const [related, setRelated] = useState([])
+  const [related, setRelated] = useState([]) // ✅ 直接存 ContentCardOut
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
 
@@ -37,6 +39,8 @@ export default function DetailPage() {
       }
 
       const data = await res.json()
+      if (!alive) return
+
       setDetail(data)
       setLoading(false)
     })().catch(() => {
@@ -51,7 +55,8 @@ export default function DetailPage() {
   }, [id])
 
   // ===============================
-  // 2️⃣ 相关内容
+  // 2️⃣ 相关内容（关键修复点）
+  // 👉 直接用后端的 /related
   // ===============================
   useEffect(() => {
     let alive = true
@@ -61,6 +66,8 @@ export default function DetailPage() {
       if (!alive || !res.ok) return
 
       const data = await res.json()
+      if (!alive) return
+
       setRelated(Array.isArray(data.items) ? data.items : [])
     })()
 
@@ -72,24 +79,55 @@ export default function DetailPage() {
   // ===============================
   // 3️⃣ 详情卡片选择
   // ===============================
+  const endorsementId = categoryByCode?.endorsement?.id
+  const eventId = categoryByCode?.event?.id
+
+  const detailCategoryId = detail?.content?.category_id ?? detail?.category_id
+
   const detailCard = (() => {
     if (!detail) return null
-    if (category === CATEGORY_CODES.ENDORSEMENT)
+    if (category === 'endorsement' || detailCategoryId === endorsementId)
       return <EndorsementDetailCard detail={detail} />
-    if (category === CATEGORY_CODES.EVENT)
+    if (category === 'event' || detailCategoryId === eventId)
       return <EventDetailCard detail={detail} />
     return <DramaDetailCard detail={detail} />
   })()
 
   // ===============================
-  // 4️⃣ 空态文案
+  // 4️⃣ 筛选 schema（直接用 card 字段）
   // ===============================
-  const emptyText =
-    category === CATEGORY_CODES.ENDORSEMENT
-      ? '找不到该商务／杂志'
-      : category === CATEGORY_CODES.EVENT
-        ? '找不到该活动'
-        : '找不到该影视'
+  const schema = useMemo(
+    () => [
+      {
+        name: 'ugc_platform_id',
+        label: '平台',
+        defaultValue: 'all',
+        getValue: (x) => x.ugc_platform_id ?? 'site',
+        optionsLabel: (v) => {
+          if (v === 'site') return '本站'
+          return ugcPlatformNameById?.[v] ?? String(v)
+        },
+      },
+      {
+        name: 'ugc_type',
+        label: '类型',
+        defaultValue: 'all',
+        getValue: (x) => x.ugc_type,
+        optionsLabel: (v) => {
+          if (v === 'video') return '视频'
+          if (v === 'picture') return '图片'
+          return String(v)
+        },
+      },
+      {
+        name: 'release_year',
+        label: '年份',
+        defaultValue: 'all',
+        getValue: (x) => x.release_year,
+      },
+    ],
+    [ugcPlatformNameById]
+  )
 
   // ===============================
   // 5️⃣ loading / not found
@@ -112,7 +150,7 @@ export default function DetailPage() {
         <Navbar />
         <section className="library-section">
           <div className="empty-state">
-            <h3>{emptyText}</h3>
+            <h3>找不到该内容</h3>
           </div>
         </section>
         <Footer />
@@ -129,7 +167,7 @@ export default function DetailPage() {
 
       <section className="library-section detail-design">{detailCard}</section>
 
-      {related.length > 0 ? (
+      {related.length > 0 && (
         <>
           <section className="library-section related-header">
             <div className="related-head">
@@ -144,12 +182,17 @@ export default function DetailPage() {
             items={related}
             pageSize={pageSize}
             gridClassName="card-grid"
-            searchKey={(x) => x.title}
-            schema={[]}
-            renderCard={(it) => <GeneralCard key={it.id} item={it} />}
+            searchKey={(x) => x.title ?? ''}
+            schema={schema}
+            renderCard={(it) => (
+              <GeneralCard
+                key={`${it.category_id ?? 'c'}-${it.id}`}
+                item={it}
+              />
+            )}
           />
         </>
-      ) : null}
+      )}
 
       <Footer />
     </div>

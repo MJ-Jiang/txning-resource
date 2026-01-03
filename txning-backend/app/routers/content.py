@@ -70,6 +70,14 @@ def get_content_detail(content_id: int, db: Session = Depends(get_db)):
 
     rating_value = float(r.rating_value) if r.rating_value is not None else None
 
+    # ✅ NEW: related_ids（从 relation 表取 target ids）
+    rel_rows = (
+        db.query(ContentRelation.target_content_id)
+        .filter(ContentRelation.source_content_id == content_id)
+        .all()
+    )
+    related_ids = [row[0] for row in rel_rows]
+
     # --- genres ---
     genre_rows = (
         db.execute(
@@ -150,6 +158,9 @@ def get_content_detail(content_id: int, db: Session = Depends(get_db)):
             date_granularity=r.date_granularity,
             href=r.href,
             created_at=r.created_at,
+            ugc_type=r.ugc_type,
+            # ✅ NEW
+            related_ids=related_ids,
         ),
         rating=RatingInfo(source="douban", value=rating_value, url=r.rating_url),
         genres=genres,

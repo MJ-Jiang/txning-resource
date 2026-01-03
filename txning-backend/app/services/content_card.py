@@ -17,11 +17,28 @@ from models import (
 )
 
 
-def _is_http_url(v: Optional[str]) -> bool:
+def _normalize_url(v: Optional[str]) -> str:
+
     if not isinstance(v, str):
-        return False
+        return ""
     s = v.strip()
-    return s.lower().startswith("http://") or s.lower().startswith("https://")
+    if not s:
+        return ""
+
+    low = s.lower()
+    if low.startswith("http://") or low.startswith("https://"):
+        return s
+    if s.startswith("//"):
+        return "https:" + s
+    if low.startswith("www."):
+        return "https://" + s
+
+
+    return "https://" + s
+
+
+def _has_any_url(v: Optional[str]) -> bool:
+    return bool(_normalize_url(v))
 
 
 def bulk_card_fields(db: Session, content_ids: Iterable[int]):
@@ -90,8 +107,11 @@ def content_to_card(
     genre_ids_map,
     related_ids_map,
 ) -> ContentCardOut:
-    ugc_url = (r.ugc_url or "").strip()
-    is_external = _is_http_url(ugc_url)
+    raw_ugc_url = r.ugc_url
+    link_url = _normalize_url(raw_ugc_url)
+
+    # ✅ 只要 ugc_url 有内容，就 external；否则 detail
+    is_external = _has_any_url(raw_ugc_url)
 
     return ContentCardOut(
         id=r.id,
@@ -99,7 +119,7 @@ def content_to_card(
         title=r.title_zh,
         cover_url=r.poster_url,
         link_type="external" if is_external else "detail",
-        link_url=ugc_url if is_external else None,
+        link_url=link_url if is_external else None,
         release_year=r.release_year,
         status_id=r.status_id,
         type_id=r.type_id,
@@ -112,7 +132,9 @@ def content_to_card(
         time_text=r.time_text,
         event_date=r.event_date,
         ugc_platform_id=r.ugc_platform_id,
+
         created_at=r.created_at,
         href=r.href,
-        is_featured=r.is_featured, 
+        is_featured=r.is_featured,
+        ugc_type=r.ugc_type,
     )

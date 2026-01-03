@@ -39,8 +39,8 @@ class ContentCardOut(BaseModel):
     created_at: Optional[datetime] = None
     href: Optional[str] = None
 
-
     is_featured: Optional[bool] = None
+    ugc_type: Optional[str] = None
 
 
 class ContentCardPageOut(BaseModel):
@@ -88,6 +88,10 @@ class ContentDetailContent(BaseModel):
 
     href: Optional[str] = None
     created_at: Optional[datetime] = None
+
+    related_ids: List[int] = Field(default_factory=list)
+
+    ugc_type: Optional[str] = None
 
 
 class ContentDetailOut(BaseModel):
