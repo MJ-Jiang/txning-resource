@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 
 from app.crud import list_contents_by_category
 from app.db import get_db
@@ -39,7 +39,6 @@ def list_contents(
     offset: int = 0,
     db: Session = Depends(get_db),
 ):
-    # 先算 total（与 channels 对齐：分页对象）
     total = db.query(Content.id).filter(Content.category_id.in_(category)).count()
 
     rows = list_contents_by_category(
@@ -55,11 +54,65 @@ def list_contents(
     )
 
     items = [
-        content_to_card(r, platform_ids_map, city_ids_map, genre_ids_map, related_ids_map)
+        content_to_card(
+            r, platform_ids_map, city_ids_map, genre_ids_map, related_ids_map
+        )
         for r in rows
     ]
 
     return ContentCardPageOut(total=total, limit=limit, offset=offset, items=items)
+
+
+# =========================================================
+# ✅ A2 新接口：反向 related 映射
+# GET /contents/related-from-map?target_category=...&source_category=...
+# ⚠️ 一定要放在 /{content_id} 之前，避免路由被当成 content_id
+# =========================================================
+@router.get("/related-from-map", response_model=Dict[str, List[int]])
+def get_related_from_map(
+    # target：Gallery 里要显示的卡片分类（比如 ugc/personal 的 category_id）
+    target_category: Optional[List[int]] = Query(
+        None, description="目标内容分类 id，可重复：?target_category=10&target_category=11"
+    ),
+    # source：哪些分类算“相关来源”（比如 drama/event/endorsement 的 category_id）
+    source_category: Optional[List[int]] = Query(
+        None, description="来源内容分类 id，可重复：?source_category=1&source_category=2"
+    ),
+    db: Session = Depends(get_db),
+):
+    Source = aliased(Content)
+    Target = aliased(Content)
+
+    stmt = (
+        select(ContentRelation.target_content_id, Source.category_id)
+        .join(Source, Source.id == ContentRelation.source_content_id)
+        .join(Target, Target.id == ContentRelation.target_content_id)
+    )
+
+    if source_category:
+        stmt = stmt.where(Source.category_id.in_(source_category))
+
+    if target_category:
+        stmt = stmt.where(Target.category_id.in_(target_category))
+
+    rows = db.execute(stmt).all()
+
+    # 聚合成：{ "target_id": [source_category_id...] }
+    out: Dict[str, List[int]] = {}
+    for target_id, source_cat_id in rows:
+        if target_id is None or source_cat_id is None:
+            continue
+        k = str(int(target_id))
+        arr = out.setdefault(k, [])
+        v = int(source_cat_id)
+        if v not in arr:
+            arr.append(v)
+
+    # 排序（稳定输出，前端更好做 options）
+    for k in out.keys():
+        out[k].sort()
+
+    return out
 
 
 @router.get("/{content_id}", response_model=ContentDetailOut)
@@ -70,7 +123,7 @@ def get_content_detail(content_id: int, db: Session = Depends(get_db)):
 
     rating_value = float(r.rating_value) if r.rating_value is not None else None
 
-    # ✅ NEW: related_ids（从 relation 表取 target ids）
+    # related_ids（从 relation 表取 target ids）
     rel_rows = (
         db.query(ContentRelation.target_content_id)
         .filter(ContentRelation.source_content_id == content_id)
@@ -159,7 +212,6 @@ def get_content_detail(content_id: int, db: Session = Depends(get_db)):
             href=r.href,
             created_at=r.created_at,
             ugc_type=r.ugc_type,
-            # ✅ NEW
             related_ids=related_ids,
         ),
         rating=RatingInfo(source="douban", value=rating_value, url=r.rating_url),
@@ -180,12 +232,10 @@ def list_related_contents(
     offset: int = 0,
     db: Session = Depends(get_db),
 ):
-    # 1) 确认内容存在
     exists = db.query(Content.id).filter(Content.id == content_id).first()
     if not exists:
         raise HTTPException(status_code=404, detail="Content not found")
 
-    # 2) 从 relation 表取 target ids
     rel_rows = (
         db.query(ContentRelation.target_content_id)
         .filter(ContentRelation.source_content_id == content_id)
@@ -196,7 +246,6 @@ def list_related_contents(
     if not target_ids:
         return ContentCardPageOut(total=0, limit=limit, offset=offset, items=[])
 
-    # 3) 查 contents
     q = db.query(Content).filter(Content.id.in_(target_ids))
 
     if title:
@@ -215,7 +264,9 @@ def list_related_contents(
     )
 
     items = [
-        content_to_card(c, platform_ids_map, city_ids_map, genre_ids_map, related_ids_map)
+        content_to_card(
+            c, platform_ids_map, city_ids_map, genre_ids_map, related_ids_map
+        )
         for c in rows
     ]
 
