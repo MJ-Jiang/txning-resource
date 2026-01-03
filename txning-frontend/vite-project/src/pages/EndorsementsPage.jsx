@@ -9,7 +9,7 @@ export default function EndorsementsPage() {
   const { typeNameById, statusNameById, categoryByCode } = useDict()
 
   const categoryId = categoryByCode?.endorsement?.id
-  if (!categoryId) return null
+  
 
   const schema = useMemo(
     () => [
@@ -37,7 +37,7 @@ export default function EndorsementsPage() {
     ],
     [typeNameById, statusNameById]
   )
-
+  if (!categoryId) return null
   return (
     <div className="page">
       <Navbar />

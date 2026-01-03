@@ -11,10 +11,11 @@ const UGC_TYPE_LABEL = {
 }
 
 export default function GeneralCard({ item }) {
-  if (!item) return null
+  
 
   const { ugcPlatformNameById, categoryById } = useDict()
-
+    const [confirmOpen, setConfirmOpen] = useState(false)
+ if (!item) return null
   // ✅ 兼容 ContentCardOut / ContentDetailOut
   const content = item.content ?? item
 
@@ -49,7 +50,7 @@ export default function GeneralCard({ item }) {
   const ugcType = content.ugc_type
   const typeText = ugcType ? (UGC_TYPE_LABEL[ugcType] ?? String(ugcType)) : null
 
-  const [confirmOpen, setConfirmOpen] = useState(false)
+
 
   const onClickExternal = (e) => {
     if (!isExternal) return

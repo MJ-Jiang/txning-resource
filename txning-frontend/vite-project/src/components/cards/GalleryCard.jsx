@@ -7,7 +7,7 @@ const ICON_CLASS_MAP = {
 }
 
 export default function GalleryCard({ item }) {
-  if (!item) return null
+  
 
   const { ugcPlatformNameById } = useDict()
 
@@ -25,7 +25,7 @@ export default function GalleryCard({ item }) {
   }, [ugcPlatformNameById, platformId])
 
   const [confirmOpen, setConfirmOpen] = useState(false)
-
+  if (!item) return null
   const onCardClick = () => {
     if (!clickable) return
     setConfirmOpen(true)

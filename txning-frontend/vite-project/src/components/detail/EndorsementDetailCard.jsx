@@ -9,7 +9,7 @@ function IconImg({ src, alt, className }) {
 export default function EndorsementDetailCard(props) {
   // ✅ 兼容两种传参：detail / endorsement
   const endorsement = props?.endorsement ?? props?.detail
-  if (!endorsement) return null
+
 
   const { typeNameById, statusNameById, bookingPlatformNameById } = useDict()
 
@@ -38,7 +38,7 @@ export default function EndorsementDetailCard(props) {
     if (!Array.isArray(booking_platforms)) return []
     return booking_platforms.filter((t) => Boolean(t?.url))
   }, [booking_platforms])
-
+  if (!endorsement) return null
   const showPurchase = buyableTickets.length > 0
 
   return (

@@ -11,7 +11,7 @@ export default function EventsPage() {
     useDict()
 
   const categoryId = categoryByCode?.event?.id
-  if (!categoryId) return null
+  
 
   const schema = useMemo(
     () => [
@@ -45,7 +45,7 @@ export default function EventsPage() {
     ],
     [statusNameById, typeNameById, cityNameById]
   )
-
+  if (!categoryId) return null
   return (
     <div className="page">
       <Navbar />

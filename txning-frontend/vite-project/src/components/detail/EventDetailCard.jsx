@@ -20,7 +20,7 @@ function formatEventDateTime({ eventDate, timeText }) {
 export default function EventDetailCard(props) {
   // ✅ 兼容：<EventDetailCard event={...}/> or <EventDetailCard detail={...}/>
   const detail = props?.event ?? props?.detail ?? props
-  if (!detail) return null
+
 
   const {
     statusNameById,
@@ -74,7 +74,7 @@ export default function EventDetailCard(props) {
       })
       .filter((x) => x.code) // 平台 code 必须有
   }, [booking_platforms])
-
+  if (!detail) return null
   const showTickets = bookingLinks.length > 0
 
   return (
