@@ -23,10 +23,14 @@ jobs:
       - name: Install frontend dependencies
         working-directory: txning-frontend/vite-project
         run: npm ci
-
+      - name: Lint frontend
+        working-directory: txning-frontend/vite-project
+        run: npm run lint
       - name: Build frontend
         working-directory: txning-frontend/vite-project
         run: npm run build
+    
+
 
       # ---------- Backend ----------
       - name: Install backend dependencies
