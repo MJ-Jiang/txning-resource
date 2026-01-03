@@ -6,22 +6,27 @@ function IconImg({ src, alt, className }) {
   return <img className={className} src={src} alt={alt} />
 }
 
-export default function EndorsementDetailCard({ endorsement }) {
+export default function EndorsementDetailCard(props) {
+  // ✅ 兼容两种传参：detail / endorsement
+  const endorsement = props?.endorsement ?? props?.detail
   if (!endorsement) return null
 
   const { typeNameById, statusNameById, bookingPlatformNameById } = useDict()
 
-  // ✅ 最新结构：直接使用后端 detail.content
-  const { content, booking_platforms } = endorsement
+  // ✅ 兼容两种结构：
+  // 1) ContentDetailOut: { content, booking_platforms, ... }
+  // 2) 兜底：直接是 content 本体
+  const content = endorsement?.content ?? endorsement
+  const booking_platforms = endorsement?.booking_platforms ?? []
 
-  const posterUrl = content.cover_url
-  const title = content.title
-  const alt = title
-  const typeId = content.type_id
-  const year = content.release_year
-  const statusId = content.status_id
-  const role = content.role
-  const description = content.description
+  const posterUrl = content?.cover_url ?? null
+  const title = content?.title ?? ''
+  const alt = title || 'poster'
+  const typeId = content?.type_id ?? null
+  const year = content?.release_year ?? null
+  const statusId = content?.status_id ?? null
+  const role = content?.role ?? null
+  const description = content?.description ?? null
 
   const typeLabel =
     typeId != null ? (typeNameById?.[typeId] ?? String(typeId)) : ''
@@ -85,15 +90,15 @@ export default function EndorsementDetailCard({ endorsement }) {
                 <div className="kv-v">
                   <div className="platform-row">
                     {buyableTickets.map((t) => {
-                      const platform = t.platform
+                      const platform = t?.platform ?? {}
                       const label =
                         bookingPlatformNameById?.[platform.id] ??
                         platform.name_zh ??
-                        String(platform.id)
+                        (platform.id != null ? String(platform.id) : '平台')
 
                       return (
                         <a
-                          key={`${platform.id}-${t.url}`}
+                          key={`${platform.id ?? 'p'}-${t.url}`}
                           className="platform-link"
                           href={t.url}
                           target="_blank"

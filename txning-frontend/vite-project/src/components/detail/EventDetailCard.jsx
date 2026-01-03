@@ -1,9 +1,6 @@
 // EventDetailCard.jsx
-import {
-  BOOKING_PLATFORM_LABEL,
-  BOOKING_PLATFORM_ICON,
-} from '../../dictionary/bookingPlatform'
-import { STATUS_FILTER_LABEL } from '../../dictionary/status'
+import { useMemo } from 'react'
+import { useDict } from '../../providers/useDict'
 
 function toArray(v) {
   if (v == null) return []
@@ -14,67 +11,71 @@ function joinText(v, sep = ' / ') {
   return toArray(v).filter(Boolean).join(sep)
 }
 
-function getBookingLinks(d) {
-  // ✅ 只认 bookingPlatform: [{ code, url }]
-  if (!Array.isArray(d?.bookingPlatform)) return []
-  return d.bookingPlatform
-    .map((t) => ({
-      code: t?.code ?? '',
-      url: t?.url ?? null, // 保留 null
-    }))
-    .filter((t) => t.code) // ✅ 只要求 code，url 允许为空（用于展示“有平台但未放链接”）
-}
-
 function formatEventDateTime({ eventDate, timeText }) {
-  const d = typeof eventDate === 'string' ? eventDate : ''
-  const t = typeof timeText === 'string' ? timeText : ''
+  const d = eventDate ? String(eventDate) : ''
+  const t = timeText ? String(timeText) : ''
   return [d, t].filter(Boolean).join(' ')
 }
 
-export default function EventDetailCard({ event }) {
-  if (!event) return null
+export default function EventDetailCard(props) {
+  // ✅ 兼容：<EventDetailCard event={...}/> or <EventDetailCard detail={...}/>
+  const detail = props?.event ?? props?.detail ?? props
+  if (!detail) return null
 
   const {
-    posterUrl,
-    posterAlt,
-    title,
+    statusNameById,
+    typeNameById,
+    bookingPlatformNameById,
+    bookingPlatformByCode,
+  } = useDict()
 
-    cityCodes,
-    cityLabels,
-    location,
+  // ✅ 兼容后端：ContentDetailOut: { content, cities, booking_platforms }
+  const content = detail?.content ?? detail
+  const cities = detail?.cities ?? []
+  const booking_platforms = detail?.booking_platforms ?? []
 
-    eventDate,
-    timeText,
+  const posterUrl = content?.cover_url ?? null
+  const title = content?.title ?? ''
+  const altText = title || 'poster'
 
-    type,
-    typeLabel,
-
-    status,
-    statusLabel,
-
-    description,
-    stickerText,
-
-    // ✅ 保留 bookingPlatform 字段
-    bookingPlatform,
-  } = event
-
-  const bookingLinks = getBookingLinks({ bookingPlatform })
-  const showTickets = bookingLinks.length > 0
-
-  const cityText =
-    (Array.isArray(cityLabels) && cityLabels.filter(Boolean).join(' / ')) ||
-    (Array.isArray(cityCodes) && cityCodes.filter(Boolean).join(' / ')) ||
-    ''
-
+  const location = content?.location ?? ''
+  const eventDate = content?.event_date ?? ''
+  const timeText = content?.time_text ?? ''
   const dateTimeText = formatEventDateTime({ eventDate, timeText })
-  const altText = posterAlt || title
 
-  // ✅ 状态：优先 mapper 的 statusLabel，其次 domain/status 的 filter label，再其次英文
-  const finalStatusLabel =
-    statusLabel ||
-    STATUS_FILTER_LABEL?.[status] ||
-    (status ? String(status) : '')
+  const typeId = content?.type_id ?? null
+  const statusId = content?.status_id ?? null
+
+  const typeLabel =
+    typeId != null ? (typeNameById?.[typeId] ?? String(typeId)) : ''
+  const statusLabel =
+    statusId != null ? (statusNameById?.[statusId] ?? String(statusId)) : ''
+
+  const description = content?.description ?? ''
+
+  const cityText = useMemo(() => {
+    if (!Array.isArray(cities)) return ''
+    // cities: [{id, code?, name_zh?}]
+    const labels = cities
+      .map((c) => c?.name_zh ?? c?.code ?? c?.id)
+      .filter(Boolean)
+    return labels.join(' / ')
+  }, [cities])
+
+  // ✅ 购票平台：后端结构 booking_platforms: [{ platform:{id,code,name_zh}, url }]
+  const bookingLinks = useMemo(() => {
+    if (!Array.isArray(booking_platforms)) return []
+    return booking_platforms
+      .map((t) => {
+        const p = t?.platform ?? {}
+        const code = p.code ?? ''
+        const url = t?.url ?? null
+        return { code, url, platform: p }
+      })
+      .filter((x) => x.code) // 平台 code 必须有
+  }, [booking_platforms])
+
+  const showTickets = bookingLinks.length > 0
 
   return (
     <div className="detail-card">
@@ -86,8 +87,6 @@ export default function EventDetailCard({ event }) {
           ) : (
             <div className="detail-cover-placeholder" />
           )}
-
-          {stickerText && <div className="detail-sticker">{stickerText}</div>}
         </div>
 
         {/* 信息区 */}
@@ -116,42 +115,49 @@ export default function EventDetailCard({ event }) {
               </div>
             )}
 
-            {(typeLabel || type) && (
+            {typeLabel && (
               <div className="kv-row">
                 <div className="kv-k">类型</div>
-                <div className="kv-v">{typeLabel || joinText(type)}</div>
+                <div className="kv-v">{typeLabel}</div>
               </div>
             )}
 
-            {finalStatusLabel && (
+            {statusLabel && (
               <div className="kv-row">
                 <div className="kv-k">状态</div>
                 <div className="kv-v">
-                  <span className="status-badge">{finalStatusLabel}</span>
+                  <span className="status-badge">{statusLabel}</span>
                 </div>
               </div>
             )}
 
-            {/* ✅ 购票：平台可显示，但 url 为空则不可点击且不冒泡 */}
+            {/* ✅ 购票：有平台就显示；url 为空则不可点 */}
             {showTickets && (
               <div className="kv-row">
                 <div className="kv-k">购票</div>
                 <div className="kv-v">
                   <div className="platform-row">
                     {bookingLinks.map((t) => {
-                      const icon =
-                        BOOKING_PLATFORM_ICON?.[t.code] || '/icons/link.svg'
-                      const label = BOOKING_PLATFORM_LABEL?.[t.code] || t.code
+                      const p = t.platform ?? {}
+                      const code = t.code
+                      const url = t.url
 
-                      const isClickable = Boolean(t.url)
+                      const label =
+                        bookingPlatformByCode?.[code]?.name_zh ??
+                        bookingPlatformNameById?.[p.id] ??
+                        p.name_zh ??
+                        code
 
-                      const content = (
+                      const icon = '/icons/link.svg'
+                      const isClickable = Boolean(url)
+
+                      const iconNode = (
                         <img
                           className="platform-logo"
                           src={icon}
                           alt={label}
                           onClick={(e) => {
-                            // ✅ 防止父级 Link/卡片点击被触发
+                            // ✅ 无 url：阻止点击穿透
                             if (!isClickable) {
                               e.preventDefault()
                               e.stopPropagation()
@@ -160,30 +166,25 @@ export default function EventDetailCard({ event }) {
                         />
                       )
 
-                      // 有 url：正常外链
                       if (isClickable) {
                         return (
                           <a
-                            key={`${t.code}-${t.url}`}
+                            key={`${code}-${url}`}
                             className="platform-link"
-                            href={t.url}
+                            href={url}
                             target="_blank"
                             rel="noreferrer"
                             title={label}
-                            onClick={(e) => {
-                              // ✅ 也建议阻止冒泡，避免父级 Link 抢点击
-                              e.stopPropagation()
-                            }}
+                            onClick={(e) => e.stopPropagation()}
                           >
-                            {content}
+                            {iconNode}
                           </a>
                         )
                       }
 
-                      // 无 url：只展示，不跳转
                       return (
                         <span
-                          key={`${t.code}-no-url`}
+                          key={`${code}-no-url`}
                           className="platform-link is-disabled"
                           title={`${label}（暂无链接）`}
                           onClick={(e) => {
@@ -192,7 +193,7 @@ export default function EventDetailCard({ event }) {
                           }}
                           style={{ cursor: 'not-allowed', opacity: 0.6 }}
                         >
-                          {content}
+                          {iconNode}
                         </span>
                       )
                     })}
