@@ -1,15 +1,15 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { apiGet } from '@/services/api'
 
 const DictContext = createContext(null)
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export function DictProvider({ children }) {
   const [statusNameById, setStatusNameById] = useState({})
   const [typeNameById, setTypeNameById] = useState({})
   const [genreNameById, setGenreNameById] = useState({})
   const [platformNameById, setPlatformNameById] = useState({})
-  const [platformCodeById, setPlatformCodeById] = useState({}) // ✅ NEW
-  const [platformById, setPlatformById] = useState({}) // ✅ NEW
+  const [platformCodeById, setPlatformCodeById] = useState({})
+  const [platformById, setPlatformById] = useState({})
 
   const [typeCodeById, setTypeCodeById] = useState({})
   const [cityNameById, setCityNameById] = useState({})
@@ -20,115 +20,67 @@ export function DictProvider({ children }) {
   const [ugcPlatformByCode, setUgcPlatformByCode] = useState({})
 
   const [bookingPlatformNameById, setBookingPlatformNameById] = useState({})
-  const [bookingPlatformCodeById, setBookingPlatformCodeById] = useState({}) // ✅ NEW
-  const [bookingPlatformById, setBookingPlatformById] = useState({}) // ✅ NEW
+  const [bookingPlatformCodeById, setBookingPlatformCodeById] = useState({})
+  const [bookingPlatformById, setBookingPlatformById] = useState({})
   const [bookingPlatformByCode, setBookingPlatformByCode] = useState({})
 
   useEffect(() => {
     let alive = true
 
     async function loadDicts() {
-      const [
-        statusRes,
-        typeRes,
-        genreRes,
-        platformRes,
-        citiesRes,
-        categoriesRes,
-        ugcPlatformsRes,
-        bookingPlatformsRes,
-      ] = await Promise.all([
-        fetch(`${API_BASE_URL}/dict/statuses`),
-        fetch(`${API_BASE_URL}/dict/types`),
-        fetch(`${API_BASE_URL}/dict/genres`),
-        fetch(`${API_BASE_URL}/dict/platforms`),
-        fetch(`${API_BASE_URL}/dict/cities`),
-        fetch(`${API_BASE_URL}/dict/categories`),
-        fetch(`${API_BASE_URL}/dict/ugc-platforms`),
-        fetch(`${API_BASE_URL}/dict/booking-platforms`),
-      ])
-
-      const [
-        statuses,
-        types,
-        genres,
-        platforms,
-        cities,
-        categories,
-        ugcPlatforms,
-        bookingPlatforms,
-      ] = await Promise.all([
-        statusRes.json(),
-        typeRes.json(),
-        genreRes.json(),
-        platformRes.json(),
-        citiesRes.json(),
-        categoriesRes.json(),
-        ugcPlatformsRes.json(),
-        bookingPlatformsRes.json(),
-      ])
-
+      const data = await apiGet('/dict/all')
       if (!alive) return
 
+      const statuses = data?.statuses ?? []
+      const types = data?.types ?? []
+      const genres = data?.genres ?? []
+      const platforms = data?.platforms ?? []
+      const cities = data?.cities ?? []
+      const categories = data?.categories ?? []
+      const ugcPlatforms = data?.ugc_platforms ?? data?.ugcPlatforms ?? []
+      const bookingPlatforms =
+        data?.booking_platforms ?? data?.bookingPlatforms ?? []
+
       setStatusNameById(
-        Object.fromEntries((statuses ?? []).map((s) => [s.id, s.name_zh]))
+        Object.fromEntries(statuses.map((s) => [s.id, s.name_zh]))
       )
 
-      setTypeNameById(
-        Object.fromEntries((types ?? []).map((t) => [t.id, t.name_zh]))
-      )
-      setTypeCodeById(
-        Object.fromEntries((types ?? []).map((t) => [t.id, t.code]))
-      )
+      setTypeNameById(Object.fromEntries(types.map((t) => [t.id, t.name_zh])))
+      setTypeCodeById(Object.fromEntries(types.map((t) => [t.id, t.code])))
 
-      setGenreNameById(
-        Object.fromEntries((genres ?? []).map((g) => [g.id, g.name_zh]))
-      )
+      setGenreNameById(Object.fromEntries(genres.map((g) => [g.id, g.name_zh])))
 
-      // ✅ platforms
       setPlatformNameById(
-        Object.fromEntries((platforms ?? []).map((p) => [p.id, p.name_zh]))
+        Object.fromEntries(platforms.map((p) => [p.id, p.name_zh]))
       )
       setPlatformCodeById(
-        Object.fromEntries((platforms ?? []).map((p) => [p.id, p.code]))
+        Object.fromEntries(platforms.map((p) => [p.id, p.code]))
       )
-      setPlatformById(
-        Object.fromEntries((platforms ?? []).map((p) => [p.id, p]))
-      )
+      setPlatformById(Object.fromEntries(platforms.map((p) => [p.id, p])))
 
-      setCityNameById(
-        Object.fromEntries((cities ?? []).map((c) => [c.id, c.name_zh]))
-      )
+      setCityNameById(Object.fromEntries(cities.map((c) => [c.id, c.name_zh])))
 
-      setCategoryById(
-        Object.fromEntries((categories ?? []).map((c) => [c.id, c]))
-      )
-      setCategoryByCode(
-        Object.fromEntries((categories ?? []).map((c) => [c.code, c]))
-      )
+      setCategoryById(Object.fromEntries(categories.map((c) => [c.id, c])))
+      setCategoryByCode(Object.fromEntries(categories.map((c) => [c.code, c])))
 
-      // ✅ ugc platforms
       setUgcPlatformNameById(
-        Object.fromEntries((ugcPlatforms ?? []).map((p) => [p.id, p.name_zh]))
+        Object.fromEntries(ugcPlatforms.map((p) => [p.id, p.name_zh]))
       )
       setUgcPlatformByCode(
-        Object.fromEntries((ugcPlatforms ?? []).map((p) => [p.code, p]))
+        Object.fromEntries(ugcPlatforms.map((p) => [p.code, p]))
       )
 
-      // ✅ booking platforms
       setBookingPlatformNameById(
-        Object.fromEntries(
-          (bookingPlatforms ?? []).map((p) => [p.id, p.name_zh])
-        )
+        Object.fromEntries(bookingPlatforms.map((p) => [p.id, p.name_zh]))
       )
       setBookingPlatformCodeById(
-        Object.fromEntries((bookingPlatforms ?? []).map((p) => [p.id, p.code]))
+        Object.fromEntries(bookingPlatforms.map((p) => [p.id, p.code]))
       )
       setBookingPlatformById(
-        Object.fromEntries((bookingPlatforms ?? []).map((p) => [p.id, p]))
+        Object.fromEntries(bookingPlatforms.map((p) => [p.id, p]))
       )
       setBookingPlatformByCode(
-        Object.fromEntries((bookingPlatforms ?? []).map((p) => [p.code, p]))
+        Object.fromEntries(bookingPlatforms.map((p) => [p.code, p]))
       )
     }
 

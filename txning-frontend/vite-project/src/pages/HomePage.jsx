@@ -8,6 +8,7 @@ import DramaScroller from '../components/lists/DramaScroller.jsx'
 import EventsTimeline from '../components/lists/EventsTimeline.jsx'
 import GalleryGrid from '../components/lists/GalleryGrid.jsx'
 
+import { apiGet } from '@/services/api'
 function onlyFeatured(arr) {
   return (Array.isArray(arr) ? arr : []).filter((x) => x?.is_featured === true)
 }
@@ -19,15 +20,14 @@ export default function HomePage() {
   const [eventItems, setEventItems] = useState([])
   const [galleryItems, setGalleryItems] = useState([])
   const [categoryNameByKey, setCategoryNameByKey] = useState({})
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     let alive = true
 
     ;(async () => {
       const [homeRes, dictRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/home`),
-        fetch(`${API_BASE_URL}/dict/categories`),
+        apiGet('/home'),
+        apiGet('/dict/categories'),
       ])
 
       const homeData = await homeRes.json()

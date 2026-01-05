@@ -9,7 +9,7 @@ import ResourceListContainer from '../components/channels/ResourceListContainer'
 import GeneralCard from '../components/cards/GeneralCard'
 import useResponsivePageSize from '../hooks/useResponsivePageSize'
 import { useDict } from '../providers/useDict'
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { apiGet } from '@/services/api'
 
 export default function DetailPage() {
   const { category, id } = useParams()
@@ -30,7 +30,7 @@ export default function DetailPage() {
     setLoading(true)
     setNotFound(false)
     ;(async () => {
-      const res = await fetch(`${API_BASE_URL}/contents/${id}`)
+      const res = await apiGet(`/contents/${id}`)
       if (!alive) return
 
       if (!res.ok) {
@@ -63,7 +63,7 @@ export default function DetailPage() {
     let alive = true
 
     ;(async () => {
-      const res = await fetch(`${API_BASE_URL}/contents/${id}/related`)
+      const res = await apiGet(`/contents/${id}/related`)
       if (!alive || !res.ok) return
 
       const data = await res.json()

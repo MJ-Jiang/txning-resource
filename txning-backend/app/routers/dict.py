@@ -52,3 +52,16 @@ def list_booking_platforms(db: Session = Depends(get_db)):
 def list_ugc_platforms(db: Session = Depends(get_db)):
     rows = db.query(UGCPlatform).order_by(UGCPlatform.id.asc()).all()
     return [{"id": r.id, "code": r.code, "name_zh": r.name_zh} for r in rows]
+
+@router.get("/all")
+def get_all_dict(db=Depends(get_db)):
+    return {
+        "statuses": list_statuses(db),
+        "types": list_types(db),
+        "genres": list_genres(db),
+        "platforms": list_platforms(db),
+        "cities": list_cities(db),
+        "categories": list_categories(db),
+        "ugc_platforms": list_ugc_platforms(db),
+        "booking_platforms": list_booking_platforms(db),
+    }

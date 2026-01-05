@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
 import { useDict } from '../providers/useDict'
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { apiGet } from '@/services/api'
 function normalizeList(data) {
   if (Array.isArray(data)) return data
   if (Array.isArray(data?.items)) return data.items
@@ -22,10 +22,7 @@ export default function AboutMePage() {
   useEffect(() => {
     let alive = true
 
-    fetch(`${API_BASE_URL}/contents?category=${categoryId}`, {
-  headers: { Accept: 'application/json' },
-})
-
+    apiGet(`/contents?category=${categoryId}`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return res.json()
