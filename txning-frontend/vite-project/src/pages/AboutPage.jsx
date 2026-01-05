@@ -18,15 +18,10 @@ export default function AboutMePage() {
   const [loaded, setLoaded] = useState(false)
 
   const categoryId = categoryByCode?.aboutme?.id ?? 7
-
   useEffect(() => {
     let alive = true
 
     apiGet(`/contents?category=${categoryId}`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.json()
-      })
       .then((data) => {
         if (!alive) return
         setItems(normalizeList(data))

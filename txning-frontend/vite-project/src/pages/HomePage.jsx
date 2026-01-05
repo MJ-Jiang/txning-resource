@@ -25,13 +25,10 @@ export default function HomePage() {
     let alive = true
 
     ;(async () => {
-      const [homeRes, dictRes] = await Promise.all([
+      const [homeData, categories] = await Promise.all([
         apiGet('/home'),
         apiGet('/dict/categories'),
       ])
-
-      const homeData = await homeRes.json()
-      const categories = await dictRes.json()
 
       if (!alive) return
 

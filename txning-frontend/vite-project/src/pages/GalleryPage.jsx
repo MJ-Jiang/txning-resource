@@ -47,7 +47,6 @@ export default function GalleryPage() {
     )
 
     apiGet(`/contents/related-from-map?${params.toString()}`)
-      .then((r) => (r.ok ? r.json() : {}))
       .then((data) => {
         if (!alive) return
         setRelatedFromMap(data ?? {})

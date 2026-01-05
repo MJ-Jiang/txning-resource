@@ -30,25 +30,18 @@ export default function DetailPage() {
     setLoading(true)
     setNotFound(false)
     ;(async () => {
-      const res = await apiGet(`/contents/${id}`)
-      if (!alive) return
+      try {
+        const data = await apiGet(`/contents/${id}`)
+        if (!alive) return
 
-      if (!res.ok) {
+        setDetail(data)
+        setLoading(false)
+      } catch {
+        if (!alive) return
         setNotFound(true)
         setLoading(false)
-        return
       }
-
-      const data = await res.json()
-      if (!alive) return
-
-      setDetail(data)
-      setLoading(false)
-    })().catch(() => {
-      if (!alive) return
-      setNotFound(true)
-      setLoading(false)
-    })
+    })()
 
     return () => {
       alive = false
@@ -57,19 +50,21 @@ export default function DetailPage() {
 
   // ===============================
   // 2️⃣ 相关内容（关键修复点）
-  // 👉 直接用后端的 /related
+  //直接用后端的 /related
   // ===============================
   useEffect(() => {
     let alive = true
 
     ;(async () => {
-      const res = await apiGet(`/contents/${id}/related`)
-      if (!alive || !res.ok) return
+      try {
+        const data = await apiGet(`/contents/${id}/related`)
+        if (!alive) return
 
-      const data = await res.json()
-      if (!alive) return
-
-      setRelated(Array.isArray(data.items) ? data.items : [])
+        setRelated(Array.isArray(data.items) ? data.items : [])
+      } catch {
+        if (!alive) return
+        setRelated([])
+      }
     })()
 
     return () => {

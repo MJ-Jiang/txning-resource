@@ -73,9 +73,7 @@ export default function ResourceListContainer({
       params.set('limit', '100')
       params.set('offset', '0')
 
-      const res = await apiGet(`/contents?${params.toString()}`)
-
-      const data = await res.json()
+      const data = await apiGet(`/contents?${params.toString()}`)
 
       if (!alive) return
 
