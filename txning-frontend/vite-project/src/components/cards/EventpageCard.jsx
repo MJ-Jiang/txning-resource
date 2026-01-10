@@ -15,13 +15,11 @@ function StatusTag({ statusId, label }) {
 }
 
 export default function EventpageCard({ item }) {
-  const { statusNameById, cityNameById, categoryById } = useDict()
+  const { statusNameById, categoryById } = useDict()
 
   // ✅ category：后端 category_id → dict → code
   const categoryCode = categoryById?.[item.category_id]?.code
-  if (!categoryCode) {
-    return null
-  }
+  if (!categoryCode) return null
 
   const href = `/detail/${categoryCode}/${item.id}`
 
@@ -34,16 +32,12 @@ export default function EventpageCard({ item }) {
   const statusId = item.status_id
   const statusLabel = statusNameById?.[statusId] || ''
 
-  // ✅ 城市：city_ids → dict name_zh
-  const cityText = Array.isArray(item.city_ids)
-    ? item.city_ids
-        .map((id) => cityNameById?.[id])
-        .filter(Boolean)
-        .join(' / ')
-    : ''
-
   const altText = item.title
   const posterUrl = item.cover_url
+
+  // ✅ 只显示：地点 & 时间
+  const locationText = item.location ? item.location : '暂无地点'
+  const timeText = item.time_text ? item.time_text : '暂无时间'
 
   return (
     <Link to={href} className="card-link">
@@ -68,20 +62,11 @@ export default function EventpageCard({ item }) {
         <div className="evt-page-info">
           <h3 className="evt-page-title">{item.title}</h3>
 
+          {/* ✅ 底部仅地点 + 时间，缺省显示“暂无地点 / 暂无时间” */}
           <p className="evt-page-location">
-            {cityText}
-            {item.location && (
-              <>
-                <span> · </span>
-                <span>{item.location || '暂无时间'}</span>
-              </>
-            )}
-            {(item.time_text || item.event_date) && (
-              <>
-                <span> | </span>
-                <span>{item.time_text ?? '暂无时间'}</span>
-              </>
-            )}
+            <span>{locationText}</span>
+            <span> | </span>
+            <span>{timeText}</span>
           </p>
         </div>
       </div>

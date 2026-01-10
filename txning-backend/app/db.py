@@ -1,4 +1,4 @@
-# 数据库基础设施层 
+# 数据库基础设施层  创建 engine / Session / get_db
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base
