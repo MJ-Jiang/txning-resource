@@ -48,6 +48,7 @@ jobs:
       - name: Run backend tests
         working-directory: txning-backend
         env:
+          PYTHONPATH: ${{ github.workspace }}/txning-backend
           DATABASE_URL: "sqlite+pysqlite:///./_ci.db"
           RATE_LIMIT_MAX: "999999"
           CORS_ORIGINS: ""
