@@ -64,7 +64,7 @@ def test_cors_origins_parsing(monkeypatch, cors_env, expected):
 
     assert cors_mw is not None
 
-    # 兼容不同版本：有的叫 options，有的叫 kwargs
+    # 兼容不同版本
     opts = getattr(cors_mw, "options", None) or getattr(cors_mw, "kwargs", None) or {}
     assert opts.get("allow_origins") == expected
 
