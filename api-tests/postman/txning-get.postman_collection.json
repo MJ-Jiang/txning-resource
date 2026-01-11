@@ -1,0 +1,564 @@
+{
+  "info": {
+    "_postman_id": "b7b20d3a-9b1a-4f76-9c2f-4d6f0c1d8c2a",
+    "name": "TXNING Resource – GET APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Contract-driven blackbox checks for TXNING Resource public read-only API."
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.upsert({ key: 'Accept', value: 'application/json' });"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "health" ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "const body = pm.response.json();",
+                  "pm.test('Body has ok=true', function () {",
+                  "  pm.expect(body).to.be.an('object');",
+                  "  pm.expect(body).to.have.property('ok', true);",
+                  "});",
+                  "pm.test('Response time < 2000ms', function () { pm.expect(pm.response.responseTime).to.be.below(2000); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Home",
+      "item": [
+        {
+          "name": "GET /home",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/home",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "home" ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response is JSON', () => pm.response.to.be.json);",
+                  "const b = pm.response.json();",
+                  "pm.test('Top-level keys exist (contract)', function () {",
+                  "  pm.expect(b).to.be.an('object');",
+                  "  ['banners','featured_drama','featured_endorsement','featured_event','featured_media','about'].forEach(k => {",
+                  "    pm.expect(b).to.have.property(k);",
+                  "    pm.expect(b[k]).to.be.an('array');",
+                  "  });",
+                  "});",
+                  "function assertCardShape(card) {",
+                  "  pm.expect(card).to.be.an('object');",
+                  "  pm.expect(card).to.have.property('id');",
+                  "  pm.expect(card).to.have.property('title');",
+                  "  pm.expect(card).to.have.property('cover_url');",
+                  "  pm.expect(card).to.have.property('link_type');",
+                  "  pm.expect(['detail','external']).to.include(card.link_type);",
+                  "  // link_url can be null or string",
+                  "  pm.expect(card).to.have.property('link_url');",
+                  "}",
+                  "pm.test('Each section items look like ContentCardOut (weak check)', function () {",
+                  "  Object.keys(b).forEach(sec => {",
+                  "    b[sec].forEach(assertCardShape);",
+                  "  });",
+                  "});",
+                  "pm.test('Response time < 3000ms', function () { pm.expect(pm.response.responseTime).to.be.below(3000); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dict",
+      "item": [
+        {
+          "name": "GET /dict/categories",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/dict/categories", "host": ["{{baseUrl}}"], "path": ["dict", "categories"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Response is JSON array', () => { pm.response.to.be.json; pm.expect(pm.response.json()).to.be.an('array'); });",
+              "const arr = pm.response.json();",
+              "pm.test('Dict item has {id, code, name_zh}', function () {",
+              "  arr.forEach(it => {",
+              "    pm.expect(it).to.be.an('object');",
+              "    pm.expect(it).to.have.property('id');",
+              "    pm.expect(it).to.have.property('code');",
+              "    pm.expect(it).to.have.property('name_zh');",
+              "  });",
+              "});"
+            ] } }
+          ]
+        },
+        {
+          "name": "GET /dict/statuses",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/dict/statuses", "host": ["{{baseUrl}}"], "path": ["dict", "statuses"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Response is JSON array', () => { pm.response.to.be.json; pm.expect(pm.response.json()).to.be.an('array'); });"
+            ] } }
+          ]
+        },
+        {
+          "name": "GET /dict/types",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/dict/types", "host": ["{{baseUrl}}"], "path": ["dict", "types"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Response is JSON array', () => { pm.response.to.be.json; pm.expect(pm.response.json()).to.be.an('array'); });"
+            ] } }
+          ]
+        },
+        {
+          "name": "GET /dict/genres",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/dict/genres", "host": ["{{baseUrl}}"], "path": ["dict", "genres"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Response is JSON array', () => { pm.response.to.be.json; pm.expect(pm.response.json()).to.be.an('array'); });"
+            ] } }
+          ]
+        },
+        {
+          "name": "GET /dict/cities",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/dict/cities", "host": ["{{baseUrl}}"], "path": ["dict", "cities"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Response is JSON array', () => { pm.response.to.be.json; pm.expect(pm.response.json()).to.be.an('array'); });"
+            ] } }
+          ]
+        },
+        {
+          "name": "GET /dict/platforms",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/dict/platforms", "host": ["{{baseUrl}}"], "path": ["dict", "platforms"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Response is JSON array', () => { pm.response.to.be.json; pm.expect(pm.response.json()).to.be.an('array'); });"
+            ] } }
+          ]
+        },
+        {
+          "name": "GET /dict/booking-platforms",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/dict/booking-platforms", "host": ["{{baseUrl}}"], "path": ["dict", "booking-platforms"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Response is JSON array', () => { pm.response.to.be.json; pm.expect(pm.response.json()).to.be.an('array'); });"
+            ] } }
+          ]
+        },
+        {
+          "name": "GET /dict/ugc-platforms",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/dict/ugc-platforms", "host": ["{{baseUrl}}"], "path": ["dict", "ugc-platforms"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Response is JSON array', () => { pm.response.to.be.json; pm.expect(pm.response.json()).to.be.an('array'); });"
+            ] } }
+          ]
+        },
+        {
+          "name": "GET /dict/all",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/dict/all", "host": ["{{baseUrl}}"], "path": ["dict", "all"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Response is JSON object', () => { pm.response.to.be.json; pm.expect(pm.response.json()).to.be.an('object'); });",
+              "const b = pm.response.json();",
+              "pm.test('Has all dict keys (contract)', function () {",
+              "  ['statuses','types','genres','platforms','cities','categories','ugc_platforms','booking_platforms'].forEach(k => {",
+              "    pm.expect(b).to.have.property(k);",
+              "    pm.expect(b[k]).to.be.an('array');",
+              "  });",
+              "});"
+            ] } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Channels",
+      "item": [
+        {
+          "name": "GET /channels/{category_id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/channels/{{category_id}}?title={{title}}&release_year={{release_year}}&status_id={{status_id}}&type_id={{type_id}}&limit={{limit}}&offset={{offset}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["channels", "{{category_id}}"],
+              "query": [
+                { "key": "title", "value": "{{title}}" },
+                { "key": "release_year", "value": "{{release_year}}" },
+                { "key": "status_id", "value": "{{status_id}}" },
+                { "key": "type_id", "value": "{{type_id}}" },
+                { "key": "limit", "value": "{{limit}}" },
+                { "key": "offset", "value": "{{offset}}" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response is JSON', () => pm.response.to.be.json);",
+                  "const b = pm.response.json();",
+                  "pm.test('Pagination fields exist', function () {",
+                  "  pm.expect(b).to.be.an('object');",
+                  "  ['total','limit','offset','items'].forEach(k => pm.expect(b).to.have.property(k));",
+                  "  pm.expect(b.items).to.be.an('array');",
+                  "});",
+                  "pm.test('Each item has core ContentCardOut keys (weak)', function () {",
+                  "  b.items.forEach(it => {",
+                  "    pm.expect(it).to.have.property('id');",
+                  "    pm.expect(it).to.have.property('title');",
+                  "    pm.expect(it).to.have.property('cover_url');",
+                  "    pm.expect(it).to.have.property('link_type');",
+                  "  });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Contents",
+      "item": [
+        {
+          "name": "GET /contents (requires category repeatable)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/contents?category=4&category=5&limit={{limit}}&offset={{offset}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["contents"],
+              "query": [
+                { "key": "category", "value": "4" },
+                { "key": "category", "value": "5" },
+                { "key": "limit", "value": "{{limit}}" },
+                { "key": "offset", "value": "{{offset}}" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response is JSON', () => pm.response.to.be.json);",
+                  "const b = pm.response.json();",
+                  "pm.test('Pagination fields exist', function () {",
+                  "  ['total','limit','offset','items'].forEach(k => pm.expect(b).to.have.property(k));",
+                  "  pm.expect(b.items).to.be.an('array');",
+                  "});",
+                  "pm.test('Each item has core ContentCardOut keys (weak)', function () {",
+                  "  b.items.forEach(it => {",
+                  "    pm.expect(it).to.have.property('id');",
+                  "    pm.expect(it).to.have.property('title');",
+                  "    pm.expect(it).to.have.property('cover_url');",
+                  "    pm.expect(it).to.have.property('link_type');",
+                  "  });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /contents/{content_id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/contents/{{content_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["contents", "{{content_id}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response is JSON', () => pm.response.to.be.json);",
+                  "const b = pm.response.json();",
+                  "pm.test('Top-level keys exist: content, rating, genres, cities, platforms, booking_platforms', function () {",
+                  "  ['content','rating','genres','cities','platforms','booking_platforms'].forEach(k => pm.expect(b).to.have.property(k));",
+                  "  pm.expect(b.genres).to.be.an('array');",
+                  "  pm.expect(b.cities).to.be.an('array');",
+                  "  pm.expect(b.platforms).to.be.an('array');",
+                  "  pm.expect(b.booking_platforms).to.be.an('array');",
+                  "});",
+                  "pm.test('Content has required core fields', function () {",
+                  "  pm.expect(b.content).to.be.an('object');",
+                  "  ['id','category_id','title','cover_url'].forEach(k => pm.expect(b.content).to.have.property(k));",
+                  "});",
+                  "pm.test('Rating shape is valid (weak)', function () {",
+                  "  pm.expect(b.rating).to.be.an('object');",
+                  "  pm.expect(b.rating).to.have.property('source');",
+                  "  pm.expect(b.rating).to.have.property('value');",
+                  "  pm.expect(b.rating).to.have.property('url');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /contents/{content_id}/related",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/contents/{{content_id}}/related?title={{title}}&release_year={{release_year}}&type_id={{type_id}}&limit=20&offset={{offset}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["contents", "{{content_id}}", "related"],
+              "query": [
+                { "key": "title", "value": "{{title}}" },
+                { "key": "release_year", "value": "{{release_year}}" },
+                { "key": "type_id", "value": "{{type_id}}" },
+                { "key": "limit", "value": "20" },
+                { "key": "offset", "value": "{{offset}}" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response is JSON', () => pm.response.to.be.json);",
+                  "const b = pm.response.json();",
+                  "pm.test('Pagination fields exist', function () {",
+                  "  ['total','limit','offset','items'].forEach(k => pm.expect(b).to.have.property(k));",
+                  "  pm.expect(b.items).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /contents/related-from-map",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/contents/related-from-map?target_category={{target_category}}&source_category={{source_category}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["contents", "related-from-map"],
+              "query": [
+                { "key": "target_category", "value": "{{target_category}}" },
+                { "key": "source_category", "value": "{{source_category}}" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response is JSON object map', () => { pm.response.to.be.json; pm.expect(pm.response.json()).to.be.an('object'); });",
+                  "const b = pm.response.json();",
+                  "pm.test('Map values are arrays of ints (weak)', function () {",
+                  "  Object.keys(b).forEach(k => {",
+                  "    pm.expect(b[k]).to.be.an('array');",
+                  "  });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Negative (Contract Errors)",
+      "item": [
+        {
+          "name": "GET /contents (missing required category) -> 422",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/contents?limit={{limit}}&offset={{offset}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["contents"],
+              "query": [
+                { "key": "limit", "value": "{{limit}}" },
+                { "key": "offset", "value": "{{offset}}" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 422', () => pm.response.to.have.status(422));",
+                  "pm.test('Response is JSON', () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /channels/{category_id}?limit=abc -> 422",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/channels/{{category_id}}?limit=abc&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["channels", "{{category_id}}"],
+              "query": [
+                { "key": "limit", "value": "abc" },
+                { "key": "offset", "value": "0" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 422', () => pm.response.to.have.status(422));",
+                  "pm.test('Response is JSON', () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /contents/999999999 -> 404",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/contents/999999999",
+              "host": ["{{baseUrl}}"],
+              "path": ["contents", "999999999"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Response is JSON', () => pm.response.to.be.json);",
+                  "const b = pm.response.json();",
+                  "pm.test('Has detail message (weak)', function () {",
+                  "  pm.expect(b).to.be.an('object');",
+                  "  pm.expect(b).to.have.property('detail');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "protocolProfileBehavior": {
+    "disableBodyPruning": true
+  }
+}
