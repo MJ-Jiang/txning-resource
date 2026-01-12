@@ -13,43 +13,42 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
 
-      # ---------- Root (Cypress lives here) ----------
-    # ---------- Root + Frontend ----------
+      # ---------------- Node (shared for frontend + Cypress) ----------------
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-            node-version: 22
-            cache: npm
-            cache-dependency-path: txning-frontend/vite-project/package-lock.json
+          node-version: 22
+          cache: npm
+          cache-dependency-path: txning-frontend/vite-project/package-lock.json
 
-      # ---------- Frontend ----------
-
+      # ---------------- Frontend ----------------
       - name: Install frontend dependencies
         working-directory: txning-frontend/vite-project
         run: npm ci
+
       - name: Lint frontend
         working-directory: txning-frontend/vite-project
         run: npm run lint
+
       - name: Build frontend
         working-directory: txning-frontend/vite-project
         run: npm run build
-    
-  # ---------- Cypress E2E ----------
+
+      # ---------------- Cypress E2E ----------------
       - name: Cypress run (E2E)
         uses: cypress-io/github-action@v6
         with:
-          install: false
+          working-directory: txning-frontend/vite-project
+          install: true
           browser: chrome
-          # 启动前端开发服务器（Vite 默认 5173）
-          start: npm --prefix txning-frontend/vite-project run dev -- --host 127.0.0.1 --port 5173
+          start: npm run dev -- --host 127.0.0.1 --port 5173
           wait-on: http://127.0.0.1:5173
           wait-on-timeout: 120
         env:
-            CYPRESS_INTERNAL_NODE: "false"
+          CYPRESS_INTERNAL_NODE: "false"
 
-      # ---------- Backend ----------
+      # ---------------- Backend ----------------
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
