@@ -16,20 +16,15 @@ jobs:
         
 
       # ---------- Root (Cypress lives here) ----------
+    # ---------- Root + Frontend ----------
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22 
-          cache: npm
-          cache-dependency-path: txning-frontend/vite-project/package-lock.json
+            node-version: 22
+            cache: npm
+            cache-dependency-path: txning-frontend/vite-project/package-lock.json
 
-      - name: Install root dependencies (for Cypress)
-        run: npm ci
       # ---------- Frontend ----------
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
 
       - name: Install frontend dependencies
         working-directory: txning-frontend/vite-project
