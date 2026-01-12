@@ -51,6 +51,8 @@ jobs:
           start: npm --prefix txning-frontend/vite-project run dev -- --host 127.0.0.1 --port 5173
           wait-on: http://127.0.0.1:5173
           wait-on-timeout: 120
+        env:
+            CYPRESS_INTERNAL_NODE: "false"
 
       # ---------- Backend ----------
       - name: Setup Python
