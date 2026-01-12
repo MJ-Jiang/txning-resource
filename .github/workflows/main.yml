@@ -14,6 +14,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # ---------- Root (Cypress lives here) ----------
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install root dependencies (for Cypress)
+        run: npm ci
       # ---------- Frontend ----------
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,7 +38,16 @@ jobs:
         working-directory: txning-frontend/vite-project
         run: npm run build
     
-
+  # ---------- Cypress E2E ----------
+      - name: Cypress run (E2E)
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          browser: chrome
+          # 启动前端开发服务器（Vite 默认 5173）
+          start: npm --prefix txning-frontend/vite-project run dev -- --host 127.0.0.1 --port 5173
+          wait-on: http://127.0.0.1:5173
+          wait-on-timeout: 120
 
       # ---------- Backend ----------
       - name: Setup Python
