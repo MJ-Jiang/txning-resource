@@ -1,7 +1,9 @@
 describe("Smoke – site loads, navbar and footer work", () => {
-  beforeEach(() => {
-    cy.visit("/");
-  });
+beforeEach(() => {
+  cy.intercept("GET", "**/dict/all").as("dict");
+  cy.visit("/");
+  cy.wait("@dict");   // 👈 关键
+});
 
   it("homepage loads", () => {
     cy.url().should("include", "/");
