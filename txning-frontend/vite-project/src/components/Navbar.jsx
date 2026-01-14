@@ -8,23 +8,28 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { categoryByCode } = useDict()
 
-  // ✅ 完全由 provider 决定分类名称
+  // 🔒 确保 label 永远是字符串（CI dict 未就绪时也不炸）
+  const safe = (v, fallback) => (typeof v === 'string' && v ? v : fallback)
+
   const navItems = useMemo(
     () => [
       { to: '/', label: '主页', end: true },
       {
         to: '/drama',
-        label: categoryByCode?.drama?.name_zh,
+        label: safe(categoryByCode?.drama?.name_zh, '影视剧'),
       },
       {
         to: '/endorsement',
-        label: categoryByCode?.endorsement?.name_zh,
+        label: safe(categoryByCode?.endorsement?.name_zh, '商务'),
       },
       {
         to: '/event',
-        label: categoryByCode?.event?.name_zh,
+        label: safe(categoryByCode?.event?.name_zh, '活动'),
       },
-      { to: '/gallery', label: categoryByCode?.ugc?.name_zh },
+      {
+        to: '/gallery',
+        label: safe(categoryByCode?.ugc?.name_zh, '图频'),
+      },
       { to: '/aboutme', label: '关于我' },
     ],
     [categoryByCode]
@@ -43,10 +48,8 @@ export default function Navbar() {
       if (!e.matches) setOpen(false)
     }
 
-    // 初始状态
     if (!mq.matches) setOpen(false)
 
-    // 兼容 Safari / CI Chrome
     if (mq.addEventListener) {
       mq.addEventListener('change', handleChange)
       return () => mq.removeEventListener('change', handleChange)
