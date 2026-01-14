@@ -1,13 +1,21 @@
 describe("Smoke – site loads, navbar and footer work", () => {
-beforeEach(() => {
-  cy.intercept("GET", "**/dict/all").as("dict");
-  cy.visit("/");
-  cy.wait("@dict");   // 👈 关键
-});
+  beforeEach(() => {
+    // Dict 是 Navbar 渲染所必需的，必须等它返回
+    cy.intercept("GET", "**/dict/all").as("dict");
+
+    cy.visit("/");
+
+    // 等 DictProvider 完成
+    cy.wait("@dict");
+
+    // 等 Navbar 真正 mount
+    cy.get("nav.navbar", { timeout: 10000 }).should("exist");
+  });
 
   it("homepage loads", () => {
-    cy.url().should("include", "/");
-    cy.get("nav").should("be.visible");
+    cy.location("pathname").should("eq", "/");
+
+    cy.get("nav.navbar").should("be.visible");
     cy.get("footer.site-footer").should("be.visible");
   });
 
@@ -22,16 +30,27 @@ beforeEach(() => {
 
   navLinks.forEach(({ path, exact }) => {
     it(`nav → ${path} works`, () => {
-      cy.get(`nav a[href="${path}"]`).first().click();
+      // 点击对应 NavLink
+      cy.get(`nav.navbar a[href="${path}"]`, { timeout: 10000 })
+        .should("exist")
+        .first()
+        .click();
 
+      // 等 SPA 路由真的完成（CI 中这是异步的）
       if (exact) {
-        cy.location("pathname").should("eq", path);
+        cy.location("pathname", { timeout: 10000 }).should("eq", path);
       } else {
-        cy.location("pathname").should("include", path);
+        cy.location("pathname", { timeout: 10000 }).should("include", path);
       }
 
-      cy.get("nav").should("be.visible");
-      cy.get("footer.site-footer").should("be.visible");
+      // 等 React 重新 mount 完成
+      cy.get("nav.navbar", { timeout: 10000 })
+        .should("exist")
+        .and("be.visible");
+
+      cy.get("footer.site-footer", { timeout: 10000 })
+        .should("exist")
+        .and("be.visible");
     });
   });
 
@@ -56,7 +75,9 @@ beforeEach(() => {
     ];
 
     socials.forEach(({ label, url }) => {
-      cy.get(`footer a[aria-label="${label}"]`)
+      cy.get(`footer.site-footer a[aria-label="${label}"]`, {
+        timeout: 10000,
+      })
         .should("have.attr", "href", url)
         .and("have.attr", "target", "_blank");
     });
