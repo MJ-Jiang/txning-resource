@@ -14,6 +14,7 @@ export default function GeneralCard({ item }) {
   const { ugcPlatformNameById, categoryById } = useDict()
   const [confirmOpen, setConfirmOpen] = useState(false)
   if (!item) return null
+
   // ✅ 兼容 ContentCardOut / ContentDetailOut
   const content = item.content ?? item
 
@@ -26,7 +27,8 @@ export default function GeneralCard({ item }) {
   const alt = title || desc || ''
 
   // 外链
-  const externalUrl = item.link_url ?? ''
+  const externalUrl = content.link_url ?? item.link_url ?? ''
+
   const isExternal = isHttpUrl(externalUrl)
 
   // ✅ 内链：/detail/${categoryCode}/${id}
@@ -47,12 +49,6 @@ export default function GeneralCard({ item }) {
   // 左下：图片/视频（只在有 ugc_type 时显示）
   const ugcType = content.ugc_type
   const typeText = ugcType ? (UGC_TYPE_LABEL[ugcType] ?? String(ugcType)) : null
-
-  const onClickExternal = (e) => {
-    if (!isExternal) return
-    e.preventDefault()
-    setConfirmOpen(true)
-  }
 
   const onGoExternal = () => {
     if (!externalUrl) return
@@ -75,20 +71,27 @@ export default function GeneralCard({ item }) {
     </div>
   )
 
-  // 外链
+  // =====================================================
+  // 外链（✅ 修复：不再使用 <a target=_blank>）
+  // =====================================================
   if (isExternal) {
     return (
       <>
-        <a
+        <div
           className="card-link"
           data-role="external-card"
-          href={externalUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onClickExternal}
+          role="button"
+          tabIndex={0}
+          onClick={() => setConfirmOpen(true)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              setConfirmOpen(true)
+            }
+          }}
         >
           {CardInner}
-        </a>
+        </div>
 
         {confirmOpen && (
           <div
@@ -144,6 +147,9 @@ export default function GeneralCard({ item }) {
     )
   }
 
+  // =====================================================
+  // 内链（保持不变）
+  // =====================================================
   if (internalHref) {
     return (
       <a className="card-link" href={internalHref}>
