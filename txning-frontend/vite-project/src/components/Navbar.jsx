@@ -8,7 +8,6 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { categoryByCode } = useDict()
 
-  // 🔒 确保 label 永远是字符串（CI dict 未就绪时也不炸）
   const safe = (v, fallback) => (typeof v === 'string' && v ? v : fallback)
 
   const navItems = useMemo(
