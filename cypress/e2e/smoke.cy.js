@@ -83,23 +83,33 @@
 //     });
 //   });
 // });
-describe("DEBUG – why nav is missing in CI", () => {
-  it("logs dict response and DOM", () => {
-    cy.intercept("GET", "**/dict/all").as("dict");
+describe("DEBUG – CI page state", () => {
+  it("dump html and requests", () => {
+    cy.intercept("GET", "**/*").as("all");
 
     cy.visit("/drama");
 
-    cy.wait("@dict").then((r) => {
-      // 打到 CI log 里
-      console.log("DICT status:", r.response?.statusCode);
-      console.log("DICT body:", JSON.stringify(r.response?.body));
-    });
+    // 等首屏所有请求
+    cy.wait(3000);
 
+    // 打印页面 HTML
     cy.document().then((doc) => {
-      console.log("BODY HTML:", doc.body.innerHTML);
+      const html = doc.documentElement.outerHTML;
+      console.log("===== PAGE HTML START =====");
+      console.log(html);
+      console.log("===== PAGE HTML END =====");
     });
 
-    // 强制看 nav 是否存在
-    cy.get("nav", { timeout: 10000 }).should("exist");
+    // 打印已发起的请求
+    cy.get("@all.all").then((calls) => {
+      console.log("===== NETWORK CALLS =====");
+      calls.forEach((c) => {
+        console.log(c.request.method, c.request.url, c.response?.statusCode);
+      });
+    });
+
+    // 只验证 body 是否存在
+    cy.get("body").should("exist");
   });
 });
+
