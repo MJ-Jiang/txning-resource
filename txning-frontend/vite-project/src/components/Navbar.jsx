@@ -38,12 +38,22 @@ export default function Navbar() {
 
   useEffect(() => {
     const mq = window.matchMedia(`(max-width: ${MOBILE_BP}px)`)
+
     const handleChange = (e) => {
       if (!e.matches) setOpen(false)
     }
+
+    // 初始状态
     if (!mq.matches) setOpen(false)
-    mq.addEventListener('change', handleChange)
-    return () => mq.removeEventListener('change', handleChange)
+
+    // 兼容 Safari / CI Chrome
+    if (mq.addEventListener) {
+      mq.addEventListener('change', handleChange)
+      return () => mq.removeEventListener('change', handleChange)
+    } else if (mq.addListener) {
+      mq.addListener(handleChange)
+      return () => mq.removeListener(handleChange)
+    }
   }, [])
 
   return (
