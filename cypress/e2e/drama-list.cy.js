@@ -16,7 +16,10 @@ describe("Drama list page", () => {
     { id: 30, name_zh: "已完结" },
   ],
 });
-
+it("renders navbar and footer", () => {
+  cy.get("nav.navbar").should("exist").and("be.visible");
+  cy.get("footer.site-footer").should("exist").and("be.visible");
+});
 
     // ===== contents（包含：单平台 + 多平台）=====
     cy.intercept("GET", "**/contents*", {
@@ -188,7 +191,10 @@ it("reset clears search, filters and pagination", () => {
   cy.contains("腾讯独播剧").should("exist");
   cy.contains("爱奇艺独播剧").should("exist");
 });
-
+it("clicking a card navigates to detail page", () => {
+    cy.contains("爱奇艺独播剧").click();
+    cy.url().should("include", "/drama/");
+  });
 
 
 });
