@@ -14,7 +14,7 @@ export default function DramaScroller() {
 
     const params = new URLSearchParams()
     params.append('category', String(categoryId))
-    params.append('is_featured', 'true')  
+    params.append('is_featured', 'true')
     params.set('limit', '100')
     params.set('offset', '0')
 
