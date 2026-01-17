@@ -13,8 +13,14 @@ function formatEventDateTime({ eventDate, timeText }) {
   return [d, t].filter(Boolean).join(' ')
 }
 
+function normalizeUrl(url) {
+  if (!url) return null
+  const u = String(url).trim()
+  if (u.startsWith('http://') || u.startsWith('https://')) return u
+  return `https://${u}`
+}
+
 export default function EventDetailCard(props) {
-  // ✅ 兼容：<EventDetailCard event={...}/> or <EventDetailCard detail={...}/>
   const detail = props?.event ?? props?.detail ?? props
 
   const {
@@ -24,7 +30,6 @@ export default function EventDetailCard(props) {
     bookingPlatformByCode,
   } = useDict()
 
-  // ✅ 兼容后端：ContentDetailOut: { content, cities, booking_platforms }
   const content = detail?.content ?? detail
   const cities = detail?.cities ?? []
   const booking_platforms = detail?.booking_platforms ?? []
@@ -50,32 +55,30 @@ export default function EventDetailCard(props) {
 
   const cityText = useMemo(() => {
     if (!Array.isArray(cities)) return ''
-    // cities: [{id, code?, name_zh?}]
     const labels = cities
       .map((c) => c?.name_zh ?? c?.code ?? c?.id)
       .filter(Boolean)
     return labels.join(' / ')
   }, [cities])
 
-  // ✅ 购票平台：后端结构 booking_platforms: [{ platform:{id,code,name_zh}, url }]
   const bookingLinks = useMemo(() => {
     if (!Array.isArray(booking_platforms)) return []
     return booking_platforms
       .map((t) => {
         const p = t?.platform ?? {}
         const code = p.code ?? ''
-        const url = t?.url ?? null
+        const url = normalizeUrl(t?.url)
         return { code, url, platform: p }
       })
-      .filter((x) => x.code) // 平台 code 必须有
+      .filter((x) => x.code)
   }, [booking_platforms])
+
   if (!detail) return null
   const showTickets = bookingLinks.length > 0
 
   return (
     <div className="detail-card">
       <div className="detail-grid">
-        {/* 封面 */}
         <div className="detail-cover">
           {posterUrl ? (
             <img className="detail-cover-img" src={posterUrl} alt={altText} />
@@ -84,7 +87,6 @@ export default function EventDetailCard(props) {
           )}
         </div>
 
-        {/* 信息区 */}
         <div className="detail-info">
           <h1 className="detail-title">{title}</h1>
 
@@ -126,7 +128,6 @@ export default function EventDetailCard(props) {
               </div>
             )}
 
-            {/* ✅ 购票：有平台就显示；url 为空则不可点 */}
             {showTickets && (
               <div className="kv-row">
                 <div className="kv-k">购票</div>
@@ -143,7 +144,7 @@ export default function EventDetailCard(props) {
                         p.name_zh ??
                         code
 
-                      const icon = '/icons/link.svg'
+                      const icon = `/icons/${p.code}.svg`
                       const isClickable = Boolean(url)
 
                       const iconNode = (
@@ -151,13 +152,6 @@ export default function EventDetailCard(props) {
                           className="platform-logo"
                           src={icon}
                           alt={label}
-                          onClick={(e) => {
-                            // ✅ 无 url：阻止点击穿透
-                            if (!isClickable) {
-                              e.preventDefault()
-                              e.stopPropagation()
-                            }
-                          }}
                         />
                       )
 
@@ -170,7 +164,6 @@ export default function EventDetailCard(props) {
                             target="_blank"
                             rel="noreferrer"
                             title={label}
-                            onClick={(e) => e.stopPropagation()}
                           >
                             {iconNode}
                           </a>
@@ -182,10 +175,6 @@ export default function EventDetailCard(props) {
                           key={`${code}-no-url`}
                           className="platform-link is-disabled"
                           title={`${label}（暂无链接）`}
-                          onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                          }}
                           style={{ cursor: 'not-allowed', opacity: 0.6 }}
                         >
                           {iconNode}
@@ -200,7 +189,6 @@ export default function EventDetailCard(props) {
         </div>
       </div>
 
-      {/* 简介 */}
       {description && (
         <div className="detail-desc">
           <div className="detail-desc-hd">简介</div>

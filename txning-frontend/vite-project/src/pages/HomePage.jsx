@@ -70,7 +70,7 @@ export default function HomePage() {
 
         <HomeSection
           title={categoryNameByKey?.endorsement}
-          subtitle="MAGAZINE"
+          subtitle="ENDORSEMENT"
           to="/endorsement"
         >
           <EndorsementGrid items={endorsementItems} />

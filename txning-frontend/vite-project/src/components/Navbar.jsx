@@ -62,7 +62,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="logo">
         <i className="fa-solid fa-bolt" style={{ color: 'var(--dark)' }} />
-        田栩宁资源站
+        宁羽羽资源站
       </div>
 
       <button

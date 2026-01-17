@@ -92,6 +92,7 @@ class ContentDetailContent(BaseModel):
     related_ids: List[int] = Field(default_factory=list)
 
     ugc_type: Optional[str] = None
+    link_url: Optional[str] = None
 
 
 class ContentDetailOut(BaseModel):

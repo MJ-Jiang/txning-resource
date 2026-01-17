@@ -16,6 +16,7 @@ from app.schemas import (
     RatingInfo,
 )
 from app.services.content_card import bulk_card_fields, content_to_card
+from app.tests.conftest import db
 from models import (
     BookingPlatform,
     City,
@@ -115,6 +116,8 @@ def get_related_from_map(
     return out
 
 
+from app.services.content_card import _normalize_url, _has_any_url
+
 @router.get("/{content_id}", response_model=ContentDetailOut)
 def get_content_detail(content_id: int, db: Session = Depends(get_db)):
     r = db.query(Content).filter(Content.id == content_id).first()
@@ -123,7 +126,11 @@ def get_content_detail(content_id: int, db: Session = Depends(get_db)):
 
     rating_value = float(r.rating_value) if r.rating_value is not None else None
 
-    # related_ids（从 relation 表取 target ids）
+    # ===== 关键新增：生成 link_url（与 card 逻辑一致）=====
+    raw_ugc_url = r.ugc_url
+    link_url = _normalize_url(raw_ugc_url) if _has_any_url(raw_ugc_url) else None
+
+    # related_ids
     rel_rows = (
         db.query(ContentRelation.target_content_id)
         .filter(ContentRelation.source_content_id == content_id)
@@ -155,22 +162,26 @@ def get_content_detail(content_id: int, db: Session = Depends(get_db)):
     )
     cities = [{"id": c.id, "name_zh": c.name_zh} for c in city_rows]
 
-    # --- platforms ---
+    # --- platforms（最小修改版，已带 url） ---
     platform_rows = (
         db.execute(
-            select(Platform)
-            .join(ContentPlatform, ContentPlatform.platform_id == Platform.id)
+            select(ContentPlatform, Platform)
+            .join(Platform, ContentPlatform.platform_id == Platform.id)
             .where(ContentPlatform.content_id == content_id)
         )
-        .scalars()
         .all()
     )
+
     platforms = [
         PlatformLink(
-            platform={"id": p.id, "code": p.code, "name_zh": p.name_zh},
-            url=None,
+            platform={
+                "id": p.id,
+                "code": p.code,
+                "name_zh": p.name_zh,
+            },
+            url=cp.url,
         )
-        for p in platform_rows
+        for (cp, p) in platform_rows
     ]
 
     # --- booking_platforms ---
@@ -213,6 +224,8 @@ def get_content_detail(content_id: int, db: Session = Depends(get_db)):
             created_at=r.created_at,
             ugc_type=r.ugc_type,
             related_ids=related_ids,
+            # ===== 关键新增：把 link_url 返回给前端 =====
+            link_url=link_url,
         ),
         rating=RatingInfo(source="douban", value=rating_value, url=r.rating_url),
         genres=genres,
@@ -220,6 +233,7 @@ def get_content_detail(content_id: int, db: Session = Depends(get_db)):
         booking_platforms=booking_platforms,
         cities=cities,
     )
+
 
 
 @router.get("/{content_id}/related", response_model=ContentCardPageOut)

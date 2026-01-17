@@ -690,6 +690,7 @@ img {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
+  border:solid;
 }
 /* 仅在支持 hover 的设备上生效（桌面端） */
 @media (hover: hover) {
