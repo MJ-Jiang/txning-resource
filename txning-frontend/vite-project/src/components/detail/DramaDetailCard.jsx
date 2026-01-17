@@ -25,7 +25,6 @@ function IconImg({ src, alt, className }) {
 
 export default function DramaDetailCard({ detail }) {
   const { genreNameById, platformNameById, bookingPlatformNameById } = useDict()
-  if (!detail) return null
 
   const { content, rating, genres, platforms, booking_platforms } = detail
 
@@ -47,7 +46,6 @@ export default function DramaDetailCard({ detail }) {
       .join(' / ')
   }, [genres, genreNameById])
 
-  // ✅ 播放平台：只保留「有 url」的
   const playPlatforms = useMemo(() => {
     const ps = Array.isArray(platforms) ? platforms : []
     return ps
@@ -65,7 +63,6 @@ export default function DramaDetailCard({ detail }) {
       .filter(Boolean)
   }, [platforms])
 
-  // ✅ 购买平台（保持原逻辑）
   const buyPlatforms = useMemo(() => {
     const bs = Array.isArray(booking_platforms) ? booking_platforms : []
     return bs
@@ -80,7 +77,7 @@ export default function DramaDetailCard({ detail }) {
 
   const showPlay = playPlatforms.length > 0
   const showBuy = statusId !== 4 && buyPlatforms.length > 0
-
+  if (!detail) return null
   return (
     <div className="detail-card">
       <div className="detail-grid">

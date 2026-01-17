@@ -148,11 +148,7 @@ export default function EventDetailCard(props) {
                       const isClickable = Boolean(url)
 
                       const iconNode = (
-                        <img
-                          className="platform-logo"
-                          src={icon}
-                          alt={label}
-                        />
+                        <img className="platform-logo" src={icon} alt={label} />
                       )
 
                       if (isClickable) {

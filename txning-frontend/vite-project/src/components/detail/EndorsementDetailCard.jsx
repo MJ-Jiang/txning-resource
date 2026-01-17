@@ -9,7 +9,6 @@ function IconImg({ src, alt, className }) {
 export default function EndorsementDetailCard(props) {
   // 兼容两种传参：detail / endorsement
   const endorsement = props?.endorsement ?? props?.detail
-  if (!endorsement) return null
 
   const { typeNameById, statusNameById, bookingPlatformNameById } = useDict()
 
@@ -41,7 +40,7 @@ export default function EndorsementDetailCard(props) {
   // 1) 至少存在一条购买 url
   // 2) statusId !== 6（expired）
   const showPurchase = buyableTickets.length > 0 && statusId !== 6
-
+  if (!endorsement) return null
   return (
     <div className="detail-card">
       <div className="detail-grid">
