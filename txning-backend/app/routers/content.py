@@ -16,7 +16,7 @@ from app.schemas import (
     RatingInfo,
 )
 from app.services.content_card import bulk_card_fields, content_to_card
-from app.tests.conftest import db
+from app.db import get_db
 from models import (
     BookingPlatform,
     City,
