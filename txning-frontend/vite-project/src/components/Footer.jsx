@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="footer-deco">
         <i className="fa-solid fa-lemon"></i>
       </div>
-      <h2 className="footer-title">田栩宁资源站</h2>
+      <h2 className="footer-title">宁羽羽资源站</h2>
       <div
         style={{
           display: 'flex',
@@ -51,7 +51,7 @@ export default function Footer() {
           </a>
         </div>
       </div>
-      <p>© 2025 Tian Xuning Fan Resource Hub.</p>
+      <p>© 2025 Ning Yuyu Fan Resource Hub.</p>
     </footer>
   )
 }

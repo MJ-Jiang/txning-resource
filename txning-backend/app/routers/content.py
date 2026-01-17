@@ -16,6 +16,7 @@ from app.schemas import (
     RatingInfo,
 )
 from app.services.content_card import bulk_card_fields, content_to_card
+from app.tests.conftest import db
 from models import (
     BookingPlatform,
     City,
@@ -156,22 +157,28 @@ def get_content_detail(content_id: int, db: Session = Depends(get_db)):
     cities = [{"id": c.id, "name_zh": c.name_zh} for c in city_rows]
 
     # --- platforms ---
+   # --- platforms（最小修改版） ---
     platform_rows = (
         db.execute(
-            select(Platform)
-            .join(ContentPlatform, ContentPlatform.platform_id == Platform.id)
-            .where(ContentPlatform.content_id == content_id)
-        )
-        .scalars()
-        .all()
+        select(ContentPlatform, Platform)
+        .join(Platform, ContentPlatform.platform_id == Platform.id)
+        .where(ContentPlatform.content_id == content_id)
     )
+    .all()
+)
+
     platforms = [
         PlatformLink(
-            platform={"id": p.id, "code": p.code, "name_zh": p.name_zh},
-            url=None,
-        )
-        for p in platform_rows
+        platform={
+            "id": p.id,
+            "code": p.code,
+            "name_zh": p.name_zh,
+        },
+        url=cp.url,   # ← 关键修改：使用 ContentPlatform.url
+    )
+    for (cp, p) in platform_rows
     ]
+
 
     # --- booking_platforms ---
     booking_rows = (
