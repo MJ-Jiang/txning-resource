@@ -10,9 +10,6 @@ assert DATABASE_URL, "DATABASE_URL is None/empty. Check env vars."
 print("DATABASE_URL_IN_USE =", DATABASE_URL)
 
 
-
-
-
 engine = create_engine(DATABASE_URL) #engine = 数据库连接的“工厂 + 管理器”
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 #定义“以后创建出来的 db 会话长什么样”

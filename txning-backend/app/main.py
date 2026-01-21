@@ -47,3 +47,6 @@ app.include_router(home.router)
 @app.get("/health")
 def health():
     return {"ok": True}
+@app.head("/health")
+def health_head(response: Response):
+    response.status_code = 200
