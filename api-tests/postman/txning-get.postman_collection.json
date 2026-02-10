@@ -256,57 +256,146 @@
         }
       ]
     },
-    {
-      "name": "Channels",
-      "item": [
-        {
-          "name": "GET /channels/{category_id}",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Accept", "value": "application/json" }],
-            "url": {
-              "raw": "{{baseUrl}}/channels/{{category_id}}?title={{title}}&release_year={{release_year}}&status_id={{status_id}}&type_id={{type_id}}&limit={{limit}}&offset={{offset}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["channels", "{{category_id}}"],
-              "query": [
-                { "key": "title", "value": "{{title}}" },
-                { "key": "release_year", "value": "{{release_year}}" },
-                { "key": "status_id", "value": "{{status_id}}" },
-                { "key": "type_id", "value": "{{type_id}}" },
-                { "key": "limit", "value": "{{limit}}" },
-                { "key": "offset", "value": "{{offset}}" }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Response is JSON', () => pm.response.to.be.json);",
-                  "const b = pm.response.json();",
-                  "pm.test('Pagination fields exist', function () {",
-                  "  pm.expect(b).to.be.an('object');",
-                  "  ['total','limit','offset','items'].forEach(k => pm.expect(b).to.have.property(k));",
-                  "  pm.expect(b.items).to.be.an('array');",
-                  "});",
-                  "pm.test('Each item has core ContentCardOut keys (weak)', function () {",
-                  "  b.items.forEach(it => {",
-                  "    pm.expect(it).to.have.property('id');",
-                  "    pm.expect(it).to.have.property('title');",
-                  "    pm.expect(it).to.have.property('cover_url');",
-                  "    pm.expect(it).to.have.property('link_type');",
-                  "  });",
-                  "});"
-                ]
-              }
-            }
+    {"name":"Channels",
+    "item": [
+  {
+    "name": "GET /channels/{category_id} – Pagination",
+    "request": {
+      "method": "GET",
+      "url": {
+        "raw": "{{baseUrl}}/channels/{{category_id}}?limit={{limit}}&offset={{offset}}",
+        "host": ["{{baseUrl}}"],
+        "path": ["channels", "{{category_id}}"],
+        "query": [
+          { "key": "limit", "value": "{{limit}}" },
+          { "key": "offset", "value": "{{offset}}" }
+        ]
+      }
+    },
+    "event": [
+      {
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+            "pm.test('Response is JSON', () => pm.response.to.be.json);",
+            "const b = pm.response.json();",
+            "pm.test('Pagination shape exists', () => {",
+            "  ['total','limit','offset','items'].forEach(k => pm.expect(b).to.have.property(k));",
+            "  pm.expect(b.items).to.be.an('array');",
+            "});",
+            "pm.test('Each item has minimal render fields', () => {",
+            "  b.items.forEach(it => {",
+            "    pm.expect(it).to.have.property('id');",
+            "    pm.expect(it).to.have.property('title');",
+            "    pm.expect(it).to.have.property('cover_url');",
+            "    pm.expect(it).to.have.property('link_type');",
+            "  });",
+            "});"
           ]
         }
-      ]
+      }
+    ]
+  },
+  {
+    "name": "GET /channels/{category_id} – Pagination (next page)",
+    "request": {
+      "method": "GET",
+      "url": {
+        "raw": "{{baseUrl}}/channels/{{category_id}}?limit={{limit}}&offset={{next_offset}}",
+        "host": ["{{baseUrl}}"],
+        "path": ["channels", "{{category_id}}"],
+        "query": [
+          { "key": "limit", "value": "{{limit}}" },
+          { "key": "offset", "value": "{{next_offset}}" }
+        ]
+      }
     },
+    "event": [
+      {
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Status is not 500', () => pm.expect(pm.response.code).to.not.eql(500));",
+            "const b = pm.response.json();",
+            "pm.test('Still returns pagination structure', () => {",
+            "  ['total','limit','offset','items'].forEach(k => pm.expect(b).to.have.property(k));",
+            "});"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "GET /channels/{category_id} – Filter (type)",
+    "request": {
+      "method": "GET",
+      "url": {
+        "raw": "{{baseUrl}}/channels/{{category_id}}?type_id={{type_id}}&limit={{limit}}&offset={{offset}}",
+        "host": ["{{baseUrl}}"],
+        "path": ["channels", "{{category_id}}"],
+        "query": [
+          { "key": "type_id", "value": "{{type_id}}" },
+          { "key": "limit", "value": "{{limit}}" },
+          { "key": "offset", "value": "{{offset}}" }
+        ]
+      }
+    },
+    "event": [
+      {
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+            "const b = pm.response.json();",
+            "pm.test('Filtered response keeps pagination shape', () => {",
+            "  ['total','limit','offset','items'].forEach(k => pm.expect(b).to.have.property(k));",
+            "});"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "GET /channels/{category_id} – Search",
+    "request": {
+      "method": "GET",
+      "url": {
+        "raw": "{{baseUrl}}/channels/{{category_id}}?title={{keyword}}&limit={{limit}}&offset={{offset}}",
+        "host": ["{{baseUrl}}"],
+        "path": ["channels", "{{category_id}}"],
+        "query": [
+          { "key": "title", "value": "{{keyword}}" },
+          { "key": "limit", "value": "{{limit}}" },
+          { "key": "offset", "value": "{{offset}}" }
+        ]
+      }
+    },
+    "event": [
+      {
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+            "const b = pm.response.json();",
+            "pm.test('Search keeps pagination structure (items may be empty)', () => {",
+            "  ['total','limit','offset','items'].forEach(k => pm.expect(b).to.have.property(k));",
+            "  pm.expect(b.items).to.be.an('array');",
+            "});"
+          ]
+        }
+      }
+    ]
+  }
+]
+
+      
+    },
+   
     {
       "name": "Contents",
       "item": [
